@@ -1,6 +1,6 @@
 # Masgouf theme guide
 
-Version 1.0.0. Made by ZeronKit (https://zeronkit.com).
+Version 1.0.0, updated 26 November 2026. Made by ZeronKit (https://zeronkit.com).
 
 Words in `code style` match the Shopify theme editor word for word, so you can find each one by searching the editor.
 
@@ -18,9 +18,7 @@ The theme is built like one of those stalls at night, and it calls its look the 
 - Round plates: photos are small round plates beside the words. You read the menu first and the photo backs it up.
 - Turmeric and sumac: turmeric yellow is the colour of the fire and of the main buttons. Sumac red marks prices and sales.
 - A chalk hand: prices and short notes are written in a handwriting font, as if someone at the counter wrote them.
-
 [![Masgouf home page in full: The whole Riverside Stall home page of an Iraqi bakery and pantry, from the painted sign and the green chalk board at the top to the baking week in the footer.](images/home-overview-en.jpg)](images/home-overview-en.jpg)
-
 ### What a food shop gets
 
 A shopper buying bread or sweets online wants to know a few plain things. When was it baked, and when will it arrive? What is in it, and is it safe for my child with a nut allergy? How big is the box? Is there free delivery if I add one more tray? Can I send it as a gift with a note?
@@ -155,9 +153,7 @@ On a phone each message has to fit on one line. "Free US delivery on orders from
 ### 3.5 The stall header
 
 The header has two rows. Click `Header` in the editor to change it.
-
 [![Masgouf header: The turmeric painted sign with the shop name, the large "What would you like today?" search field, the Basket with its count and total, and the awning of category chips with a bake time on the Bakery chip.](images/header-en.jpg)](images/header-en.jpg)
-
 **The painted sign.** On the left is a turmeric sign with your shop name.
 
 - Upload a logo in `Logo`, or leave it empty and the shop name is written in the heading font. To write something else, use `Text logo`.
@@ -193,9 +189,7 @@ Other header settings:
 ### 3.6 The whole board (menu)
 
 Click `Everything` and the full menu drops down from the awning as one chalk board.
-
 [![Masgouf menu as a chalk board: Every collection in its own column with item counts and prices on dotted leaders, the pages in the last column, and the country and language at the foot of the board.](images/board-menu-en.jpg)](images/board-menu-en.jpg)
-
 - Each top level item in your menu becomes a column. Its sub-items are lines with the number of products, or a "From" price for single products.
 - Pages and the blog get their own column at the end.
 - The country and language selectors sit at the foot.
@@ -205,17 +199,15 @@ The board is built from the same `Menu` as the chips. Arrange the menu in `Onlin
 ### 3.7 Search as an order ticket
 
 Click the search field and a paper ticket hangs from it, with a torn foot like a slip from an order pad.
-
 [![Masgouf search ticket before typing: A paper order ticket under the search field with popular searches as chalk words and the Popular today products as menu lines with prices.](images/search-ticket-en.jpg)](images/search-ticket-en.jpg)
-
 Before the shopper types, the ticket shows two lists. You set both in `Theme settings`, `Search`:
 
 - `Popular searches`: words separated by commas, for example `kleicha, dates, baklava, chai, cardamom`. They show as chalk words to tap.
 - `Popular today collection`: pick a collection, and its first products show as menu lines with prices. Use your best sellers or what was baked this morning.
-
 [![Masgouf live search results: Typing "dates" fills the ticket with suggestions, products as menu lines with their prices, a matching collection, a matching journal post and a See all results line.](images/search-typing-en.jpg)](images/search-typing-en.jpg)
-
 As soon as the shopper types, the ticket fills with suggestions, products, collections, pages and journal posts. `Enable search suggestions` in the same panel turns this live search on or off.
+
+The ticket has no search button. The shopper presses Enter, or the search key on a phone keyboard, to open every result on the search page.
 
 Shopify's live search doesn't support every language, and Arabic is one it skips. On the Arabic store the ticket shows a single line that opens all the results for the word, and the results page works as usual.
 
@@ -312,9 +304,7 @@ The home page is laid out like an evening at the stall: the board with tonight's
 ### 5.1 Counter hero
 
 The first thing a shopper sees: a green board with your shop photo on a round plate at its corner, a heading and a short menu of tonight's products.
-
 [![Masgouf counter hero: A Tigris green chalk board with the shop photo on a round plate, the opening note "Baking today, Tuesday to Saturday", the heading and text, and On the board tonight with products, prices and a plus to add.](images/home-counter-en.jpg)](images/home-counter-en.jpg)
-
 - `Image`: your best photo. It shows as the round plate.
 - `Opening note`: the small turmeric label above the heading, for example "Baking today, Tuesday to Saturday". Leave it empty to hide it.
 - Inside the board you add blocks: a small text, a `Heading`, a `Text` and a `Button`. Click `Add block` to add or move them.
@@ -325,9 +315,7 @@ Each menu line has a plus button. A product with one size goes straight into the
 ### 5.2 Fill your basket (Collection list)
 
 Your shelves, shown as name tabs hanging from an awning over a photo of the stall.
-
 [![Masgouf collection list as an awning: Collection name tabs with their item counts hanging from a green scalloped awning over a wide photo of a baker at the tannour oven.](images/home-awning-en.jpg)](images/home-awning-en.jpg)
-
 - Set `Card shape` to `Tabs hanging from an awning over a stall photo`. The other shapes are `Round plates` and `Cards`.
 - `Stall photo`: a wide photo of your shop, your oven or your counter.
 - Add one `Collection` block per shelf.
@@ -335,9 +323,7 @@ Your shelves, shown as name tabs hanging from an awning over a photo of the stal
 ### 5.3 When the tannour is lit (Bake schedule)
 
 A turmeric strip with the day at the oven, hour by hour.
-
 [![Masgouf bake schedule: The turmeric section When the tannour is lit, with bake times 6:30, 8:00, 11:00 and 14:00 on a timeline, the item baked at each time and a short note under each one.](images/home-bake-en.jpg)](images/home-bake-en.jpg)
-
 - Add one `Bake` block for each time: `Time`, `Item name` and `Note` (for example "Every baking day").
 - `Product` links the line to a product. If `Item name` is empty, the product's title is used.
 - `Small print` is the line under the timeline, for example "We bake from Tuesday to Saturday. Times are a guide."
@@ -347,9 +333,7 @@ People like to know when the bread comes out warm, and it nudges them to order b
 ### 5.4 Fresh this week (Featured collection)
 
 A tray of round plates, each with a price tag.
-
 [![Masgouf Fresh this week tray: Products as round plates on a paper tray, each with a handwritten price tag and a Choose or plus button, one Sale or New badge per product, and an Everything fresh link.](images/home-tray-en.jpg)](images/home-tray-en.jpg)
-
 - `Collection`: pick your new or seasonal products.
 - `Layout`: `Tray of round plates`. You can also choose `Grid` or `Scrolling row`.
 - `Products to show` and `Columns on desktop` set the size of the tray.
@@ -360,9 +344,7 @@ Each product shows one badge at most: Sold out first, then Sale, then New. Secti
 ### 5.5 The whole board (Menu board)
 
 Your full menu written on chalk boards, in columns, with a short description under each name.
-
 [![Masgouf menu board: Three green chalk columns for Bakery, Sweets and cookies, and Pantry and spices, with product names, short descriptions and From prices, and a See every product button.](images/home-menu-board-en.jpg)](images/home-menu-board-en.jpg)
-
 - Add one `Menu category` block per column. Pick its `Collection`. `Title` replaces the collection name if you want a shorter one. `Products to show` sets the lines.
 - `Show short descriptions` adds a line from each product description.
 - `Show small photos` adds a small plate to each line.
@@ -371,9 +353,7 @@ Your full menu written on chalk boards, in columns, with a short description und
 ### 5.6 What goes into it (Ingredients and allergens)
 
 One product, with its full ingredient list and its allergens, on a dark charcoal section. It tells shoppers that you are open about what you put in your food.
-
 [![Masgouf ingredients and allergens section: A round photo of kleicha cookies on a charcoal background, the full ingredient list, Contains and May contain allergen chips, and a View full details button.](images/home-ingredients-en.jpg)](images/home-ingredients-en.jpg)
-
 - `Product`: the product to show. Leave it empty to use the first product in stock.
 - `Heading` and `Text`: leave the heading empty to use the product title.
 - `Ingredients`: leave it empty to use the product's `masgouf.ingredients` metafield.
@@ -385,9 +365,7 @@ Check every allergen against your real product labels.
 ### 5.7 Today's special (Featured product)
 
 One product on a chalk card, with its sizes and an Add to cart button right on the home page.
-
 [![Masgouf featured product as today's special: The Baklava Tray on a green chalk card with a round photo, a handwritten price tag, the flavours as menu lines with prices, and Add to cart and Buy it now buttons.](images/home-special-en.jpg)](images/home-special-en.jpg)
-
 - `Product`: the special.
 - `Eyebrow text`: the small line above the name, for example "Stall favourite".
 - `Show accelerated checkout buttons` shows Buy it now and other fast payment buttons.
@@ -395,9 +373,7 @@ One product on a chalk card, with its sizes and an Add to cart button right on t
 ### 5.8 Baking days (Visit the shop)
 
 Your opening hours, where to find you, and a newsletter sign-up as a tear-off stub at the foot of the card.
-
 [![Masgouf visit card: A photo of the baker at the oven beside a paper card with the opening hours as dotted lines, a note about baking days and a newsletter sign-up on a tear-off stub.](images/home-visit-en.jpg)](images/home-visit-en.jpg)
-
 - Add an `Opening hours row` block for each line, with `Days` and `Hours`. "Hours" can be words, like "The oven rests".
 - `Address`: leave it empty to use your store address.
 - `Map link` and `Button label` add a button to a map.
@@ -406,9 +382,7 @@ Your opening hours, where to find you, and a newsletter sign-up as a tear-off st
 ## 6. The menu card: product page
 
 Every product page is set like a menu card. The name and price are one menu line across the top. Under it, a paper order ticket holds everything needed to order. The photo sits on the ticket's corner as a round plate.
-
 [![Masgouf product page top: The product name and price joined by a dotted leader, the order ticket with the photo as a round plate on its corner, the box sizes as menu lines with prices and the Add to cart row.](images/product-top-en.jpg)](images/product-top-en.jpg)
-
 Click `Product information` in the editor (open a product with the page picker first).
 
 Section settings:
@@ -428,9 +402,7 @@ The ticket is made of blocks. Drag them to change the order. Each one is explain
 - `Weight and servings`: net weight, pack size and servings as dotted lines. It reads the metafields from 4.3. `Use the variant weight when no net weight is set` uses the weight from the variant.
 - `Variant picker`: set `Style` to `Menu lines with prices`. Each size is a line with its own price. `Buttons` and `Dropdown` are the other styles.
 - `Buy buttons`: quantity, Add to cart and Buy it now. Add to cart is the only filled button. Buy it now is an outline. `Show pickup availability` shows local pickup if you offer it.
-
 [![Masgouf order ticket: Add to cart with Buy it now as an outline button, the stock and free delivery box, the Baked and delivered week with delivery days lit, and the Storage and Delivery and returns folds.](images/product-ticket-en.jpg)](images/product-ticket-en.jpg)
-
 Under the buttons a small box says if the product is in stock and gives one delivery line. That line is built from your free delivery settings (2.3) and the shopper's country.
 
 - `Delivery days and freshness`: a week with your delivery days lit in turmeric. Tick the days under `Delivery days`. Write your cut-off in `Order cut-off note` ("Order by 14:00 for the next baking day") and a line in `Freshness note`. A product's `masgouf.delivery_days` metafield replaces the ticked days, so pantry goods can ship on other days than fresh bread.
@@ -442,17 +414,13 @@ Every food block has `Placement`. `In the order panel` puts it on the ticket. `B
 ### 6.2 A size on sale
 
 Say the large box is reduced and the small one isn't. The price board at the top tells the shopper about the large box even while the small one is picked.
-
 [![Masgouf price board with a sale on another size: The Masgouf Gift Box name and price, with a Sale badge and the line "Large now $75.00" with the old price $85.00 struck through.](images/product-sale-en.jpg)](images/product-sale-en.jpg)
-
 You don't set anything. Add a `Compare-at price` to the size on sale and the line appears.
 
 ### 6.3 From the pantry
 
 Under the ticket is a row of cards with the food details.
-
 [![Masgouf From the pantry row: Three cards under the product, the ingredients with allergens in bold and Contains, Suitable for and May contain labels, a nutrition table per 100 g and per cookie, and Serve it with suggestions with prices.](images/product-pantry-en.jpg)](images/product-pantry-en.jpg)
-
 - `Ingredients and allergens`: the ingredient list from `masgouf.ingredients`, with allergens and diet labels. `Bold allergens in the ingredient list` makes the allergens bold inside the list, as food labels do. `Allergen note` is the line about your kitchen.
 - `Nutrition table`: reads `masgouf.nutrition`. `Amount column heading` and `Serving column heading` set the column titles when the metafields are empty.
 - `Recipe and pairing`: a serving idea and products that go well with it. It reads `masgouf.recipe`, `masgouf.recipe_article` and `masgouf.pairing`. With `Fill with products from the same collection when none are chosen` on, it never stays empty.
@@ -460,9 +428,7 @@ Under the ticket is a row of cards with the food details.
 The text fields inside these blocks (`Ingredients text`, `Nutrition rows`, `Recipe or serving idea`) are only fallbacks. They show on every product that has no metafield. Use them only on a template made for a single product, so a cookie never shows the nutrition of a loaf.
 
 ### 6.4 Related products
-
 [![Masgouf related products: A row of related bakery and pantry products under the product page, each with its photo, name and price.](images/product-related-en.jpg)](images/product-related-en.jpg)
-
 Click `Related products` to set `Heading`, `Layout` (`Grid` or `Scrolling row`) and `Products to show`. Shopify learns which products to suggest over time. Until it has enough orders, Masgouf shows products from the same collection.
 
 ### 6.5 Gift cards
@@ -474,31 +440,23 @@ Gift card products show no Buy it now, no delivery lines and no food panels. The
 ### 7.1 A collection page
 
 A collection is one chalk board. Products are menu lines in two columns: a round plate, the name, a dotted leader and the price.
-
 [![Masgouf collection page as a chalk board: The Sweets and Cookies board with its item count, category tabs, a chalk Sort by menu, and products as menu lines in two columns, with Choose opening the flavours and prices of one product.](images/collection-en.jpg)](images/collection-en.jpg)
-
 - A product with one size has a plus to add it straight away. A product with several sizes has "Choose", which opens its sizes as lines with prices, each with its own plus. A regular who knows what they want can fill a basket without opening one product page.
 - The tabs along the top come from your filters, or from `Category tabs menu`.
 - `Banner note` is the short handwritten label on the board, for example "Fresh stock every baking day".
 - `Show round product photos` and `Show a short description under each name` change the lines.
 - `Products per page` and `Pagination` (`Load more button`, `Numbered pages` or `Infinite scroll`) set how lists load.
-
 [![Masgouf filters on a long collection: The All products board with Filter, per page and sort, and the filter drawer open with price and other filter groups.](images/collection-filters-en.jpg)](images/collection-filters-en.jpg)
-
 On lists with 12 products or more, a Filter button and a per page choice appear. On short lists they stay hidden, because a shopper can read twelve lines at a glance. Filter groups with only one choice are hidden too. Set the filters themselves in the free Search & Discovery app.
 
 ### 7.2 Search results
-
 [![Masgouf search results page: The board headed You asked for "dates", with tabs for products, articles and pages, the matching collections as chalk words and the results as menu lines with prices.](images/search-results-en.jpg)](images/search-results-en.jpg)
-
 Click `Search results` (open the search page with the page picker). You can set `Heading`, `Products per page`, filtering and sorting. `Suggested collection when nothing is found` fills an empty search with products, under the words "Not on the board today".
 
 ### 7.3 All your shelves (collections list)
 
 The page at `/collections` is a map of your stall: a wide photo with numbered pins and a key under it.
-
 [![Masgouf collections list as a stall map: A wide photo of spice bowls with numbered pins, and a key in two columns with each collection's number, name, dotted leader and item count.](images/collections-map-en.jpg)](images/collections-map-en.jpg)
-
 - `Stall photo`: a wide photo of your shop or market table.
 - Without blocks, every collection gets a pin along the bottom. Add a `Pin` block per collection to place it yourself: `Across the picture` and `Down the picture` move the pin, in percent.
 - When a shopper points at a key line, its pin lights up, and the other way round.
@@ -508,9 +466,7 @@ The page at `/collections` is a map of your stall: a wide photo with numbered pi
 ### 8.1 The basket ticket (cart drawer)
 
 Add something to the cart and a narrow paper ticket drops from the Basket button.
-
 [![Masgouf cart drawer as a paper ticket: The basket meter saying how much more is needed for free delivery, the order lines with quantity, name, price and small round plates, the open gift note field, the subtotal and a turmeric Check out button.](images/cart-drawer-en.jpg)](images/cart-drawer-en.jpg)
-
 From top to bottom:
 
 - **The basket meter.** "Add $56.00 more for free delivery", with a bar that fills up. At the goal it says the basket travels free. It uses `Free delivery from (amount in the store currency)` and `Countries with free delivery` (2.3). It only shows to shoppers in those countries.
@@ -524,10 +480,10 @@ If the cart is empty, it shows a few products to start with. Pick them in `Colle
 To use a full page instead of the drawer, set `Cart type` to `Page` in `Theme settings`, `Cart`.
 
 ### 8.2 The cart page (the counter)
-
 [![Masgouf cart page as the counter: A green board on top with the total in large chalk figures, the basket meter, the gift note and the Check out button, and the cart lines below it as round plates with size, price, stepper and Remove.](images/cart-page-en.jpg)](images/cart-page-en.jpg)
-
 The cart page puts the bill first. The board on top holds the total in large chalk figures, the meter, the gift note and Check out. The lines follow as round plates in two columns. Click `Cart` in the editor for `Heading` and `Order note under the summary`.
+
+An empty cart keeps the board. It says the basket is empty and lists a few products still for sale under "Still on the board". Turn the list on or off with `Show product suggestions` under `Empty cart`, and pick its products in `Collection`.
 
 The Check out button is turmeric in both the drawer and the page, so the last step always looks the same.
 
@@ -538,9 +494,7 @@ Shopify's checkout is not part of the theme. To match it to the stall, open `Set
 ## 9. The other pages
 
 ### 9.1 Contact: the stall front
-
 [![Masgouf contact page as the stall front: A wide photo of the bread with the opening hours on a green board over its corner, and the contact form on a paper order ticket with a tear-off stub giving the reply time.](images/contact-en.jpg)](images/contact-en.jpg)
-
 Click `Contact form` in the editor (open the contact page first).
 
 - `Layout`: `Stall front: photo, hours board and a ticket form`. The other layouts are `Form only` and `Form and information column`.
@@ -553,9 +507,7 @@ Click `Contact form` in the editor (open the contact page first).
 Messages go to your store email in `Settings`, `General`.
 
 ### 9.2 About: a day at the stall
-
 [![Masgouf About page as a day at the stall: The title on a green board strip, story rows that switch sides with a round photo beside each part, and The stall in short as dotted fact lines.](images/about-en.jpg)](images/about-en.jpg)
-
 Give the About page the `about` template. The page content is split at each Heading 2 into rows. Each row gets a round photo, switching sides as the shopper scrolls.
 
 - Add `Photo for a row` blocks to choose the photos, in order. Without them, collection photos are used.
@@ -563,23 +515,17 @@ Give the About page the `about` template. The page content is split at each Head
 - Add a `Fact line` block for each fact at the end, with `Label` and `Value`, for example "Baking days ....... Tuesday to Saturday".
 
 ### 9.3 FAQ: questions on the board
-
 [![Masgouf FAQ page as questions on the board: One green board with topic words along the top and every question in bold with its answer under it, in two columns.](images/faq-en.jpg)](images/faq-en.jpg)
-
 Give the FAQ page the `faq` template. Each Heading 2 in the page becomes a question, and the text under it is the answer. All answers show at once. Someone checking for allergens can read every answer without a single click.
 
 Add a `Topic word` block for each topic, with `Label` and `Jumps to question number`. The words sit along the top and jump to that question.
 
 ### 9.4 The journal
-
 [![Masgouf journal as a recipe board: The newest post on a round plate with its title, date and read time, then every post as a line on a green board with its read time and tag, and topic words along the top.](images/journal-en.jpg)](images/journal-en.jpg)
-
 The newest post sits on a round plate at the top. Every post follows as a line on the board, with its read time. The topic words come from your post tags. Click `Blog posts` for `Show the newest post as a wide card` and `Posts per page`.
 
 ### 9.5 A post as a recipe card
-
 [![Masgouf journal post as a recipe card: A chalk title band with the date, read time and Print, and an At a glance card with a round photo, the ingredient list and Shop the ingredients beside the method.](images/article-en.jpg)](images/article-en.jpg)
-
 If a post has a bulleted list, Masgouf moves the first list to an "At a glance" card beside the text. Put a Heading 2 such as "You will need" just before the list and it becomes the card's title.
 
 Under the list, "Shop the ingredients" shows up to four of your products with prices. A product is picked when its name is in the post, or when its `masgouf.recipe_article` metafield points to the post. So a post about chai that mentions "Iraqi Chai Black Tea" and "Green Cardamom Pods" sells both.
@@ -587,15 +533,11 @@ Under the list, "Shop the ingredients" shows up to four of your products with pr
 Click `Blog post` for `Show author`, `Show reading time` and `Show print button`. The print button prints the recipe without the header and footer.
 
 ### 9.6 Normal pages
-
 [![Masgouf normal page: The Shipping and Returns page with its title on a green board and the text on a cream paper sheet, with a table of delivery rates.](images/page-en.jpg)](images/page-en.jpg)
-
 Shipping and returns, privacy and other plain pages use the `Page` section. `Alignment` sets the title to the start or the centre.
 
 ### 9.7 Page not found
-
 [![Masgouf 404 page: The board titled Sold out on the board, the missing web address struck through like a sold out dish, a search field, the shelves as chalk words and Still on the board products with prices.](images/not-found-en.jpg)](images/not-found-en.jpg)
-
 A wrong address shows a board that says "Sold out on the board", with the address struck through like a dish that ran out. Under it are a search field, your shelves and products still for sale. Click `Page not found` to set `Heading`, `Show popular collections` and `Show products`.
 
 ### 9.8 The password page
@@ -603,9 +545,7 @@ A wrong address shows a board that says "Sold out on the board", with the addres
 While your store is locked, visitors see the shutter down: a full screen board with "Closed until opening day", your opening and bake times as menu lines, the password as one chalk line, and a newsletter sign-up. Click `Password page` to add `Fact line` blocks and to turn `Show newsletter sign-up` on or off.
 
 ## 10. The footer and the baking week
-
 [![Masgouf footer: The baking week with the oven lit days in turmeric, a chalk board of links in three columns with item counts and short hints, and a slim band with the shop name, country and language, payment icons and the credit.](images/footer-en.jpg)](images/footer-en.jpg)
-
 The footer opens with the baking week: seven days, with the days the oven is lit in turmeric. Under it, one chalk board holds your links in three columns. Each line has a small hint: the number of items on a shelf, the number of stories in the journal, or your free delivery amount.
 
 Click `Footer` in the editor:
@@ -654,23 +594,11 @@ Two things to know:
 ## 13. On a phone
 
 Many of your shoppers will order from a phone, often on the way home.
-
 [![Masgouf home page on a phone: The sign with the shop name, the search and Basket buttons, the chip strip that starts with Everything, and the counter board with the heading and tonight's products.](images/m-home-en.jpg)](images/m-home-en.jpg)
-
 - The header shows the name, search and the Basket. The chip strip scrolls sideways and starts with `Everything`.
-
-[![Masgouf menu on a phone: The chalk board menu titled Browse the stall, with the shop collections and their item counts and the Fresh this week products with prices, one per line.](images/m-menu-en.jpg)](images/m-menu-en.jpg)
-
-- The menu opens as a chalk board titled "Browse the stall", with every link on one line.
-
-[![Masgouf collection on a phone: The chalk board with category tabs, a sort menu and products as menu lines with round photos, prices and Choose buttons.](images/m-collection-en.jpg)](images/m-collection-en.jpg)
-
-[![Masgouf product on a phone: The order ticket with the round photo, the description and the weight and pack lines on a narrow screen.](images/m-product-en.jpg)](images/m-product-en.jpg)
-
-[![Masgouf cart on a phone: The cart ticket over the full width with the basket meter, the order lines with steppers and the gift note.](images/m-cart-en.jpg)](images/m-cart-en.jpg)
-
-[![Masgouf contact on a phone: The contact form on a paper ticket with the name, email, topic and message fields.](images/m-contact-en.jpg)](images/m-contact-en.jpg)
-
+[![Masgouf menu on a phone: The chalk board menu titled Browse the stall, with the shop collections and their item counts and the Fresh this week products with prices, one per line, and the country and language fixed at the foot.](images/m-menu-en.jpg)](images/m-menu-en.jpg)
+- On a phone the menu fills the screen as a chalk board titled "Browse the stall", with every link on one line. Each column heading stays at the top while its lines scroll past, and the country and language stay at the foot of the board.
+[![Masgouf collection on a phone: The chalk board with category tabs, a sort menu and products as menu lines with round photos, prices and Choose buttons.](images/m-collection-en.jpg)](images/m-collection-en.jpg)[![Masgouf product on a phone: The order ticket with the round photo, the description and the weight and pack lines on a narrow screen.](images/m-product-en.jpg)](images/m-product-en.jpg)[![Masgouf cart on a phone: The cart ticket over the full width with the basket meter, the order lines with steppers and the gift note.](images/m-cart-en.jpg)](images/m-cart-en.jpg)[![Masgouf contact on a phone: The contact form on a paper ticket with the name, email, topic and message fields.](images/m-contact-en.jpg)](images/m-contact-en.jpg)
 Every button and link is at least 44 pixels tall on phones, so it is easy to hit with a thumb. You don't need to set anything for phones. A few sections have their own phone setting, such as `Logo width on mobile` in `Header`.
 
 ## 14. When something looks wrong
@@ -704,5 +632,7 @@ Every button and link is at least 44 pixels tall on phones, so it is easy to hit
 Help is free and best effort. Write through https://zeronkit.com or to info@zeronkit.com. There is no fixed schedule for updates.
 
 ### Changelog
+
+**1.0.0, updated zip (26 November 2026)**: small fixes after the layout review. The column headings on the menu board line up. On the product page the round photo no longer covers the facts table. In Arabic the little point on the basket ticket points at the Basket. The search ticket has no button over the field, so nothing covers what the shopper types. On phones the country and language bar stays above the menu headings. An empty cart page keeps its board and lists products still for sale. If you installed 1.0.0 before this date, download it again and follow 2.4.
 
 **1.0.0 (25 November 2026)**: first public release. Before release, the theme went through store reviews and a round of page layouts. It includes the menu board header and search ticket, the menu card product page with sizes as menu lines, the basket meter and open gift note, the about, FAQ, recipe card and stall map pages, one badge per product, a description for every page for search engines, the Store contact email setting, and Arabic for all theme texts.
