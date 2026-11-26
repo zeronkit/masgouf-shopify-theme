@@ -1,0 +1,59 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign t_heading = 'mg.newsletter.heading' | t
+  if section.settings.heading != blank
+    assign t_heading = section.settings.heading
+  endif
+  assign t_text = 'mg.newsletter.text_html' | t
+  if section.settings.text != blank
+    assign t_text = section.settings.text
+  endif
+-%}
+{%- assign form_id = 'Newsletter-' | append: section.id -%}
+{{ 'home.css' | asset_url | stylesheet_tag }}
+<section class="cw-section cw-newsletter-section cw-newsletter-section--{{ section.settings.layout }} color-{{ section.settings.color_scheme }}">
+  {%- if section.settings.layout == 'panel' -%}
+    <div class="cw-wrap">
+      <div class="cw-newsletter-panel">
+        <div class="cw-newsletter-panel__copy">
+          {%- if section.settings.eyebrow != blank -%}<p class="cw-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+          <h2 class="cw-h2">{{ t_heading | escape }}</h2>
+          {%- if t_text != blank -%}<div class="cw-rte">{{ t_text }}</div>{%- endif -%}
+        </div>
+        {% render 'newsletter-form', id: form_id %}
+      </div>
+    </div>
+  {%- else -%}
+    <div class="cw-wrap cw-wrap--narrow cw-center">
+      {%- if section.settings.eyebrow != blank -%}<p class="cw-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+      <h2 class="cw-h2">{{ t_heading | escape }}</h2>
+      {%- if t_text != blank -%}<div class="cw-rte">{{ t_text }}</div>{%- endif -%}
+      {% render 'newsletter-form', id: form_id %}
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "t:names.newsletter",
+  "class": "cw-shopify-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:labels.layout",
+      "options": [
+        { "value": "panel", "label": "t:options.panel" },
+        { "value": "centered", "label": "t:options.footer_centered" }
+      ],
+      "default": "panel"
+    },
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow" },
+    { "type": "text", "id": "heading", "label": "t:labels.heading" },
+    { "type": "richtext", "id": "text", "label": "t:labels.text" },
+    { "type": "paragraph", "content": "t:info.newsletter" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ],
+  "presets": [{ "name": "t:names.newsletter" }]
+}
+{% endschema %}

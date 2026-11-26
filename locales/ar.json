@@ -1,0 +1,642 @@
+{
+  "accessibility": {
+    "skip_to_content": "انتقل إلى المحتوى"
+  },
+  "general": {
+    "announcements": "الإعلانات",
+    "back": "رجوع",
+    "close": "إغلاق",
+    "error": "حدث خطأ. يرجى المحاولة مرة أخرى.",
+    "new_window": "يفتح في نافذة جديدة",
+    "pause_video": "إيقاف فيديو الخلفية مؤقتًا",
+    "per": "لكل",
+    "meta": {
+      "tags": "الوسم \"{{ tags }}\"",
+      "page": "الصفحة {{ page }}"
+    },
+    "pagination": {
+      "label": "التنقل بين الصفحات",
+      "previous": "الصفحة السابقة",
+      "next": "الصفحة التالية",
+      "page": "الصفحة {{ number }}"
+    },
+    "pause_announcements": "إيقاف الإعلانات مؤقتًا",
+    "close_announcements": "إغلاق الإعلانات",
+    "slider": {
+      "previous": "التمرير للخلف: {{ label }}",
+      "next": "التمرير للأمام: {{ label }}"
+    }
+  },
+  "header": {
+    "shop": "تسوّق",
+    "primary_nav": "القائمة الرئيسية",
+    "quick_nav": "روابط سريعة",
+    "search": "بحث",
+    "collections": "المجموعات",
+    "view_all_plain": "عرض الكل",
+    "secondary_nav": "روابط إضافية"
+  },
+  "localization": {
+    "country_label": "الدولة/المنطقة",
+    "language_label": "اللغة"
+  },
+  "search": {
+    "title": "بحث",
+    "label": "ابحث في المتجر",
+    "placeholder": "خبز، تمر، علب هدايا",
+    "submit": "بحث",
+    "suggestions": "اقتراحات البحث",
+    "results_for": "نتائج البحث عن \"{{ terms }}\"",
+    "view_all": "عرض كل النتائج لـ \"{{ terms }}\"",
+    "page": "صفحة",
+    "results_count": {
+      "zero": "لا توجد اقتراحات",
+      "one": "اقتراح واحد",
+      "two": "اقتراحان",
+      "few": "{{ count }} اقتراحات",
+      "many": "{{ count }} اقتراحًا",
+      "other": "{{ count }} اقتراح"
+    },
+    "page_heading": "عمّ تبحث؟",
+    "tabs_label": "أنواع النتائج",
+    "tab_all": "الكل",
+    "tab_products": "المنتجات",
+    "tab_articles": "المقالات",
+    "tab_pages": "الصفحات",
+    "matching_collections": "مجموعات مطابقة",
+    "no_results_title": "لا توجد نتائج لـ \"{{ terms }}\"",
+    "no_results_hint": "تحقق من الإملاء، أو جرّب كلمة أقصر مثل خبز أو قهوة، أو اختر من عمليات البحث أدناه.",
+    "you_may_like": "قد يعجبك أيضًا",
+    "popular": "عمليات البحث الشائعة",
+    "recent": "عمليات البحث الأخيرة",
+    "recent_clear": "مسح",
+    "new_in": "وصل حديثًا"
+  },
+  "products": {
+    "add_to_cart": "أضف إلى السلة",
+    "sold_out": "نفدت الكمية",
+    "unavailable": "غير متوفر",
+    "unavailable_short": "غير متوفر",
+    "new": "جديد",
+    "view_details": "عرض التفاصيل كاملة",
+    "placeholder_title": "منتجك",
+    "placeholder_help": "اختر منتجًا في محرر القالب لعرضه هنا.",
+    "sizes_label": "المقاسات المتوفرة:",
+    "colours_count": {
+      "zero": "لا توجد ألوان",
+      "one": "لون واحد",
+      "two": "لونان",
+      "few": "{{ count }} ألوان",
+      "many": "{{ count }} لونًا",
+      "other": "{{ count }} لون"
+    },
+    "tax_included": "شامل الضريبة.",
+    "shipping_policy_html": "تُحسب تكلفة <a href=\"{{ link }}\">الشحن</a> عند الدفع.",
+    "purchase_options": "خيارات الشراء",
+    "one_time": "شراء لمرة واحدة",
+    "quantity": "الكمية",
+    "quantity_down": "إنقاص الكمية",
+    "quantity_up": "زيادة الكمية",
+    "price": {
+      "regular": "السعر العادي",
+      "sale": "سعر التخفيض",
+      "unit": "سعر الوحدة",
+      "from": "ابتداءً من {{ price }}",
+      "variant_offer": "{{ variant }} الآن بـ {{ price }}"
+    },
+    "media": {
+      "gallery": "صور المنتج",
+      "play_video": "تشغيل الفيديو",
+      "load_model": "تحميل النموذج ثلاثي الأبعاد",
+      "view_in_space": "اعرضه في مساحتك",
+      "zoom": "فتح الصورة بحجم أكبر",
+      "previous": "الصورة السابقة",
+      "next": "الصورة التالية"
+    },
+    "pickup": {
+      "available_at_html": "الاستلام متاح في <strong>{{ location }}</strong>",
+      "unavailable_at_html": "الاستلام غير متاح حاليًا في <strong>{{ location }}</strong>",
+      "view_stores": "تحقّق من المتاجر الأخرى",
+      "ready": "جاهز للاستلام:",
+      "not_ready": "غير متاح للاستلام حاليًا"
+    },
+    "tabs": {
+      "shipping_policy": "سياسة الشحن",
+      "refund_policy": "سياسة الإرجاع والاسترداد"
+    },
+    "show_colour": "عرض اللون {{ colour }}",
+    "colour_map": "أسود:black,أبيض:white,رمادي:grey,أخضر:green,أرجواني:purple,بنفسجي:purple,أحمر:red,أزرق:blue,كحلي:navy,بيج:beige,بني:brown,وردي:pink,ذهبي:gold,فضي:silver,كريمي:cream,زيتوني:olive,خاكي:khaki,أصفر:yellow,برتقالي:orange,سماوي:sky blue,عاجي:ivory,جملي:camel,رملي:sand,noir:black,blanc:white,gris:grey,vert:green,rouge:red,bleu:blue,marine:navy,rose:pink,jaune:yellow,beige:beige,marron:brown,violet:purple,doré:gold,argenté:silver,crème:cream,negro:black,blanco:white,gris:grey,verde:green,rojo:red,azul:blue,marino:navy,rosa:pink,amarillo:yellow,marrón:brown,morado:purple,dorado:gold,plateado:silver,crema:cream,schwarz:black,weiß:white,weiss:white,grau:grey,grün:green,rot:red,blau:blue,marineblau:navy,gelb:yellow,braun:brown,lila:purple,golden:gold,silbern:silver",
+    "option_names": {
+      "colour": "اللون,لون,الألوان,Color,Colour",
+      "size": "المقاس,مقاس,الحجم,Size"
+    },
+    "food": {
+      "contains": "يحتوي على",
+      "suitable_for": "مناسب لـ",
+      "may_contain": "قد يحتوي على",
+      "editor_hint": "{{ name }}: تظهر هذه الكتلة عندما تتوفر بيانات لها في المنتج. راجع إعدادات الكتلة لمعرفة الحقول الوصفية التي تقرؤها.",
+      "nutrient": "العنصر الغذائي",
+      "net_weight": "الوزن الصافي",
+      "pieces": "العبوة",
+      "serves": "يكفي",
+      "serving_size": "حجم الحصة",
+      "days": {
+        "mon": "الاثنين",
+        "tue": "الثلاثاء",
+        "wed": "الأربعاء",
+        "thu": "الخميس",
+        "fri": "الجمعة",
+        "sat": "السبت",
+        "sun": "الأحد"
+      },
+      "days_short": {
+        "mon": "اثنين",
+        "tue": "ثلاثاء",
+        "wed": "أربعاء",
+        "thu": "خميس",
+        "fri": "جمعة",
+        "sat": "سبت",
+        "sun": "أحد"
+      },
+      "day_on": "{{ day }}: يوم توصيل",
+      "day_off": "{{ day }}: لا يوجد توصيل",
+      "storage": "الحفظ",
+      "best_within": "يفضل استهلاكه خلال",
+      "read_recipe": "اقرأ الوصفة",
+      "save_percent": "وفّر {{ percent }}%",
+      "per_delivery": "{{ price }} لكل توصيلة",
+      "in_stock": "متوفر، يُخبز حسب الطلب",
+      "breadcrumb": "مسار التنقل",
+      "home": "الرئيسية",
+      "show_image": "عرض الصورة {{ index }}",
+      "storage_default_html": "<p>يُحفظ في مكان بارد وجاف بعيدًا عن أشعة الشمس المباشرة. بعد الفتح، يُحفظ في وعاء محكم الإغلاق. يمكن تجميد الخبز والكعك في يوم وصولها.</p>",
+      "delivery_default_html": "<p>نغلّف المنتجات الطازجة صباح يوم إرسالها ونرسلها بتوصيل قابل للتتبع. تظهر أيام التوصيل وتكلفته لعنوانك عند الدفع.</p><p>لا يمكن إرجاع المواد الغذائية لأسباب صحية. إذا وصل منتج تالفًا أو مختلفًا عن الوصف، تواصل معنا خلال 48 ساعة وسنعالج الأمر.</p>"
+    },
+    "stock": {
+      "in": "متوفر وجاهز للتعبئة",
+      "low": "بقي {{ count }} فقط في البسطة",
+      "out": "نفدت الكمية حاليًا",
+      "gift_card": "تصلك بالبريد الإلكتروني وجاهزة للاستخدام في المتجر",
+      "delivery_free": "التوصيل مجاني للطلبات من {{ amount }}. تفاصيل التوصيل والإرجاع في الأسفل.",
+      "delivery_checkout": "تظهر تكلفة التوصيل إلى عنوانك عند الدفع. تفاصيل التوصيل والإرجاع في الأسفل."
+    },
+    "badge_sale": "تخفيض"
+  },
+  "collections": {
+    "eyebrow": "مجموعة",
+    "all_title": "المجموعات",
+    "filter": "تصفية",
+    "sort_by": "ترتيب حسب",
+    "from": "من",
+    "to": "إلى",
+    "clear_all": "مسح الكل",
+    "remove_filter": "إزالة عامل التصفية",
+    "show_results": "عرض النتائج",
+    "shop_by_colour": "تسوّق حسب اللون",
+    "empty": "لا يوجد على هذا الرف ما يطابق هذه الفلاتر.",
+    "view_all": "عرض الكل",
+    "placeholder_title": "مجموعتك",
+    "product_count": {
+      "zero": "لا توجد منتجات",
+      "one": "منتج واحد",
+      "two": "منتجان",
+      "few": "{{ count }} منتجات",
+      "many": "{{ count }} منتجًا",
+      "other": "{{ count }} منتج"
+    },
+    "showing": "عرض {{ shown }} من {{ total }}",
+    "load_more": "تحميل المزيد",
+    "show": "العرض",
+    "per_page": "{{ number }} في الصفحة"
+  },
+  "cart": {
+    "title": "السلة",
+    "title_with_count": {
+      "zero": "السلة، فارغة",
+      "one": "السلة، منتج واحد",
+      "two": "السلة، منتجان",
+      "few": "السلة، {{ count }} منتجات",
+      "many": "السلة، {{ count }} منتجًا",
+      "other": "السلة، {{ count }} منتج"
+    },
+    "added": "تمت الإضافة إلى سلتك",
+    "empty": "سلتك فارغة",
+    "continue": "متابعة التسوق",
+    "remove": "إزالة",
+    "quantity_for": "كمية {{ title }}",
+    "note": "ملاحظة الطلب",
+    "subtotal": "المجموع الفرعي",
+    "duties_taxes_included": "شامل الرسوم الجمركية والضرائب. تُؤكَّد تكلفة التوصيل إلى عنوانك عند الدفع.",
+    "taxes_included": "شامل الضرائب. تُؤكَّد تكلفة التوصيل إلى عنوانك عند الدفع.",
+    "taxes_at_checkout": "تُؤكَّد الضرائب وتكلفة التوصيل إلى عنوانك عند الدفع.",
+    "checkout": "الدفع",
+    "update": "تحديث السلة",
+    "view": "عرض السلة",
+    "order_summary": "طلبك",
+    "empty_hint": "لا يوجد شيء في السلة بعد. اختر شيئًا طازجًا لتبدأ.",
+    "each": "{{ price }} للقطعة",
+    "free_delivery": {
+      "left_html": "أضف <strong>{{ amount }}</strong> إلى سلتك لتحصل على توصيل مجاني",
+      "done": "سلتك تصلك مجانًا: التوصيل علينا",
+      "label": "التقدم نحو التوصيل المجاني"
+    },
+    "note_label": "بطاقة إهداء أو ملاحظة على الطلب",
+    "note_hint": "نكتب رسالة الإهداء بخط اليد على بطاقة داخل العلبة. ويمكنك أيضًا إخبار المطبخ هنا بأي حساسية غذائية."
+  },
+  "sections": {
+    "ingredients": {
+      "ingredients": "المكونات",
+      "allergens": "مسببات الحساسية",
+      "contains": "يحتوي على",
+      "may_contain": "قد يحتوي على",
+      "free_from": "خالٍ من",
+      "none": "قائمة المكونات الكاملة موجودة في صفحة المنتج.",
+      "no_allergens": "لا توجد مسببات حساسية مدرجة لهذا المنتج."
+    },
+    "visit": {
+      "hours": "ساعات العمل"
+    }
+  },
+  "newsletter": {
+    "label": "البريد الإلكتروني",
+    "button": "اشترك",
+    "success": "شكرًا لاشتراكك."
+  },
+  "contact": {
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "phone": "رقم الهاتف",
+    "message": "الرسالة",
+    "send": "إرسال",
+    "success": "شكرًا لتواصلك معنا. سنرد عليك في أقرب وقت ممكن.",
+    "title": "نموذج التواصل",
+    "order": "رقم الطلب",
+    "topic": "الموضوع",
+    "consent": "الموافقة",
+    "consent_yes": "نعم",
+    "consent_default": "أوافق على استخدام بياناتي للرد على هذه الرسالة.",
+    "error_heading": "يرجى مراجعة النموذج:",
+    "required_note": "الحقول المميزة بعلامة * مطلوبة.",
+    "info_label": "طرق أخرى للتواصل معنا",
+    "hours": "ساعات العمل",
+    "address": "العنوان"
+  },
+  "blogs": {
+    "all": "الكل",
+    "tags": "المواضيع",
+    "empty": "لا توجد مقالات بعد.",
+    "comments": {
+      "title": {
+        "zero": "لا توجد تعليقات",
+        "one": "تعليق واحد",
+        "two": "تعليقان",
+        "few": "{{ count }} تعليقات",
+        "many": "{{ count }} تعليقًا",
+        "other": "{{ count }} تعليق"
+      },
+      "leave": "اترك تعليقًا",
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "message": "التعليق",
+      "post": "نشر التعليق",
+      "posted": "تم نشر تعليقك.",
+      "moderated": "شكرًا. سيظهر تعليقك بعد الموافقة عليه.",
+      "moderation_note": "تتم مراجعة التعليقات قبل نشرها."
+    },
+    "read_time": "مدة القراءة: {{ minutes }} دقيقة",
+    "print": "اطبع هذه الصفحة",
+    "tag_names": {
+      "recipes": "وصفات",
+      "spices": "البهارات",
+      "tea": "الشاي",
+      "guides": "أدلة",
+      "dates": "التمور",
+      "breakfast": "الفطور",
+      "bakery": "المخبز"
+    }
+  },
+  "footer": {
+    "credit": "قالب من ZeronKit",
+    "payment_methods": "طرق الدفع",
+    "policies": "السياسات"
+  },
+  "social": {
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "facebook": "Facebook",
+    "pinterest": "Pinterest",
+    "youtube": "YouTube",
+    "snapchat": "Snapchat",
+    "twitter": "X"
+  },
+  "not_found": {
+    "title": "نفدت من اللوح",
+    "text": "هذه الصفحة لم تعد في البسطة، وقد يكون الرابط قديمًا. ابحث أدناه أو اختر شيئًا ما زال على اللوح.",
+    "collections": "مجموعات شائعة"
+  },
+  "password": {
+    "opening_soon": "نفتح قريبًا",
+    "newsletter": "اترك بريدك الإلكتروني لنخبرك عند الافتتاح.",
+    "enter": "الدخول بكلمة المرور",
+    "label": "كلمة المرور",
+    "submit": "دخول",
+    "owner_html": "هل أنت صاحب المتجر؟ <a href=\"{{ link }}\">سجّل الدخول هنا</a>",
+    "powered_by_html": "سيعمل هذا المتجر بواسطة {{ shopify }}"
+  },
+  "gift_card": {
+    "title": "بطاقة هدايا بقيمة {{ value }} من {{ shop }}",
+    "heading": "بطاقة الهدايا الخاصة بك",
+    "initial_value": "القيمة الأصلية {{ value }}",
+    "expired": "منتهية الصلاحية أو معطّلة",
+    "expires_on": "تنتهي في {{ date }}",
+    "code_label": "رمز بطاقة الهدايا",
+    "copy": "نسخ الرمز",
+    "copied": "تم نسخ الرمز",
+    "qr_label": "رمز QR لبطاقة الهدايا هذه",
+    "apple_wallet": "أضف إلى Apple Wallet",
+    "shop": "ابدأ التسوق",
+    "print": "طباعة"
+  },
+  "mg": {
+    "announcement": {
+      "message_1_text_html": "توصيل مجاني داخل أمريكا للطلبات من 70$",
+      "message_2_text_html": "نخبز طلبك صباح يوم شحنه",
+      "message_3_text_html": "أضف بطاقة إهداء بخط اليد من السلة"
+    },
+    "cart_drawer": {
+      "note": "نعبّئ المخبوزات الطازجة في يوم شحنها.",
+      "suggestions_heading": "أضف إلى السلة"
+    },
+    "collection_list": {
+      "heading": "املأ سلتك"
+    },
+    "contact_form": {
+      "heading": "راسل البسطة",
+      "intro_html": "<p>هل لديك سؤال عن طلب أو مسببات الحساسية أو صوانٍ لمناسبة؟ أرسل لنا رسالة وسنرد بالبريد الإلكتروني خلال يوم عمل واحد.</p>",
+      "button_label": "إرسال الرسالة",
+      "success_message": "شكرًا لك. سنرد عليك خلال يوم عمل واحد.",
+      "info_heading": "أيام الخبز",
+      "info_hours_html": "<p>من الثلاثاء إلى السبت، من 9:00 حتى 17:00<br>الأحد والاثنين، يستريح الفرن</p>",
+      "info_note_html": "<p>تدخل الطلبات الواردة قبل الساعة 14:00 في خبز صباح اليوم التالي.</p>",
+      "name_label": "الاسم",
+      "email_label": "البريد الإلكتروني",
+      "topic_label": "الموضوع",
+      "topic_options": "طلب، مسببات الحساسية، صوانٍ لمناسبة، التوصيل، أخرى",
+      "topic_placeholder": "اختر الموضوع",
+      "order_label": "رقم الطلب",
+      "order_placeholder": "#1001",
+      "message_label": "الرسالة",
+      "links_heading": "صفحات مفيدة",
+      "hours_1_days": "من الثلاثاء إلى السبت",
+      "hours_1_hours": "9:00 حتى 17:00",
+      "hours_2_days": "الأحد والاثنين",
+      "hours_2_hours": "الفرن في استراحة",
+      "stub_title": "الرد بالبريد",
+      "stub_text": "نرد خلال يوم عمل واحد، من الثلاثاء إلى السبت."
+    },
+    "featured_collection": {
+      "heading": "طازج هذا الأسبوع"
+    },
+    "featured_product": {
+      "eyebrow": "الأكثر طلبًا في البسطة"
+    },
+    "footer": {
+      "brand_text_html": "<p>خبز وحلويات وتمور وبهارات عراقية، نخبزها ونعبّئها بكميات صغيرة لسهرات العائلة وصواني الضيافة.</p>",
+      "menu_1_heading": "المتجر",
+      "menu_2_heading": "المساعدة",
+      "newsletter_1_heading": "رسائل من البسطة",
+      "newsletter_1_text_html": "<p>رسالة واحدة كل شهر فيها وصفة وأخبار ما خبزناه حديثًا، وعرض من حين لآخر.</p>",
+      "week_heading": "أسبوع الخبز",
+      "week_on": "الفرن يعمل",
+      "week_off": "الفرن في استراحة",
+      "week_note": "اطلب متى شئت، وكل طلب يصلنا قبل الساعة 14:00 يُخبز صباح اليوم التالي.",
+      "col_shop": "المتجر",
+      "col_print": "التفاصيل",
+      "hint_free": "مجاني من {{ amount }}",
+      "hints": {
+        "contact": "نرد خلال يوم",
+        "faq": "قبل أن تطلب",
+        "about": "حكايتنا"
+      }
+    },
+    "header": {
+      "navigator_label": "المتجر",
+      "sign_note": "مخبز ومؤونة عراقية",
+      "search_prompt": "ابحث في البسطة",
+      "basket": "السلة",
+      "open_menu": "افتح القائمة",
+      "navigator_title": "تجوّل في البسطة",
+      "shelves": "على رفوف البسطة اليوم",
+      "ask": "ماذا تشتهي اليوم؟"
+    },
+    "home_bake_schedule": {
+      "heading": "متى نوقد التنور",
+      "text_html": "<p>نتبع في كل يوم خبز الترتيب نفسه، وكل طلب يصلنا قبل الساعة 14:00 يُخبز صباح اليوم التالي.</p>",
+      "small_print": "نخبز من الثلاثاء إلى السبت، والمواعيد تقريبية.",
+      "b1_time": "6:30",
+      "b1_item": "خبز التنور",
+      "b1_note": "كل يوم خبز",
+      "b2_time": "8:00",
+      "b2_item": "الصمون وكعك السمسم",
+      "b2_note": "دفعة ثانية في الساعة 10:30",
+      "b3_time": "11:00",
+      "b3_item": "خبز الجبن",
+      "b4_time": "14:00",
+      "b4_item": "الكليچة والحلويات",
+      "b4_note": "الخميس والسبت"
+    },
+    "home_counter": {
+      "hours_text": "الفرن يعمل من الثلاثاء إلى السبت",
+      "board_heading": "ما نخبزه الليلة"
+    },
+    "home_ingredients": {
+      "heading": "مما نصنع الكليچة",
+      "text_html": "<p>مكونات قليلة وحقيقية، وهذه بالضبط مكونات كليچة التمر التي نخبزها.</p>",
+      "ingredients_html": "<p>دقيق القمح، زبدة، عجينة تمر الزهدي، حليب، سكر، سمسم، هيل، حبة البركة، خميرة، ملح.</p>",
+      "disclaimer": "نُعدّها في مطبخ تُستخدم فيه المكسرات والسمسم والغلوتين، فاقرأ الملصق على العبوة دائمًا.",
+      "a1_name": "الغلوتين (القمح)",
+      "a2_name": "السمسم",
+      "a3_name": "الحليب",
+      "a4_name": "البيض"
+    },
+    "home_menu_board": {
+      "heading": "قائمة البسطة كاملة",
+      "text_html": "<p>كل ما تعرضه البسطة في قائمة واحدة، كما نكتبها بالطباشير على السبورة.</p>",
+      "button_label": "تصفّح كل المنتجات"
+    },
+    "home_visit": {
+      "heading": "أيام الخبز",
+      "note_html": "<p>اطلب متى شئت. يخرج الخبز الطازج من فرننا في أيام الخبز، أما المؤونة فنشحنها طوال الأسبوع.</p>",
+      "button_label": "التوصيل والإرجاع",
+      "h1_days": "من الثلاثاء إلى الخميس",
+      "h1_hours": "الخبز والحلويات",
+      "h2_days": "الجمعة والسبت",
+      "h2_hours": "الحلويات والمؤونة",
+      "h3_days": "الأحد والاثنين",
+      "h3_hours": "الفرن في استراحة"
+    },
+    "main_404": {
+      "products_heading": "ما زال متوفرًا في البسطة"
+    },
+    "main_cart": {
+      "ticket_note_html": "<p>نعبّئ المخبوزات الطازجة في يوم شحنها. وإن كانت لديك حساسية غذائية فاذكرها في الملاحظة.</p>",
+      "suggestions_heading": "ما زال على اللوح"
+    },
+    "main_collection": {
+      "banner_note": "بضاعة طازجة في كل يوم خبز"
+    },
+    "main_product": {
+      "larder_heading": "من المؤونة",
+      "buy_plan_note": "يمكنك تخطي التوصيلات أو إيقافها أو إلغاؤها في أي وقت.",
+      "freshness_heading": "نخبزه ونوصله",
+      "freshness_cutoff": "اطلب قبل الساعة 14:00 ليصلك في يوم الخبز التالي.",
+      "freshness_fresh_note": "نخبزه صباح يوم إرساله، ويكون في أطيب حالاته خلال ثلاثة أيام.",
+      "complementary_heading": "يُقدَّم معه",
+      "storage_heading": "الحفظ",
+      "shipping_heading": "التوصيل والإرجاع",
+      "ingredients_heading": "المكونات ومسببات الحساسية",
+      "ingredients_allergen_note": "نُعدّه في مطبخ تُستخدم فيه أيضًا المكسرات والسمسم والغلوتين والبيض والحليب.",
+      "nutrition_heading": "القيم الغذائية",
+      "nutrition_basis": "لكل 100 غ",
+      "nutrition_serving_heading": "لكل حصة",
+      "nutrition_footnote": "الاحتياج المرجعي لشخص بالغ متوسط (8400 كيلوجول / 2000 سعرة حرارية).",
+      "pairing_heading": "قدّمه مع",
+      "pairing_products_heading": "يتناغم مع"
+    },
+    "main_search": {
+      "heading": "ماذا تشتهي اليوم؟"
+    },
+    "newsletter": {
+      "heading": "رسائل من البسطة",
+      "text_html": "<p>رسالة واحدة كل شهر فيها وصفة وأخبار ما خبزناه حديثًا، وعرض من حين لآخر. ويمكنك إلغاء الاشتراك متى شئت.</p>"
+    },
+    "product_recommendations": {
+      "heading": "المزيد من البسطة"
+    },
+    "blocks": {
+      "heading_html": "خبز وتمر وبهارات لسهرات طويلة على ضفاف دجلة",
+      "text_eyebrow_html": "<p>طازج من التنور</p>",
+      "text_body_html": "<p>خبز وحلويات ومؤونة عراقية نخبزها ونعبّئها بكميات صغيرة. اطلب قبل الساعة 14:00 ليصلك طلبك من خبز اليوم التالي.</p>",
+      "text_large_html": "<p>خبز وحلويات وتمور وبهارات عراقية.</p>",
+      "text_small_html": "<p>نخبز من الثلاثاء إلى السبت.</p>",
+      "button_label": "تسوّق من المخبز"
+    },
+    "not_found": {
+      "board_title": "الليلة",
+      "line_1": "خبز التنور",
+      "line_2": "الصفحة 404",
+      "line_3": "الكليچة",
+      "on": "متوفر",
+      "out": "نفد"
+    },
+    "search": {
+      "popular": "تمر, كليچة, بهارات, شاي, خبز تنور",
+      "popular_today": "الأكثر طلبًا اليوم",
+      "asked": "طلبت «{{ terms }}»",
+      "none_title": "ليس على اللوح اليوم",
+      "none_hint": "لا شيء يطابق «{{ terms }}». جرّب كلمة أقصر أو واحدة من هذه:"
+    },
+    "meta": {
+      "home": "{{ shop }}: خبز طازج وحلويات وتمور ومؤونة، نخبزها عند الطلب ونوصلها إلى بابك.",
+      "collections": "كل رفوف {{ shop }}: الخبز والحلويات والتمور والمؤونة والشاي والقهوة والهدايا.",
+      "collection": "{{ title }} من {{ shop }}، نخبزها أو نجهزها عند الطلب ونوصلها إليك.",
+      "product": "{{ title }} من {{ shop }}.",
+      "blog": "{{ blog }} من {{ shop }}: وصفات وأدلة وملاحظات من المطبخ. الأحدث: {{ titles }}.",
+      "search": "ابحث في مخبوزات {{ shop }} ومؤونته ووصفاته وصفحاته.",
+      "search_results": "نتائج البحث عن {{ terms }} في {{ shop }}.",
+      "cart": "سلتك في {{ shop }}: راجع الأحجام وأضف بطاقة إهداء ثم أكمل الطلب.",
+      "policy": "{{ title }} لطلبات {{ shop }}: ما تتوقعه منا وكيف نصلح أي خطأ.",
+      "page": "{{ title }} من {{ shop }}.",
+      "separator": "، "
+    },
+    "line": {
+      "add": "أضف {{ title }} إلى السلة",
+      "add_variant": "أضف {{ title }}، {{ variant }} إلى السلة",
+      "choose": "اختر",
+      "choose_label": "اختر حجم {{ title }}",
+      "sold_out_today": "نفد اليوم"
+    },
+    "board": {
+      "items": {
+        "zero": "لا أصناف",
+        "one": "صنف واحد",
+        "two": "صنفان",
+        "few": "{{ count }} أصناف",
+        "many": "{{ count }} صنفًا",
+        "other": "{{ count }} صنف"
+      },
+      "all": "الكل",
+      "everything": "كل شيء",
+      "tabs_label": "تسوّق حسب الصنف",
+      "more_filters": "تصفية أكثر",
+      "more": "المزيد من اللوح",
+      "still": "ما زال على اللوح"
+    },
+    "nav": {
+      "see_all": "عرض الكل ({{ count }})",
+      "stories": {
+        "zero": "لا قصص",
+        "one": "قصة واحدة",
+        "two": "قصتان",
+        "few": "{{ count }} قصص",
+        "many": "{{ count }} قصة",
+        "other": "{{ count }} قصة"
+      },
+      "around": "حول البسطة"
+    },
+    "tray": {
+      "everything": "كل ما هو طازج"
+    },
+    "map": {
+      "hint": "كل رفوف البسطة مرقّمة. اختر واحدًا من الدليل."
+    },
+    "cart": {
+      "your_order": {
+        "zero": "طلبك فارغ",
+        "one": "طلبك: صنف واحد",
+        "two": "طلبك: صنفان",
+        "few": "طلبك: {{ count }} أصناف",
+        "many": "طلبك: {{ count }} صنفًا",
+        "other": "طلبك: {{ count }} صنف"
+      }
+    },
+    "about": {
+      "kicker": "يوم في البسطة",
+      "facts": "البسطة باختصار",
+      "fact_1_label": "التأسيس",
+      "fact_1_value": "2026",
+      "fact_2_label": "أيام الخبز",
+      "fact_2_value": "من الثلاثاء إلى السبت",
+      "fact_3_label": "الأفران",
+      "fact_3_value": "فرن حجري وتنور طيني",
+      "fact_4_label": "مدة الرد",
+      "fact_4_value": "يوم عمل واحد"
+    },
+    "faq": {
+      "meta": "أسئلة البسطة وأجوبتها",
+      "topics": "انتقل إلى موضوع",
+      "topic_1_label": "الطزاجة",
+      "topic_2_label": "مسببات الحساسية",
+      "topic_3_label": "الصواني والهدايا",
+      "topic_4_label": "التوصيل",
+      "topic_5_label": "الحفظ"
+    },
+    "blog": {
+      "newest": "الأحدث على اللوح"
+    },
+    "article": {
+      "glance": "نظرة سريعة",
+      "ingredients": "ما تحتاجه",
+      "shop": "تسوّق المكونات"
+    },
+    "password": {
+      "closed": "مغلق حتى يوم الافتتاح",
+      "line_1_label": "يوم الافتتاح",
+      "line_1_value": "قريبًا، تابع بريدك",
+      "line_2_label": "أيام الخبز",
+      "line_2_value": "من الثلاثاء إلى السبت",
+      "line_3_label": "أول خبزة",
+      "line_3_value": "6:30 صباحًا"
+    }
+  }
+}

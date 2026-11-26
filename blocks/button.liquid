@@ -1,0 +1,44 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign mg_bk = 'mg.blocks.button_label'
+  assign bt_label = mg_bk | t
+  if bt_label contains 'ranslation missing'
+    assign bt_label = ''
+  endif
+  if block.settings.label != blank
+    assign bt_label = block.settings.label
+  endif
+-%}
+{%- if bt_label != blank -%}
+  <a
+    class="cw-block cw-button cw-button--{{ block.settings.style }}"
+    {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% else %}role="link" aria-disabled="true"{% endif %}
+    {{ block.shopify_attributes }}
+  >
+    {{- bt_label | escape -}}
+    {%- if block.settings.show_arrow %} {% render 'icon', name: 'arrow' %}{% endif -%}
+  </a>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:names.button",
+  "settings": [
+    { "type": "text", "id": "label", "label": "t:labels.button_label" },
+    { "type": "url", "id": "link", "label": "t:labels.link" },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:labels.style",
+      "options": [
+        { "value": "primary", "label": "t:options.solid" },
+        { "value": "ghost", "label": "t:options.outline" },
+        { "value": "text", "label": "t:options.text_link" }
+      ],
+      "default": "primary"
+    },
+    { "type": "checkbox", "id": "show_arrow", "label": "t:labels.show_arrow", "default": true }
+  ],
+  "presets": [{ "name": "t:names.button" }]
+}
+{% endschema %}

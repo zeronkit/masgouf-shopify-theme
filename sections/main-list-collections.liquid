@@ -1,0 +1,112 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  The stall map: a wide picture of the stall with numbered pins, one per collection, and the key under it in two columns
+  (number, name, dotted leader, product count, arrow). Pins come from blocks with x and y positions; without blocks every
+  collection gets a pin, spread evenly along the counter. Hovering or focusing a key line lights its pin and the other way round.
+{%- endcomment -%}
+{%- liquid
+  assign map_image = section.settings.image
+  if map_image == blank
+    for c in collections
+      if c.featured_image
+        assign map_image = c.featured_image
+        break
+      endif
+    endfor
+  endif
+  assign use_blocks = false
+  if section.blocks.size > 0
+    assign use_blocks = true
+  endif
+-%}
+<section class="cw-section mg-map-page color-{{ section.settings.color_scheme }}">
+  <div class="cw-wrap">
+    <header class="mg-map__head">
+      {%- if section.settings.eyebrow != blank -%}<p class="cw-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+      <h1 class="cw-h1 mg-map__title">{{ 'collections.all_title' | t }}</h1>
+      <p class="mg-map__hint">{{ 'mg.map.hint' | t }}</p>
+    </header>
+    {%- paginate collections by 24 -%}
+      {%- liquid
+        if use_blocks
+          assign pin_total = section.blocks.size
+        else
+          assign pin_total = collections.size
+        endif
+      -%}
+      <div class="mg-map" data-mg-map>
+        <div class="mg-map__picture">
+          {%- if map_image != blank -%}
+            {% render 'image', image: map_image, sizes: '(min-width: 1300px) 1220px, 100vw', max: 2400, alt: '', eager: true %}
+          {%- endif -%}
+          <ul class="mg-map__pins" role="list" aria-hidden="true">
+            {%- if use_blocks -%}
+              {%- for block in section.blocks -%}
+                {%- assign c = block.settings.collection -%}
+                {%- if c != blank -%}
+                  <li class="mg-pin" style="--x: {{ block.settings.x }}%; --y: {{ block.settings.y }}%;" {{ block.shopify_attributes }}>
+                    <a href="{{ c.url }}" tabindex="-1" data-mg-pin="{{ forloop.index }}"><span class="mg-pin__num"><span>{{ forloop.index }}</span></span><span class="mg-pin__label">{{ c.title | escape }}</span></a>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- else -%}
+              {%- for c in collections -%}
+                {%- liquid
+                  assign x = forloop.index0 | times: 100 | plus: 50 | divided_by: pin_total
+                  assign y = 58
+                  assign odd = forloop.index | modulo: 2
+                  if odd == 0
+                    assign y = 74
+                  endif
+                -%}
+                <li class="mg-pin" style="--x: {{ x }}%; --y: {{ y }}%;">
+                  <a href="{{ c.url }}" tabindex="-1" data-mg-pin="{{ forloop.index }}"><span class="mg-pin__num"><span>{{ forloop.index }}</span></span><span class="mg-pin__label">{{ c.title | escape }}</span></a>
+                </li>
+              {%- endfor -%}
+            {%- endif -%}
+          </ul>
+        </div>
+        <ol class="mg-map__key" role="list">
+          {%- if use_blocks -%}
+            {%- for block in section.blocks -%}
+              {%- assign c = block.settings.collection -%}
+              {%- if c != blank -%}
+                <li><a class="mg-keyline" href="{{ c.url }}" data-mg-pin="{{ forloop.index }}"><span class="mg-keyline__num">{{ forloop.index }}</span><span class="mg-keyline__name">{{ c.title | escape }}</span><span class="mg-keyline__count">{{ 'mg.board.items' | t: count: c.products_count }}</span><span class="mg-keyline__arrow" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span></a></li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- else -%}
+            {%- for c in collections -%}
+              <li><a class="mg-keyline" href="{{ c.url }}" data-mg-pin="{{ forloop.index }}"><span class="mg-keyline__num">{{ forloop.index }}</span><span class="mg-keyline__name">{{ c.title | escape }}</span><span class="mg-keyline__count">{{ 'mg.board.items' | t: count: c.products_count }}</span><span class="mg-keyline__arrow" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span></a></li>
+            {%- endfor -%}
+          {%- endif -%}
+        </ol>
+      </div>
+      {% render 'pagination', paginate: paginate %}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.collections_list",
+  "class": "cw-shopify-section",
+  "enabled_on": { "templates": ["list-collections"] },
+  "max_blocks": 16,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow" },
+    { "type": "image_picker", "id": "image", "label": "t:labels.mg_stall_photo", "info": "t:info.mg_map_photo" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ],
+  "blocks": [
+    {
+      "type": "pin",
+      "name": "t:names.mg_pin",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "t:labels.collection" },
+        { "type": "range", "id": "x", "label": "t:labels.mg_pin_x", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+        { "type": "range", "id": "y", "label": "t:labels.mg_pin_y", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 60 }
+      ]
+    }
+  ]
+}
+{% endschema %}

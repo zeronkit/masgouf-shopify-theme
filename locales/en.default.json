@@ -1,0 +1,610 @@
+{
+  "accessibility": {
+    "skip_to_content": "Skip to content"
+  },
+  "general": {
+    "announcements": "Announcements",
+    "back": "Back",
+    "close": "Close",
+    "error": "Something went wrong. Please try again.",
+    "new_window": "opens in a new window",
+    "pause_video": "Pause background video",
+    "per": "per",
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous page",
+      "next": "Next page",
+      "page": "Page {{ number }}"
+    },
+    "pause_announcements": "Pause announcements",
+    "close_announcements": "Close announcements",
+    "slider": {
+      "previous": "Scroll back: {{ label }}",
+      "next": "Scroll forward: {{ label }}"
+    }
+  },
+  "header": {
+    "shop": "Shop",
+    "primary_nav": "Primary",
+    "quick_nav": "Quick links",
+    "search": "Search",
+    "collections": "Collections",
+    "view_all_plain": "View all",
+    "secondary_nav": "More links"
+  },
+  "localization": {
+    "country_label": "Country/region",
+    "language_label": "Language"
+  },
+  "search": {
+    "title": "Search",
+    "label": "Search the store",
+    "placeholder": "Bread, dates, gift boxes",
+    "submit": "Search",
+    "suggestions": "Search suggestions",
+    "results_for": "Results for \"{{ terms }}\"",
+    "view_all": "See all results for \"{{ terms }}\"",
+    "page": "Page",
+    "results_count": {
+      "one": "{{ count }} suggestion",
+      "other": "{{ count }} suggestions"
+    },
+    "page_heading": "What are you looking for?",
+    "tabs_label": "Result types",
+    "tab_all": "All",
+    "tab_products": "Products",
+    "tab_articles": "Articles",
+    "tab_pages": "Pages",
+    "matching_collections": "Matching collections",
+    "no_results_title": "Nothing found for \"{{ terms }}\"",
+    "no_results_hint": "Check the spelling, try a shorter word like bread or coffee, or pick one of the searches below.",
+    "you_may_like": "You may like",
+    "popular": "Popular searches",
+    "recent": "Recent searches",
+    "recent_clear": "Clear",
+    "new_in": "New in"
+  },
+  "products": {
+    "add_to_cart": "Add to cart",
+    "sold_out": "Sold out",
+    "unavailable": "Unavailable",
+    "unavailable_short": "out of stock",
+    "new": "New",
+    "view_details": "View full details",
+    "placeholder_title": "Your product",
+    "placeholder_help": "Choose a product in the theme editor to show it here.",
+    "sizes_label": "Sizes in stock:",
+    "colours_count": {
+      "one": "{{ count }} colour",
+      "other": "{{ count }} colours"
+    },
+    "tax_included": "Tax included.",
+    "shipping_policy_html": "<a href=\"{{ link }}\">Shipping</a> calculated at checkout.",
+    "purchase_options": "Purchase options",
+    "one_time": "One-time purchase",
+    "quantity": "Quantity",
+    "quantity_down": "Decrease quantity",
+    "quantity_up": "Increase quantity",
+    "price": {
+      "regular": "Regular price",
+      "sale": "Sale price",
+      "unit": "Unit price",
+      "from": "From {{ price }}",
+      "variant_offer": "{{ variant }} now {{ price }}"
+    },
+    "media": {
+      "gallery": "Product images",
+      "play_video": "Play video",
+      "load_model": "Load 3D model",
+      "view_in_space": "View in your space",
+      "zoom": "Open larger image",
+      "previous": "Previous image",
+      "next": "Next image"
+    },
+    "pickup": {
+      "available_at_html": "Pickup available at <strong>{{ location }}</strong>",
+      "unavailable_at_html": "Pickup currently unavailable at <strong>{{ location }}</strong>",
+      "view_stores": "Check other stores",
+      "ready": "Ready for pickup:",
+      "not_ready": "Not available for pickup right now"
+    },
+    "tabs": {
+      "shipping_policy": "Shipping policy",
+      "refund_policy": "Returns and refunds policy"
+    },
+    "show_colour": "Show {{ colour }}",
+    "colour_map": "noir:black,blanc:white,gris:grey,vert:green,rouge:red,bleu:blue,marine:navy,rose:pink,jaune:yellow,beige:beige,marron:brown,violet:purple,doré:gold,argenté:silver,crème:cream,negro:black,blanco:white,gris:grey,verde:green,rojo:red,azul:blue,marino:navy,rosa:pink,amarillo:yellow,marrón:brown,morado:purple,dorado:gold,plateado:silver,crema:cream,schwarz:black,weiß:white,weiss:white,grau:grey,grün:green,rot:red,blau:blue,marineblau:navy,gelb:yellow,braun:brown,lila:purple,golden:gold,silbern:silver",
+    "option_names": {
+      "colour": "Color,Colour,Couleur,Farbe,Colore,Kleur,Kolor,Renk,Cor",
+      "size": "Size,Taille,Größe,Talla,Taglia,Maat,Rozmiar,Beden,Tamanho"
+    },
+    "food": {
+      "contains": "Contains",
+      "suitable_for": "Suitable for",
+      "may_contain": "May contain",
+      "editor_hint": "{{ name }}: this block shows when the product has data for it. See the block settings for the metafields it reads.",
+      "nutrient": "Nutrient",
+      "net_weight": "Net weight",
+      "pieces": "Pack",
+      "serves": "Serves",
+      "serving_size": "Serving size",
+      "days": {
+        "mon": "Monday",
+        "tue": "Tuesday",
+        "wed": "Wednesday",
+        "thu": "Thursday",
+        "fri": "Friday",
+        "sat": "Saturday",
+        "sun": "Sunday"
+      },
+      "days_short": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+      },
+      "day_on": "{{ day }}: delivery day",
+      "day_off": "{{ day }}: no delivery",
+      "storage": "Storage",
+      "best_within": "Best within",
+      "read_recipe": "Read the recipe",
+      "save_percent": "Save {{ percent }}%",
+      "per_delivery": "{{ price }} per delivery",
+      "in_stock": "In stock, baked to order",
+      "breadcrumb": "Breadcrumb",
+      "home": "Home",
+      "show_image": "Show image {{ index }}",
+      "storage_default_html": "<p>Keep in a cool, dry place away from direct sunlight. Once opened, store in an airtight container. Breads and cakes can be frozen on the day they arrive.</p>",
+      "delivery_default_html": "<p>Fresh items are packed on the morning they leave us and sent by tracked delivery. Delivery days and costs for your address are shown at checkout.</p><p>Food cannot be returned for hygiene reasons. If something arrives damaged or not as described, contact us within 48 hours and we will put it right.</p>"
+    },
+    "stock": {
+      "in": "In stock, ready to pack",
+      "low": "Only {{ count }} left on the stall",
+      "out": "Sold out for now",
+      "gift_card": "Sent by email, ready to spend online",
+      "delivery_free": "Free delivery on orders from {{ amount }}. Delivery and returns are explained below.",
+      "delivery_checkout": "Delivery to your address is priced at checkout. Delivery and returns are explained below."
+    },
+    "badge_sale": "Sale"
+  },
+  "collections": {
+    "eyebrow": "Collection",
+    "all_title": "Collections",
+    "filter": "Filter",
+    "sort_by": "Sort by",
+    "from": "From",
+    "to": "To",
+    "clear_all": "Clear all",
+    "remove_filter": "Remove filter",
+    "show_results": "Show results",
+    "shop_by_colour": "Shop by colour",
+    "empty": "Nothing on this shelf matches these filters.",
+    "view_all": "View all",
+    "placeholder_title": "Your collection",
+    "product_count": {
+      "one": "{{ count }} product",
+      "other": "{{ count }} products"
+    },
+    "showing": "Showing {{ shown }} of {{ total }}",
+    "load_more": "Load more",
+    "show": "Show",
+    "per_page": "{{ number }} per page"
+  },
+  "cart": {
+    "title": "Cart",
+    "title_with_count": {
+      "one": "Cart, {{ count }} item",
+      "other": "Cart, {{ count }} items"
+    },
+    "added": "Added to your cart",
+    "empty": "Your basket is empty",
+    "continue": "Continue shopping",
+    "remove": "Remove",
+    "quantity_for": "Quantity for {{ title }}",
+    "note": "Order note",
+    "subtotal": "Subtotal",
+    "duties_taxes_included": "Duties and taxes included. Delivery to your address is confirmed at checkout.",
+    "taxes_included": "Taxes included. Delivery to your address is confirmed at checkout.",
+    "taxes_at_checkout": "Taxes and delivery to your address are confirmed at checkout.",
+    "checkout": "Check out",
+    "update": "Update cart",
+    "view": "View cart",
+    "order_summary": "Your order",
+    "empty_hint": "Nothing in the basket yet. Pick something fresh to get started.",
+    "each": "{{ price }} each",
+    "free_delivery": {
+      "left_html": "Add <strong>{{ amount }}</strong> more for free delivery",
+      "done": "Your basket travels free: delivery is on us",
+      "label": "Progress to free delivery"
+    },
+    "note_label": "Gift note or order note",
+    "note_hint": "Gift notes are written by hand on a card in the box. You can also tell the kitchen about allergies here."
+  },
+  "sections": {
+    "ingredients": {
+      "ingredients": "Ingredients",
+      "allergens": "Allergens",
+      "contains": "Contains",
+      "may_contain": "May contain",
+      "free_from": "Free from",
+      "none": "The full ingredient list is on the product page.",
+      "no_allergens": "No allergens are listed for this product."
+    },
+    "visit": {
+      "hours": "Opening hours"
+    }
+  },
+  "newsletter": {
+    "label": "Email address",
+    "button": "Sign up",
+    "success": "Thanks for signing up."
+  },
+  "contact": {
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone number",
+    "message": "Message",
+    "send": "Send",
+    "success": "Thanks for writing to us. We will get back to you as soon as we can.",
+    "title": "Contact form",
+    "order": "Order number",
+    "topic": "Topic",
+    "consent": "Consent",
+    "consent_yes": "Yes",
+    "consent_default": "I agree that my details are used to answer this message.",
+    "error_heading": "Please check the form:",
+    "required_note": "Fields marked * are required.",
+    "info_label": "Other ways to reach us",
+    "hours": "Opening hours",
+    "address": "Address"
+  },
+  "blogs": {
+    "all": "All",
+    "tags": "Topics",
+    "empty": "No posts yet.",
+    "comments": {
+      "title": {
+        "one": "{{ count }} comment",
+        "other": "{{ count }} comments"
+      },
+      "leave": "Leave a comment",
+      "name": "Name",
+      "email": "Email",
+      "message": "Comment",
+      "post": "Post comment",
+      "posted": "Your comment was posted.",
+      "moderated": "Thanks. Your comment will appear once it is approved.",
+      "moderation_note": "Comments are checked before they are published."
+    },
+    "read_time": "{{ minutes }} min read",
+    "print": "Print this page",
+    "tag_names": {
+      "recipes": "Recipes",
+      "spices": "Spices",
+      "tea": "Tea",
+      "guides": "Guides",
+      "dates": "Dates",
+      "breakfast": "Breakfast",
+      "bakery": "Bakery"
+    }
+  },
+  "footer": {
+    "credit": "Theme by ZeronKit",
+    "payment_methods": "Payment methods",
+    "policies": "Policies"
+  },
+  "social": {
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "facebook": "Facebook",
+    "pinterest": "Pinterest",
+    "youtube": "YouTube",
+    "snapchat": "Snapchat",
+    "twitter": "X"
+  },
+  "not_found": {
+    "title": "Sold out on the board",
+    "text": "This page is not on the stall any more. The link may be old. Search below or pick something still on the board.",
+    "collections": "Popular collections"
+  },
+  "password": {
+    "opening_soon": "Opening soon",
+    "newsletter": "Leave your email to hear when we open.",
+    "enter": "Enter with password",
+    "label": "Password",
+    "submit": "Enter",
+    "owner_html": "Are you the store owner? <a href=\"{{ link }}\">Log in here</a>",
+    "powered_by_html": "This shop will be powered by {{ shopify }}"
+  },
+  "gift_card": {
+    "title": "Your {{ value }} gift card for {{ shop }}",
+    "heading": "Your gift card",
+    "initial_value": "Original value {{ value }}",
+    "expired": "Expired or disabled",
+    "expires_on": "Expires on {{ date }}",
+    "code_label": "Gift card code",
+    "copy": "Copy code",
+    "copied": "Code copied",
+    "qr_label": "QR code for this gift card",
+    "apple_wallet": "Add to Apple Wallet",
+    "shop": "Start shopping",
+    "print": "Print"
+  },
+  "mg": {
+    "announcement": {
+      "message_1_text_html": "Free US delivery on orders from $70",
+      "message_2_text_html": "Baked fresh the morning it ships",
+      "message_3_text_html": "Add a handwritten gift note in the cart"
+    },
+    "cart_drawer": {
+      "note": "Fresh bakes are packed on the day they ship.",
+      "suggestions_heading": "Add to the basket"
+    },
+    "collection_list": {
+      "heading": "Fill your basket"
+    },
+    "contact_form": {
+      "heading": "Write to the stall",
+      "intro_html": "<p>Questions about an order, an allergen or trays for a gathering? Send us a note and we reply by email within one business day.</p>",
+      "button_label": "Send message",
+      "success_message": "Thank you. We will reply within one business day.",
+      "info_heading": "Baking days",
+      "info_hours_html": "<p>Tuesday to Saturday, 9:00 to 17:00<br>Sunday and Monday, the oven rests</p>",
+      "info_note_html": "<p>Orders placed by 14:00 go into the next morning's bake.</p>",
+      "name_label": "Name",
+      "email_label": "Email",
+      "topic_label": "Topic",
+      "topic_options": "Order, Allergens, Trays for a gathering, Delivery, Other",
+      "topic_placeholder": "Choose a topic",
+      "order_label": "Order number",
+      "order_placeholder": "#1001",
+      "message_label": "Message",
+      "links_heading": "Useful pages",
+      "hours_1_days": "Tuesday to Saturday",
+      "hours_1_hours": "9:00 to 17:00",
+      "hours_2_days": "Sunday and Monday",
+      "hours_2_hours": "the oven rests",
+      "stub_title": "Reply by email",
+      "stub_text": "We answer within one business day, Tuesday to Saturday."
+    },
+    "featured_collection": {
+      "heading": "Fresh this week"
+    },
+    "featured_product": {
+      "eyebrow": "Stall favourite"
+    },
+    "footer": {
+      "brand_text_html": "<p>Iraqi bread, sweets, dates and spices, baked and packed in small batches for long evenings and shared trays.</p>",
+      "menu_1_heading": "Shop",
+      "menu_2_heading": "Help",
+      "newsletter_1_heading": "Letters from the stall",
+      "newsletter_1_text_html": "<p>One email a month: a recipe, what is fresh and the odd offer.</p>",
+      "week_heading": "Baking week",
+      "week_on": "Oven lit",
+      "week_off": "Oven rests",
+      "week_note": "Order any day. Orders placed by 14:00 go into the next morning’s bake.",
+      "col_shop": "Shop",
+      "col_print": "Small print",
+      "hint_free": "free from {{ amount }}",
+      "hints": {
+        "contact": "reply in a day",
+        "faq": "before you order",
+        "about": "our story"
+      }
+    },
+    "header": {
+      "navigator_label": "Shop",
+      "sign_note": "Iraqi bakery and pantry",
+      "search_prompt": "Search the stall",
+      "basket": "Basket",
+      "open_menu": "Open the menu",
+      "navigator_title": "Browse the stall",
+      "shelves": "On the shelves today",
+      "ask": "What would you like today?"
+    },
+    "home_bake_schedule": {
+      "heading": "When the tannour is lit",
+      "text_html": "<p>Every baking day follows the same order. Orders placed by 14:00 join the next morning's fire.</p>",
+      "small_print": "We bake from Tuesday to Saturday. Times are a guide.",
+      "b1_time": "6:30",
+      "b1_item": "Tannour flatbread",
+      "b1_note": "Every baking day",
+      "b2_time": "8:00",
+      "b2_item": "Samoon and sesame ka’ak",
+      "b2_note": "Second tray at 10:30",
+      "b3_time": "11:00",
+      "b3_item": "Baked cheese flatbread",
+      "b4_time": "14:00",
+      "b4_item": "Kleicha and sweets",
+      "b4_note": "Thursday and Saturday"
+    },
+    "home_counter": {
+      "hours_text": "Baking today, Tuesday to Saturday",
+      "board_heading": "On the board tonight"
+    },
+    "home_ingredients": {
+      "heading": "What goes into kleicha",
+      "text_html": "<p>Short lists, real ingredients. This is exactly what is in our date filled kleicha.</p>",
+      "ingredients_html": "<p>Wheat flour, butter, Zahdi date paste, milk, sugar, sesame, cardamom, nigella seeds, yeast, salt.</p>",
+      "disclaimer": "Made in a kitchen that handles nuts, sesame and gluten. Always check the label on the pack.",
+      "a1_name": "Gluten (wheat)",
+      "a2_name": "Sesame",
+      "a3_name": "Milk",
+      "a4_name": "Eggs"
+    },
+    "home_menu_board": {
+      "heading": "The whole board",
+      "text_html": "<p>Everything on the stall, written up the way it is on the board.</p>",
+      "button_label": "See every product"
+    },
+    "home_visit": {
+      "heading": "Baking days",
+      "note_html": "<p>Order any day. Fresh bread leaves the oven and our kitchen on baking days, pantry goods every weekday.</p>",
+      "button_label": "Delivery and returns",
+      "h1_days": "Tuesday to Thursday",
+      "h1_hours": "Bread and sweets",
+      "h2_days": "Friday and Saturday",
+      "h2_hours": "Sweets and pantry",
+      "h3_days": "Sunday and Monday",
+      "h3_hours": "The oven rests"
+    },
+    "main_404": {
+      "products_heading": "Still on the board"
+    },
+    "main_cart": {
+      "ticket_note_html": "<p>Fresh bakes are packed on the day they ship. Tell us about allergies in the order note.</p>",
+      "suggestions_heading": "Still on the board"
+    },
+    "main_collection": {
+      "banner_note": "Fresh stock every baking day"
+    },
+    "main_product": {
+      "larder_heading": "From the pantry",
+      "buy_plan_note": "Skip, pause or cancel your deliveries at any time.",
+      "freshness_heading": "Baked and delivered",
+      "freshness_cutoff": "Order by 14:00 for the next baking day.",
+      "freshness_fresh_note": "Baked the morning it leaves us. Best within three days.",
+      "complementary_heading": "Goes well with",
+      "storage_heading": "Storage",
+      "shipping_heading": "Delivery and returns",
+      "ingredients_heading": "Ingredients and allergens",
+      "ingredients_allergen_note": "Made in a kitchen that also handles nuts, sesame, gluten, eggs and milk.",
+      "nutrition_heading": "Nutrition",
+      "nutrition_basis": "Per 100 g",
+      "nutrition_serving_heading": "Per serving",
+      "nutrition_footnote": "Reference intake of an average adult (8400 kJ / 2000 kcal).",
+      "pairing_heading": "Serve it with",
+      "pairing_products_heading": "Pairs well with"
+    },
+    "main_search": {
+      "heading": "What are you hungry for?"
+    },
+    "newsletter": {
+      "heading": "Letters from the stall",
+      "text_html": "<p>One email a month: a recipe, what is fresh this week and the odd offer. Unsubscribe any time.</p>"
+    },
+    "product_recommendations": {
+      "heading": "More from the stall"
+    },
+    "blocks": {
+      "heading_html": "Bread, dates and spice for long evenings by the river",
+      "text_eyebrow_html": "<p>Fresh from the tannour</p>",
+      "text_body_html": "<p>Iraqi bread, sweets and pantry goods, baked and packed in small batches. Order by 14:00 for the next baking day.</p>",
+      "text_large_html": "<p>Iraqi bread, sweets, dates and spices.</p>",
+      "text_small_html": "<p>Baked from Tuesday to Saturday.</p>",
+      "button_label": "Shop the bakery"
+    },
+    "not_found": {
+      "board_title": "Tonight",
+      "line_1": "Tannour bread",
+      "line_2": "Page 404",
+      "line_3": "Kleicha",
+      "on": "on",
+      "out": "sold out"
+    },
+    "search": {
+      "popular": "Dates, Kleicha, Baharat, Chai, Tannour bread",
+      "popular_today": "Popular today",
+      "asked": "You asked for “{{ terms }}”",
+      "none_title": "Not on the board today",
+      "none_hint": "Nothing matches “{{ terms }}”. Try a shorter word, or one of these:"
+    },
+    "meta": {
+      "home": "{{ shop }}: fresh bread, sweets, dates and pantry goods, baked to order and delivered to your door.",
+      "collections": "Every shelf at {{ shop }}: bread, sweets, dates, pantry goods, tea and coffee, and gifts.",
+      "collection": "{{ title }} from {{ shop }}, baked or packed to order and delivered.",
+      "product": "{{ title }} from {{ shop }}.",
+      "blog": "{{ blog }} from {{ shop }}: recipes, guides and kitchen notes. Latest: {{ titles }}.",
+      "search": "Search the bakes, pantry goods, recipes and pages of {{ shop }}.",
+      "search_results": "Search results for {{ terms }} at {{ shop }}.",
+      "cart": "Your basket at {{ shop }}: check sizes, add a gift note and go to checkout.",
+      "policy": "{{ title }} for orders from {{ shop }}: what to expect and how we put things right.",
+      "page": "{{ title }}, from {{ shop }}.",
+      "separator": ", "
+    },
+    "line": {
+      "add": "Add {{ title }} to basket",
+      "add_variant": "Add {{ title }}, {{ variant }} to basket",
+      "choose": "Choose",
+      "choose_label": "Choose a size of {{ title }}",
+      "sold_out_today": "Sold out today"
+    },
+    "board": {
+      "items": {
+        "one": "1 item",
+        "other": "{{ count }} items"
+      },
+      "all": "All",
+      "everything": "Everything",
+      "tabs_label": "Shop by category",
+      "more_filters": "More filters",
+      "more": "More from the board",
+      "still": "Still on the board"
+    },
+    "nav": {
+      "see_all": "See all {{ count }}",
+      "stories": {
+        "one": "1 story",
+        "other": "{{ count }} stories"
+      },
+      "around": "Around the stall"
+    },
+    "tray": {
+      "everything": "Everything fresh"
+    },
+    "map": {
+      "hint": "Every shelf of the stall, numbered. Pick one from the key."
+    },
+    "cart": {
+      "your_order": {
+        "one": "Your order, 1 item",
+        "other": "Your order, {{ count }} items"
+      }
+    },
+    "about": {
+      "kicker": "A day at the stall",
+      "facts": "The stall in short",
+      "fact_1_label": "Founded",
+      "fact_1_value": "2026",
+      "fact_2_label": "Baking days",
+      "fact_2_value": "Tuesday to Saturday",
+      "fact_3_label": "Ovens",
+      "fact_3_value": "A stone oven and a clay tannour",
+      "fact_4_label": "Reply time",
+      "fact_4_value": "One business day"
+    },
+    "faq": {
+      "meta": "Asked at the stall, answered here",
+      "topics": "Jump to a topic",
+      "topic_1_label": "Freshness",
+      "topic_2_label": "Allergens",
+      "topic_3_label": "Trays and gifts",
+      "topic_4_label": "Delivery",
+      "topic_5_label": "Storage"
+    },
+    "blog": {
+      "newest": "Newest on the board"
+    },
+    "article": {
+      "glance": "At a glance",
+      "ingredients": "What you need",
+      "shop": "Shop the ingredients"
+    },
+    "password": {
+      "closed": "Closed until opening day",
+      "line_1_label": "Opening day",
+      "line_1_value": "Soon, watch your inbox",
+      "line_2_label": "Baking days",
+      "line_2_value": "Tuesday to Saturday",
+      "line_3_label": "First bake",
+      "line_3_value": "6:30 in the morning"
+    }
+  }
+}

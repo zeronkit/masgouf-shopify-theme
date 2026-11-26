@@ -1,0 +1,140 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "show_vendor": false,
+            "show_type": true
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_stock": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "serving": {
+          "type": "serving",
+          "settings": {
+            "show_weight": true,
+            "placement": "ticket"
+          }
+        },
+        "picker": {
+          "type": "variant_picker",
+          "settings": {
+            "style": "menu"
+          }
+        },
+        "buy": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_quantity": true,
+            "show_dynamic_checkout": true,
+            "show_pickup": true,
+            "show_plan_savings": true
+          }
+        },
+        "freshness": {
+          "type": "freshness",
+          "settings": {
+            "day_mon": false,
+            "day_tue": true,
+            "day_wed": true,
+            "day_thu": true,
+            "day_fri": true,
+            "day_sat": true,
+            "day_sun": false,
+            "placement": "ticket"
+          }
+        },
+        "complementary": {
+          "type": "complementary",
+          "settings": {
+            "limit": 3
+          }
+        },
+        "storage": {
+          "type": "collapsible",
+          "settings": {
+            "source": "storage",
+            "placement": "ticket"
+          }
+        },
+        "shipping": {
+          "type": "collapsible",
+          "settings": {
+            "source": "shipping",
+            "placement": "ticket"
+          }
+        },
+        "ingredients": {
+          "type": "ingredients",
+          "settings": {
+            "show_allergens": true,
+            "bold_allergens": true,
+            "placement": "below"
+          }
+        },
+        "nutrition": {
+          "type": "nutrition",
+          "settings": {
+            "placement": "below"
+          }
+        },
+        "pairing": {
+          "type": "pairing",
+          "settings": {
+            "limit": 3,
+            "fallback": true,
+            "placement": "below"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "description",
+        "serving",
+        "picker",
+        "buy",
+        "freshness",
+        "complementary",
+        "storage",
+        "shipping",
+        "ingredients",
+        "nutrition",
+        "pairing"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "gallery_layout": "plate",
+        "media_position": "start",
+        "title_position": "masthead",
+        "show_breadcrumb": true,
+        "sticky_info": true,
+        "colour_gallery": true
+      }
+    },
+    "related": {
+      "type": "product-recommendations",
+      "settings": {
+        "layout": "rail",
+        "limit": 6,
+        "columns": 4,
+        "color_scheme": "scheme-3"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related"
+  ]
+}

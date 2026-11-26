@@ -1,0 +1,96 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Option pickers. The selected option value ids are sent back to Shopify and the
+  section is re-rendered server side, so availability is always exact.
+  Params: product, section_id, style ('chips' | 'dropdown' | 'menu': a single option drawn as menu lines with each size's price)
+{%- endcomment -%}
+{%- assign locale_colour_names = 'products.option_names.colour' | t -%}
+{%- assign colour_names = settings.colour_option_names | append: ',' | append: locale_colour_names | downcase | replace: ', ', ',' | split: ',' -%}
+{%- unless product.has_only_default_variant -%}
+  <div class="cw-picker" data-cw-picker>
+    {%- for option in product.options_with_values -%}
+      {%- liquid
+        assign has_swatch = false
+        assign option_name = option.name | downcase | strip
+        if option.values.first.swatch != blank or colour_names contains option_name
+          assign has_swatch = true
+        endif
+        assign field_id = section_id | append: '-option-' | append: option.position
+      -%}
+      {%- if style == 'menu' and has_swatch == false and product.options.size == 1 -%}
+        <fieldset class="mg-sizes">
+          <legend class="cw-field__label mg-sizes__legend">{{ option.name | escape }}</legend>
+          <div class="mg-sizes__list">
+            {%- for value in option.values -%}
+              {%- assign input_id = field_id | append: '-' | append: forloop.index -%}
+              {%- assign value_variant = value.variant -%}
+              <input class="mg-sizes__input" type="radio" id="{{ input_id }}" name="{{ field_id }}" value="{{ value | escape }}" data-cw-option data-option-value-id="{{ value.id }}" data-product-url="{{ value.product_url }}"{% if value.selected %} checked{% endif %}>
+              <label class="mg-sizes__line{% unless value.available %} mg-sizes__line--out{% endunless %}" for="{{ input_id }}">
+                <span class="mg-sizes__name">{{ value | escape }}</span>
+                <span class="mg-sizes__price">
+                  {%- if value_variant -%}
+                    {%- if value_variant.compare_at_price > value_variant.price -%}<s>{{ value_variant.compare_at_price | money }}</s> {% endif -%}
+                    {{ value_variant.price | money }}
+                  {%- endif -%}
+                  {%- unless value.available %} <span class="mg-sizes__out">{{ 'products.unavailable_short' | t }}</span>{% endunless -%}
+                </span>
+              </label>
+            {%- endfor -%}
+          </div>
+        </fieldset>
+      {%- elsif style == 'dropdown' and has_swatch == false -%}
+        <div class="cw-field">
+          <label class="cw-field__label" for="{{ field_id }}">{{ option.name | escape }}</label>
+          <div class="cw-select">
+            <select id="{{ field_id }}" data-cw-option>
+              {%- for value in option.values -%}
+                <option
+                  value="{{ value | escape }}"
+                  data-option-value-id="{{ value.id }}"
+                  data-product-url="{{ value.product_url }}"
+                  {% if value.selected %}selected{% endif %}
+                >
+                  {{ value | escape }}{% unless value.available %} ({{ 'products.unavailable_short' | t }}){% endunless %}
+                </option>
+              {%- endfor -%}
+            </select>
+            {% render 'icon', name: 'down' %}
+          </div>
+        </div>
+      {%- else -%}
+        <fieldset class="cw-options{% if has_swatch %} cw-options--swatch{% endif %}"{% if has_swatch %} data-cw-colour-option{% endif %}>
+          <legend class="cw-field__label">
+            {{ option.name | escape }}<span class="cw-options__current">{{ option.selected_value | escape }}</span>
+          </legend>
+          <div class="cw-options__list">
+            {%- for value in option.values -%}
+              {%- assign input_id = field_id | append: '-' | append: forloop.index -%}
+              <input
+                class="cw-options__input"
+                type="radio"
+                id="{{ input_id }}"
+                name="{{ field_id }}"
+                value="{{ value | escape }}"
+                data-cw-option
+                data-option-value-id="{{ value.id }}"
+                data-product-url="{{ value.product_url }}"
+                {% if value.selected %}checked{% endif %}
+              >
+              <label class="cw-chip{% unless value.available %} cw-chip--out{% endunless %}" for="{{ input_id }}">
+                {%- if has_swatch -%}
+                  {% render 'swatch', value: value, size: 'large' %}
+                  <span class="cw-visually-hidden">{{ value | escape }}</span>
+                {%- else -%}
+                  {{ value | escape }}
+                {%- endif -%}
+                {%- unless value.available -%}
+                  <span class="cw-visually-hidden">{{ 'products.unavailable_short' | t }}</span>
+                {%- endunless -%}
+              </label>
+            {%- endfor -%}
+          </div>
+        </fieldset>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endunless -%}

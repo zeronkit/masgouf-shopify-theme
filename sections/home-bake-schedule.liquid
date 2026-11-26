@@ -1,0 +1,124 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign t_heading = 'mg.home_bake_schedule.heading' | t
+  if section.settings.heading != blank
+    assign t_heading = section.settings.heading
+  endif
+  assign t_text = 'mg.home_bake_schedule.text_html' | t
+  if section.settings.text != blank
+    assign t_text = section.settings.text
+  endif
+  assign t_small_print = 'mg.home_bake_schedule.small_print' | t
+  if section.settings.small_print != blank
+    assign t_small_print = section.settings.small_print
+  endif
+-%}
+{%- comment -%}
+  Bake schedule: the day's oven times on one line, so regulars know when each bake comes out.
+  Plain times set by the merchant. No clock or countdown runs in the browser.
+{%- endcomment -%}
+{{ 'home.css' | asset_url | stylesheet_tag }}
+<section class="cw-section cw-bake color-{{ section.settings.color_scheme }}">
+  <div class="cw-wrap">
+    <div class="cw-section__head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<p class="cw-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+        {%- if t_heading != blank -%}<h2 class="cw-h2">{{ t_heading | escape }}</h2>{%- endif -%}
+      </div>
+      {%- if t_text != blank -%}<div class="cw-rte cw-bake__intro">{{ t_text }}</div>{%- endif -%}
+    </div>
+
+    <ol class="cw-bake__line" role="list">
+      {%- for block in section.blocks -%}
+{%- liquid
+  assign mg_bk = 'mg.home_bake_schedule.' | append: block.id | replace: '-', '_'
+  assign bt_time = mg_bk | append: '_time' | t
+  if bt_time contains 'ranslation missing'
+    assign bt_time = ''
+  endif
+  if block.settings.time != blank
+    assign bt_time = block.settings.time
+  endif
+  assign bt_item = mg_bk | append: '_item' | t
+  if bt_item contains 'ranslation missing'
+    assign bt_item = ''
+  endif
+  if block.settings.item != blank
+    assign bt_item = block.settings.item
+  endif
+  assign bt_note = mg_bk | append: '_note' | t
+  if bt_note contains 'ranslation missing'
+    assign bt_note = ''
+  endif
+  if block.settings.note != blank
+    assign bt_note = block.settings.note
+  endif
+-%}
+        {%- liquid
+          assign bake_product = block.settings.product
+          assign bake_name = bt_item
+          if bake_name == blank and bake_product != blank
+            assign bake_name = bake_product.title
+          endif
+          if bake_name == blank
+            assign bake_name = 'products.placeholder_title' | t
+          endif
+        -%}
+        <li class="cw-bake__slot" {{ block.shopify_attributes }}>
+          <span class="cw-bake__time">{{ bt_time | escape }}</span>
+          <span class="cw-bake__mark" aria-hidden="true"></span>
+          <span class="cw-bake__item">
+            {%- if bake_product != blank -%}
+              <a class="cw-bake__link" href="{{ bake_product.url }}">{{ bake_name | escape }}</a>
+            {%- else -%}
+              {{ bake_name | escape }}
+            {%- endif -%}
+          </span>
+          {%- if bt_note != blank -%}<span class="cw-bake__note">{{ bt_note | escape }}</span>{%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ol>
+
+    {%- if t_small_print != blank -%}
+      <p class="cw-small cw-bake__print">{{ t_small_print | escape }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.bake_schedule",
+  "class": "cw-shopify-section",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow" },
+    { "type": "text", "id": "heading", "label": "t:labels.heading" },
+    { "type": "richtext", "id": "text", "label": "t:labels.text" },
+    { "type": "text", "id": "small_print", "label": "t:labels.small_print" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-4" }
+  ],
+  "blocks": [
+    {
+      "type": "bake",
+      "name": "t:names.bake",
+      "settings": [
+        { "type": "text", "id": "time", "label": "t:labels.time" },
+        { "type": "text", "id": "item", "label": "t:labels.item_name" },
+        { "type": "text", "id": "note", "label": "t:labels.note" },
+        { "type": "product", "id": "product", "label": "t:labels.product", "info": "t:info.bake_product" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.bake_schedule",
+      "blocks": [
+        { "type": "bake", "settings": { "time": "7:00", "item": "Sourdough loaves", "note": "Every day" } },
+        { "type": "bake", "settings": { "time": "8:30", "item": "Croissants and buns", "note": "Second tray at 11:00" } },
+        { "type": "bake", "settings": { "time": "12:00", "item": "Focaccia and savoury tarts" } },
+        { "type": "bake", "settings": { "time": "15:00", "item": "Cakes and cookies", "note": "Weekends only" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

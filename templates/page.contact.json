@@ -1,0 +1,71 @@
+{
+  "sections": {
+    "form": {
+      "type": "contact-form",
+      "blocks": {
+        "name": {
+          "type": "name",
+          "settings": {
+            "required": true,
+            "width": "half"
+          }
+        },
+        "email": {
+          "type": "email",
+          "settings": {
+            "width": "half"
+          }
+        },
+        "topic": {
+          "type": "topic",
+          "settings": {
+            "required": true,
+            "width": "half"
+          }
+        },
+        "order": {
+          "type": "order",
+          "settings": {
+            "required": false,
+            "width": "half"
+          }
+        },
+        "message": {
+          "type": "message",
+          "settings": {
+            "required": true,
+            "width": "full"
+          }
+        },
+        "hours_1": {
+          "type": "hours",
+          "settings": {}
+        },
+        "hours_2": {
+          "type": "hours",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "hours_1",
+        "hours_2",
+        "name",
+        "email",
+        "topic",
+        "order",
+        "message"
+      ],
+      "settings": {
+        "enabled": true,
+        "layout": "stall_front",
+        "info_scheme": "scheme-3",
+        "info_menu": "footer",
+        "color_scheme": "scheme-1",
+        "front_image": "shopify://shop_images/photo-1772758632784-7ccc90aa5328.jpg"
+      }
+    }
+  },
+  "order": [
+    "form"
+  ]
+}

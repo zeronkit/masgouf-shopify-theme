@@ -1,0 +1,122 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign mg_bk = 'mg.main_product.' | append: block.id | replace: '-', '_'
+  assign bt_heading = mg_bk | append: '_heading' | t
+  if bt_heading contains 'ranslation missing'
+    assign bt_heading = ''
+  endif
+  if block.settings.heading != blank
+    assign bt_heading = block.settings.heading
+  endif
+  assign bt_basis = mg_bk | append: '_basis' | t
+  if bt_basis contains 'ranslation missing'
+    assign bt_basis = ''
+  endif
+  if block.settings.basis != blank
+    assign bt_basis = block.settings.basis
+  endif
+  assign bt_serving_heading = mg_bk | append: '_serving_heading' | t
+  if bt_serving_heading contains 'ranslation missing'
+    assign bt_serving_heading = ''
+  endif
+  if block.settings.serving_heading != blank
+    assign bt_serving_heading = block.settings.serving_heading
+  endif
+  assign bt_rows = mg_bk | append: '_rows' | t
+  if bt_rows contains 'ranslation missing'
+    assign bt_rows = ''
+  endif
+  if block.settings.rows != blank
+    assign bt_rows = block.settings.rows
+  endif
+  assign bt_footnote = mg_bk | append: '_footnote' | t
+  if bt_footnote contains 'ranslation missing'
+    assign bt_footnote = ''
+  endif
+  if block.settings.footnote != blank
+    assign bt_footnote = block.settings.footnote
+  endif
+-%}
+{%- comment -%}
+  Nutrition table. One row per line: "Name | amount | amount per serving" (or "Name: amount").
+  Lines that start with "-" are sub-rows, for example "- of which sugars | 12 g".
+  Data, first match wins: masgouf.nutrition (multi-line text), the block rows,
+  then the "Nutrition" part of the description (shown as written).
+  Column headings: masgouf.nutrition_basis or the block setting, masgouf.serving_size or the block setting.
+  Params: block, product
+{%- endcomment -%}
+{%- liquid
+  assign rows_text = product.metafields.masgouf.nutrition.value | default: bt_rows
+  assign basis = product.metafields.masgouf.nutrition_basis.value | default: bt_basis
+  assign serving_heading = product.metafields.masgouf.serving_size.value | default: bt_serving_heading
+  assign has_third = false
+  assign row_count = 0
+  capture table_rows
+    assign lines = rows_text | newline_to_br | split: '<br />'
+    for line in lines
+      assign line = line | strip
+      if line == blank
+        continue
+      endif
+      assign is_sub = false
+      assign first_char = line | slice: 0
+      if first_char == '-'
+        assign is_sub = true
+        assign line = line | remove_first: '-' | strip
+      endif
+      if line contains '|'
+        assign cells = line | split: '|'
+      else
+        assign cells = line | split: ':'
+      endif
+      if cells.size > 2
+        assign has_third = true
+      endif
+      assign row_count = row_count | plus: 1
+      echo '<tr'
+      if is_sub
+        echo ' class="is-sub"'
+      endif
+      echo '><th scope="row">'
+      echo cells[0] | strip | escape
+      echo '</th><td>'
+      echo cells[1] | strip | escape
+      echo '</td><td class="cw-nutrition__third">'
+      echo cells[2] | strip | escape
+      echo '</td></tr>'
+    endfor
+  endcapture
+  if row_count == 0
+    capture from_description
+      render 'description-part', description: product.description, want: 'nutrition'
+    endcapture
+  endif
+-%}
+{%- if row_count > 0 or from_description != blank -%}
+  <div class="cw-food cw-food--nutrition" {{ block.shopify_attributes }}>
+    {%- if bt_heading != blank -%}
+      <h2 class="cw-food__title" id="Nutrition-{{ block.id }}">{{ bt_heading | escape }}</h2>
+    {%- endif -%}
+    {%- if row_count > 0 -%}
+      <div class="cw-nutrition__scroll">
+        <table class="cw-nutrition{% if has_third %} cw-nutrition--three{% endif %}"{% if bt_heading != blank %} aria-labelledby="Nutrition-{{ block.id }}"{% endif %}>
+          <thead>
+            <tr>
+              <th scope="col">{{ 'products.food.nutrient' | t }}</th>
+              <th scope="col">{{ basis | escape }}</th>
+              <th scope="col" class="cw-nutrition__third">{{ serving_heading | escape }}</th>
+            </tr>
+          </thead>
+          <tbody>{{ table_rows }}</tbody>
+        </table>
+      </div>
+    {%- else -%}
+      <div class="cw-food__body cw-rte">{{ from_description }}</div>
+    {%- endif -%}
+    {%- if bt_footnote != blank -%}
+      <p class="cw-food__note">{{ bt_footnote | escape }}</p>
+    {%- endif -%}
+  </div>
+{%- elsif request.design_mode -%}
+  <p class="cw-food cw-food--hint" {{ block.shopify_attributes }}>{{ 'products.food.editor_hint' | t: name: bt_heading }}</p>
+{%- endif -%}

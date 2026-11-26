@@ -1,0 +1,44 @@
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "menu-1": {
+          "type": "menu",
+          "settings": {
+            "menu": "main-menu"
+          }
+        },
+        "menu-2": {
+          "type": "menu",
+          "settings": {
+            "menu": "footer"
+          }
+        }
+      },
+      "block_order": [
+        "menu-1",
+        "menu-2"
+      ],
+      "settings": {
+        "layout": "riverside",
+        "show_brand": true,
+        "color_scheme": "scheme-2",
+        "show_social": true,
+        "show_follow_on_shop": true,
+        "show_country": true,
+        "show_language": true,
+        "show_payment": true,
+        "show_policies": false,
+        "show_powered_by": false,
+        "show_week": true,
+        "baking_days": "tue,wed,thu,fri,sat"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

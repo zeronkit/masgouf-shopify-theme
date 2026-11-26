@@ -1,0 +1,31 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Params: id (unique form id)
+{%- endcomment -%}
+{%- form 'customer', id: id, class: 'cw-newsletter' -%}
+  <input type="hidden" name="contact[tags]" value="newsletter">
+  {%- if form.posted_successfully? -%}
+    <p class="cw-notice cw-notice--success" role="status">{% render 'icon', name: 'check' %} {{ 'newsletter.success' | t }}</p>
+  {%- else -%}
+    <div class="cw-newsletter__field">
+      <label class="cw-visually-hidden" for="{{ id }}-email">{{ 'newsletter.label' | t }}</label>
+      <input
+        class="cw-input"
+        id="{{ id }}-email"
+        type="email"
+        name="contact[email]"
+        value="{{ form.email }}"
+        autocomplete="email"
+        autocorrect="off"
+        autocapitalize="off"
+        required
+        placeholder="{{ 'newsletter.label' | t }}"
+        {% if form.errors %}aria-invalid="true" aria-describedby="{{ id }}-error"{% endif %}
+      >
+      <button type="submit" class="cw-button cw-button--primary">{{ 'newsletter.button' | t }}</button>
+    </div>
+    {%- if form.errors -%}
+      <p class="cw-notice cw-notice--error" id="{{ id }}-error">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+    {%- endif -%}
+  {%- endif -%}
+{%- endform -%}

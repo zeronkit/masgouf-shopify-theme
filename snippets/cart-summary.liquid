@@ -1,0 +1,57 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Order level discounts, subtotal and checkout buttons.
+  Params: form_id, show_note, note_rows (optional), note_fold (the note sits in a fold that starts open)
+{%- endcomment -%}
+<div class="cw-summary">
+  {%- if show_note -%}
+    {%- comment -%} The note is always open: shoppers are told they can add a gift note, so the field must be in sight. {%- endcomment -%}
+    {%- if note_fold -%}
+      <details class="mg-note mg-note--fold" open>
+        <summary class="mg-note__label">{{ 'cart.note_label' | t }}{% render 'icon', name: 'plus' %}</summary>
+        <p class="mg-note__hint" id="{{ form_id }}-note-hint">{{ 'cart.note_hint' | t }}</p>
+        <label class="cw-visually-hidden" for="{{ form_id }}-note">{{ 'cart.note_label' | t }}</label>
+        <textarea class="cw-input mg-note__field" id="{{ form_id }}-note" name="note" form="{{ form_id }}" rows="{{ note_rows | default: 3 }}" maxlength="500" aria-describedby="{{ form_id }}-note-hint" data-cw-note>{{ cart.note }}</textarea>
+      </details>
+    {%- else -%}
+    <div class="mg-note">
+      <label class="mg-note__label" for="{{ form_id }}-note">{{ 'cart.note_label' | t }}</label>
+      <p class="mg-note__hint" id="{{ form_id }}-note-hint">{{ 'cart.note_hint' | t }}</p>
+      <textarea class="cw-input mg-note__field" id="{{ form_id }}-note" name="note" form="{{ form_id }}" rows="{{ note_rows | default: 3 }}" maxlength="500" aria-describedby="{{ form_id }}-note-hint" data-cw-note>{{ cart.note }}</textarea>
+    </div>
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- if cart.cart_level_discount_applications.size > 0 -%}
+    <ul class="cw-summary__discounts" role="list">
+      {%- for discount in cart.cart_level_discount_applications -%}
+        <li class="cw-discount">
+          <span>{{ discount.title | escape }}</span>
+          <span>-{{ discount.total_allocated_amount | money }}</span>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  <p class="cw-summary__total">
+    <span>{{ 'cart.subtotal' | t }}</span>
+    <span>{{ cart.total_price | money_with_currency }}</span>
+  </p>
+  <p class="cw-small cw-muted">
+    {%- if cart.duties_included and cart.taxes_included -%}
+      {{ 'cart.duties_taxes_included' | t }}
+    {%- elsif cart.taxes_included -%}
+      {{ 'cart.taxes_included' | t }}
+    {%- else -%}
+      {{ 'cart.taxes_at_checkout' | t }}
+    {%- endif -%}
+  </p>
+
+  <button type="submit" name="checkout" form="{{ form_id }}" class="cw-button cw-button--primary cw-button--full">
+    {{ 'cart.checkout' | t }}
+  </button>
+
+  {%- if additional_checkout_buttons -%}
+    <div class="cw-summary__extra">{{ content_for_additional_checkout_buttons }}</div>
+  {%- endif -%}
+</div>

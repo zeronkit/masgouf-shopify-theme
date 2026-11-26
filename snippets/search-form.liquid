@@ -1,0 +1,44 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Params: id (unique), predictive (boolean), value (optional current terms), ticket (HTML shown on the paper ticket under the field before typing; puts the results on that ticket)
+{%- endcomment -%}
+{%- liquid
+  assign wrap = 'div'
+  if predictive
+    assign wrap = 'cw-predictive-search'
+  endif
+-%}
+<form action="{{ routes.search_url }}" method="get" role="search" class="cw-search-form">
+  <label class="cw-visually-hidden" for="{{ id }}">{{ 'search.label' | t }}</label>
+  <{{ wrap }} class="{% if predictive %}cw-predictive{% else %}cw-search-form__wrap{% endif %}"{% if predictive %} data-url="{{ routes.predictive_search_url }}" data-all="{{ 'search.view_all' | t: terms: '%Q%' }}"{% endif %}>
+    <div class="cw-search-form__field">
+      <input
+        class="cw-input cw-search-form__input"
+        type="search"
+        id="{{ id }}"
+        name="q"
+        value="{{ value | escape }}"
+        placeholder="{{ 'search.placeholder' | t }}"
+        autocomplete="off"
+        {% if predictive %}
+          role="combobox"
+          aria-expanded="false"
+          aria-controls="{{ id }}-results"
+          aria-autocomplete="list"
+        {% endif %}
+      >
+      <input type="hidden" name="options[prefix]" value="last">
+      <button type="submit" class="cw-icon-button" aria-label="{{ 'search.submit' | t }}">{% render 'icon', name: 'search' %}</button>
+    </div>
+    {%- if ticket != blank -%}
+      <div class="mg-searchticket__paper">
+        <div class="mg-searchticket__scroll">
+          {%- if predictive -%}<div class="cw-predictive__results" id="{{ id }}-results" data-cw-results hidden></div>{%- endif -%}
+          {{ ticket }}
+        </div>
+      </div>
+    {%- elsif predictive -%}
+      <div class="cw-predictive__results" id="{{ id }}-results" data-cw-results hidden></div>
+    {%- endif -%}
+  </{{ wrap }}>
+</form>

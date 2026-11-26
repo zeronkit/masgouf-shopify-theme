@@ -1,0 +1,108 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign t_hours_text = 'mg.home_counter.hours_text' | t
+  if section.settings.hours_text != blank
+    assign t_hours_text = section.settings.hours_text
+  endif
+  assign t_board_heading = 'mg.home_counter.board_heading' | t
+  if section.settings.board_heading != blank
+    assign t_board_heading = section.settings.board_heading
+  endif
+-%}
+{%- comment -%}
+  Counter hero, board first: the whole hero is one dark board. Its header line holds the "Baking today" badge and the title,
+  the body is "On the board tonight" as menu lines in two columns with a "+" to add, and the button sits at the board's foot.
+  The shop photo is a round plate set over the board's top end corner, half outside it.
+{%- endcomment -%}
+{%- liquid
+  assign image = section.settings.image
+  if image == blank and section.settings.board_collection != blank
+    assign image = section.settings.board_collection.featured_image
+  endif
+  if image == blank
+    for candidate in collections.all.products limit: 10
+      if candidate.featured_media
+        assign image = candidate.featured_media.preview_image
+        break
+      endif
+    endfor
+  endif
+
+  assign board_products = section.settings.board_products
+  if board_products == blank or board_products.size == 0
+    if section.settings.board_collection != blank
+      assign board_products = section.settings.board_collection.products
+    else
+      assign board_products = collections.all.products | sort: 'published_at' | reverse
+    endif
+  endif
+-%}
+<section class="mg-hero color-{{ section.settings.color_scheme }}">
+  <div class="cw-wrap">
+    <div class="mg-board mg-hero__board color-{{ section.settings.board_scheme }}">
+      <div class="mg-hero__plate">
+        {%- if image != blank -%}
+          {% render 'image', image: image, sizes: '(min-width: 990px) 300px, 200px', max: 700, eager: section.settings.eager, class: 'mg-hero__img' %}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'cw-placeholder mg-hero__img' }}
+        {%- endif -%}
+      </div>
+      <div class="mg-hero__head">
+        {%- if t_hours_text != blank -%}
+          <p class="mg-hero__badge"><span class="mg-hero__dot" aria-hidden="true"></span>{{ t_hours_text | escape }}</p>
+        {%- endif -%}
+        <div class="mg-hero__stack">
+          {% content_for 'blocks' %}
+        </div>
+      </div>
+      {%- if section.settings.show_board -%}
+        <div class="mg-hero__menu">
+          <h2 class="mg-board__sub mg-hero__sub" id="CounterBoard-{{ section.id }}">{{ t_board_heading | escape }}</h2>
+          <ul class="mg-menu" role="list" aria-labelledby="CounterBoard-{{ section.id }}">
+            {%- if board_products.size > 0 -%}
+              {%- for product in board_products limit: section.settings.board_limit -%}
+                <li>{% render 'mg-menu-line', product: product, show_desc: false, plate: 48 %}</li>
+              {%- endfor -%}
+            {%- else -%}
+              {%- for i in (1..4) -%}
+                <li><article class="mg-line mg-line--bare"><h3 class="mg-line__name"><span>{{ 'products.placeholder_title' | t }}</span></h3><div class="mg-line__price"><span class="cw-price__now">{{ 1000 | times: i | money }}</span></div></article></li>
+              {%- endfor -%}
+            {%- endif -%}
+          </ul>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.home_counter",
+  "class": "cw-shopify-section",
+  "blocks": [{ "type": "@theme" }, { "type": "@app" }],
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "t:labels.image" },
+    { "type": "checkbox", "id": "eager", "label": "t:labels.load_first", "default": true, "info": "t:info.load_first" },
+    { "type": "text", "id": "hours_text", "label": "t:labels.hours_text", "info": "t:info.hours_text" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" },
+    { "type": "header", "content": "t:labels.board" },
+    { "type": "checkbox", "id": "show_board", "label": "t:labels.show_board", "default": true },
+    { "type": "text", "id": "board_heading", "label": "t:labels.heading" },
+    { "type": "product_list", "id": "board_products", "label": "t:labels.products", "limit": 8, "info": "t:info.board_products" },
+    { "type": "collection", "id": "board_collection", "label": "t:labels.collection", "info": "t:info.board_collection" },
+    { "type": "range", "id": "board_limit", "label": "t:labels.products_to_show", "min": 2, "max": 8, "step": 1, "default": 6 },
+    { "type": "color_scheme", "id": "board_scheme", "label": "t:labels.board_scheme", "default": "scheme-2" }
+  ],
+  "presets": [
+    {
+      "name": "t:names.home_counter",
+      "blocks": [
+        { "type": "text", "settings": { "text": "<p>Baked this morning</p>", "style": "eyebrow" } },
+        { "type": "heading", "settings": { "heading": "Warm bread, good coffee, a full pantry", "size": "display", "tag": "h2" } },
+        { "type": "text", "settings": { "text": "<p>Order before noon for same day pickup, or have it delivered to your door.</p>", "style": "body" } },
+        { "type": "button", "settings": { "label": "Shop the bakery", "style": "primary", "show_arrow": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}

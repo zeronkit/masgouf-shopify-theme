@@ -1,0 +1,237 @@
+/* Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. */
+/*
+  Product page: masthead with a shelf-label price, plate gallery with thumbnails, rounded order ticket,
+  larder cards for ingredients, nutrition and pairing, and the "more from the counter" row.
+  Loaded by sections/main-product.liquid and sections/product-recommendations.liquid. Base gallery,
+  picker, buy form and fold styles live in theme.css; this file only reshapes them.
+*/
+
+/* ---------- Page frame ---------- */
+.cw-pdp__inner { display: grid; gap: clamp(1.25rem, 3vw, 2.25rem); }
+
+/* Masthead: crumbs, name and the shelf label */
+.cw-pdp__head { display: grid; gap: 0.9rem; padding-block-end: clamp(1rem, 2.5vw, 1.5rem); border-block-end: var(--cw-rule); }
+.cw-pdp__crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0; margin: 0; padding: 0; list-style: none; font-size: 0.8125rem; color: var(--cw-muted); }
+.cw-pdp__crumbs li + li::before {
+  content: ""; display: inline-block; inline-size: 0.3rem; block-size: 0.3rem; margin-inline: 0.6rem;
+  border-radius: 50%; background: var(--cw-accent); vertical-align: middle;
+}
+.cw-pdp__crumbs a { color: inherit; text-decoration: none; }
+.cw-pdp__crumbs a:hover { color: var(--cw-text); text-decoration: underline; }
+.cw-pdp__crumbs [aria-current] { color: var(--cw-text); }
+.cw-pdp__masthead { display: grid; gap: 1rem; align-items: end; }
+.cw-pdp__name {
+  margin: 0; font-family: var(--cw-font-heading); font-weight: var(--cw-font-heading-weight); font-style: var(--cw-font-heading-style);
+  font-size: calc(clamp(2.1rem, 5.2vw, 3.9rem) * var(--cw-heading-scale)); line-height: 1.04; max-inline-size: 18ch; text-wrap: balance;
+}
+.cw-pdp__ticket .cw-pdp__name { font-size: calc(clamp(1.8rem, 3.4vw, 2.6rem) * var(--cw-heading-scale)); }
+@media (min-width: 750px) {
+  .cw-pdp__masthead { grid-template-columns: minmax(0, 1fr) auto; column-gap: 2rem; }
+  .cw-pdp__masthead > .cw-product__price { justify-self: end; text-align: end; }
+}
+
+/* Shelf label: the price as a rounded tag with a punched hole */
+.cw-pdp__masthead .cw-pdp__label {
+  position: relative; justify-self: start; display: grid; gap: 0.2rem;
+  padding: 0.75rem 1.4rem; padding-inline-start: 2.3rem;
+  background: var(--cw-bg); border: 1px solid color-mix(in srgb, var(--cw-accent) 40%, transparent);
+  border-radius: var(--cw-radius-lg); box-shadow: var(--cw-shadow);
+}
+.cw-pdp__masthead .cw-pdp__label::before {
+  content: ""; position: absolute; inset-inline-start: 0.9rem; inset-block-start: 50%; translate: 0 -50%;
+  inline-size: 0.6rem; block-size: 0.6rem; border-radius: 50%; background: var(--cw-soft); border: 1px solid var(--cw-line);
+}
+@media (min-width: 750px) { .cw-pdp__masthead .cw-pdp__label { text-align: start; } }
+.cw-pdp__label .cw-price { font-family: var(--cw-font-heading); font-size: calc(1.6rem * var(--cw-heading-scale)); line-height: 1.1; }
+.cw-pdp__label .cw-small { font-size: 0.75rem; max-inline-size: 26ch; }
+.cw-pdp__stock { display: inline-flex; align-items: center; gap: 0.45rem; margin: 0; font-size: 0.8125rem; color: var(--cw-muted); }
+.cw-pdp__stock::before { content: ""; inline-size: 0.5rem; block-size: 0.5rem; border-radius: 50%; background: var(--cw-line); }
+.cw-pdp__stock.is-in { color: var(--cw-text); }
+.cw-pdp__stock.is-in::before { background: var(--cw-accent); }
+
+/* ---------- Photos and ticket: see "the menu card" in masgouf.css ---------- */
+.cw-pdp .cw-gallery__media { border-radius: var(--cw-radius-lg); }
+
+/* Plate: one large photo that swipes, thumbnails below */
+.cw-gallery--plate .cw-gallery__sheet {
+  display: grid; grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: 100%; gap: 0.75rem;
+  overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0;
+}
+.cw-gallery--plate .cw-gallery__frame { scroll-snap-align: start; }
+.cw-gallery--plate .cw-gallery__media--image { aspect-ratio: 1; }
+.cw-gallery--plate .cw-gallery__caption { display: none; }
+.cw-gallery__thumbs { display: flex; gap: 0.5rem; margin-block-start: 0.75rem; overflow-x: auto; scrollbar-width: none; padding-block: 0.25rem; padding-inline: 0.15rem; }
+.cw-gallery__thumbs::-webkit-scrollbar { display: none; }
+.cw-gallery__thumb {
+  flex: 0 0 auto; inline-size: 4.25rem; aspect-ratio: 1; padding: 0; overflow: hidden; cursor: pointer;
+  border: 2px solid transparent; border-radius: var(--cw-radius); background: var(--cw-tint);
+}
+.cw-gallery__thumb[hidden] { display: none; }
+.cw-gallery__thumb img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
+.cw-gallery__thumb:hover { border-color: var(--cw-line); }
+.cw-gallery__thumb[aria-current="true"] { border-color: var(--cw-accent); }
+.cw-gallery__thumb:focus-visible { outline: 2px solid var(--cw-text); outline-offset: 2px; }
+@media (min-width: 990px) { .cw-gallery__thumb { inline-size: 5rem; } }
+
+/* Mosaic: big, small, small, repeated (phones and tablets keep the swipe row from theme.css) */
+@media (min-width: 990px) {
+  .cw-gallery--mosaic .cw-gallery__sheet { grid-template-columns: 1fr 1fr; }
+  .cw-gallery--mosaic .cw-gallery__frame { grid-column: auto; }
+  .cw-gallery--mosaic .cw-gallery__frame:nth-child(3n + 1 of :not([hidden])) { grid-column: 1 / -1; }
+  .cw-gallery--mosaic .cw-gallery__media--image { aspect-ratio: 1; }
+  .cw-gallery--mosaic .cw-gallery__frame:nth-child(3n + 1 of :not([hidden])) .cw-gallery__media--image { aspect-ratio: 4 / 3; }
+}
+
+/* Stack: one photo under the other */
+@media (min-width: 990px) {
+  .cw-gallery--stack .cw-gallery__sheet { grid-template-columns: 1fr; }
+}
+
+/* Order ticket */
+.cw-pdp__ticket {
+  gap: 1.25rem; padding: clamp(1.15rem, 3vw, 2rem);
+  background: var(--cw-soft); border-radius: var(--cw-radius-lg);
+}
+.cw-pdp__ticket:empty { display: none; }
+.cw-pdp__ticket .cw-fold { border-block-end: var(--cw-rule); }
+.cw-pdp__ticket .cw-fold + .cw-fold { margin-block-start: -1.25rem; }
+.cw-pdp__ticket .cw-product__description { font-size: 1.0625rem; }
+.cw-pdp__ticket .cw-buy__add { min-block-size: 3.25rem; }
+.cw-pdp__ticket .cw-chip { background: var(--cw-bg); }
+.cw-pdp__ticket .cw-qty { background: var(--cw-bg); }
+.cw-pdp__ticket .cw-mini { background: var(--cw-bg); border-color: transparent; border-radius: var(--cw-radius-lg); }
+
+/* ---------- Purchase options (subscriptions) ---------- */
+.cw-pdp .cw-plans { gap: 0.5rem; }
+.cw-pdp .cw-plans__row {
+  flex-wrap: wrap; gap: 0.4rem 0.75rem; padding: 0.75rem 1rem; background: var(--cw-bg);
+  border-color: transparent; border-radius: var(--cw-radius-lg);
+}
+.cw-pdp .cw-plans__row:has(input:checked) { border-color: var(--cw-accent); box-shadow: inset 0 0 0 1px var(--cw-accent); background: var(--cw-accent-soft); }
+.cw-pdp .cw-plans input { accent-color: var(--cw-accent); }
+.cw-plans__name { display: grid; gap: 0.15rem; flex: 1 1 10rem; font-weight: var(--cw-font-body-weight-bold); }
+.cw-plans__desc { display: block; font-size: 0.75rem; font-weight: var(--cw-font-body-weight); color: var(--cw-muted); }
+.cw-plans__price { text-align: end; }
+.cw-plans__save {
+  padding: 0.2rem 0.6rem; border-radius: 999px; background: var(--cw-accent); color: var(--cw-bg);
+  font-size: 0.75rem; font-weight: var(--cw-font-body-weight-bold); white-space: nowrap;
+}
+.cw-plans__group { margin: 0.5rem 0 0; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cw-muted); }
+.cw-plans__note { display: flex; gap: 0.5rem; align-items: center; margin: 0.25rem 0 0; font-size: 0.8125rem; color: var(--cw-muted); }
+.cw-plans__note .cw-icon { flex: none; inline-size: 1rem; block-size: 1rem; color: var(--cw-accent); }
+
+/* ---------- Food detail blocks ---------- */
+.cw-food { display: grid; gap: 0.85rem; align-content: start; min-inline-size: 0; }
+.cw-food__title {
+  margin: 0; font-family: var(--cw-font-heading); font-weight: var(--cw-font-heading-weight);
+  font-size: calc(1.35rem * var(--cw-heading-scale)); line-height: 1.2;
+}
+.cw-food__note { margin: 0; font-size: 0.8125rem; color: var(--cw-muted); }
+.cw-food__body strong { font-weight: var(--cw-font-body-weight-bold); }
+.cw-food--hint { margin: 0; padding: 0.75rem 1rem; font-size: 0.8125rem; color: var(--cw-muted); border: var(--cw-rule); border-radius: var(--cw-radius); }
+
+/* Allergen and diet tags */
+.cw-food__tags { display: grid; gap: 0.8rem; margin: 0; }
+.cw-food__tagrow { display: grid; gap: 0.4rem; }
+.cw-food__tagrow dt, .cw-stat dt {
+  font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cw-muted);
+  font-weight: var(--cw-font-body-weight-bold);
+}
+.cw-food__tagrow dd, .cw-stat dd { margin: 0; }
+.cw-food__chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+.cw-food__chip {
+  display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.3rem 0.8rem; border-radius: 999px;
+  font-size: 0.8125rem; line-height: 1.3;
+}
+.cw-food__chip--allergen { background: var(--cw-accent-soft); font-weight: var(--cw-font-body-weight-bold); }
+.cw-food__chip--diet { background: var(--cw-bg); border: var(--cw-rule); }
+.cw-food__chip .cw-icon { inline-size: 0.95rem; block-size: 0.95rem; color: var(--cw-accent); }
+
+/* Nutrition table */
+.cw-nutrition__scroll { overflow-x: auto; }
+.cw-nutrition { inline-size: 100%; border-collapse: collapse; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+.cw-nutrition th, .cw-nutrition td { padding-block: 0.55rem; text-align: start; border-block-end: var(--cw-rule); vertical-align: baseline; }
+.cw-nutrition td { text-align: end; padding-inline-start: 1rem; white-space: nowrap; }
+.cw-nutrition thead th {
+  font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cw-muted);
+  border-block-end: 2px solid var(--cw-text);
+}
+.cw-nutrition thead th + th { text-align: end; padding-inline-start: 1rem; }
+.cw-nutrition tbody th { font-weight: var(--cw-font-body-weight-bold); }
+.cw-nutrition .is-sub th { font-weight: var(--cw-font-body-weight); padding-inline-start: 1rem; color: var(--cw-muted); }
+.cw-nutrition:not(.cw-nutrition--three) .cw-nutrition__third { display: none; }
+
+/* Weight and servings */
+.cw-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: 0.5rem; margin: 0; }
+.cw-stat { display: grid; gap: 0.15rem; padding: 0.7rem 0.95rem; background: var(--cw-bg); border-radius: var(--cw-radius); }
+.cw-stat dd { font-family: var(--cw-font-heading); font-size: calc(1.15rem * var(--cw-heading-scale)); line-height: 1.25; }
+.cw-food--serving:empty { display: none; }
+
+/* Delivery week and freshness lines */
+.cw-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.3rem; margin: 0; padding: 0; list-style: none; }
+.cw-week__day {
+  display: grid; place-items: center; min-block-size: 2.5rem; border-radius: var(--cw-radius);
+  background: var(--cw-tint); color: var(--cw-muted); font-size: 0.75rem; font-weight: var(--cw-font-body-weight-bold);
+}
+.cw-week__day.is-on { background: var(--cw-accent); color: var(--cw-bg); }
+.cw-food__lines { display: grid; gap: 0.55rem; margin: 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.cw-food__lines:empty { display: none; }
+.cw-food__lines li { display: flex; gap: 0.6rem; align-items: flex-start; }
+.cw-food__lines .cw-icon { flex: none; inline-size: 1.15rem; block-size: 1.15rem; margin-block-start: 0.1rem; color: var(--cw-accent); }
+
+/* Recipe and pairing */
+.cw-pairing__head { display: grid; gap: 0.25rem; }
+.cw-pairing__recipe, .cw-pairing__products { display: grid; gap: 0.75rem; align-content: start; min-inline-size: 0; }
+.cw-pairing__products .cw-field__label { margin: 0; }
+.cw-pairing__card {
+  display: grid; overflow: hidden; text-decoration: none; color: inherit;
+  background: var(--cw-bg); border-radius: var(--cw-radius-lg);
+}
+.cw-pairing__photo { display: block; aspect-ratio: 4 / 3; background: var(--cw-tint); }
+.cw-pairing__photo img { inline-size: 100%; block-size: 100%; object-fit: cover; }
+.cw-pairing__card-body { display: grid; gap: 0.4rem; padding: 1rem 1.15rem 1.15rem; }
+.cw-pairing__cta { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--cw-accent); font-weight: var(--cw-font-body-weight-bold); font-size: 0.875rem; }
+.cw-pairing__cta .cw-icon { inline-size: 1rem; block-size: 1rem; }
+.cw-pairing__list { display: grid; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.cw-pairing__item {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+  padding: 0.5rem; padding-inline-end: 1rem; background: var(--cw-bg); border-radius: var(--cw-radius-lg);
+}
+.cw-pairing__link { display: flex; align-items: center; gap: 0.85rem; min-inline-size: 0; text-decoration: none; }
+.cw-pairing__link:hover .cw-pairing__name { text-decoration: underline; }
+.cw-pairing__media { flex: none; inline-size: 3.75rem; aspect-ratio: 1; overflow: hidden; border-radius: var(--cw-radius); background: var(--cw-tint); }
+.cw-pairing__media img { inline-size: 100%; block-size: 100%; object-fit: cover; }
+.cw-pairing__name { font-family: var(--cw-font-heading); font-size: 1.05rem; line-height: 1.25; }
+.cw-pairing__item .cw-price { font-size: 0.875rem; justify-content: end; text-align: end; }
+
+/* ---------- Larder: food details below the photos ---------- */
+.cw-pdp__larder { display: grid; gap: 1.25rem; padding-block-start: clamp(0.5rem, 2vw, 1.5rem); }
+.cw-pdp__larder-title { margin: 0; }
+.cw-pdp__larder-grid { display: grid; gap: 1rem; }
+.cw-pdp__larder-grid > * { padding: clamp(1.15rem, 3vw, 2rem); background: var(--cw-soft); border-radius: var(--cw-radius-lg); }
+.cw-pdp__larder-grid > .cw-food--hint { background: transparent; }
+@media (min-width: 990px) {
+  .cw-pdp__larder-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cw-pdp__larder-grid > .cw-pairing, .cw-pdp__larder-grid > :only-child { grid-column: 1 / -1; }
+  .cw-pdp__larder .cw-pairing { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); column-gap: clamp(1.25rem, 3vw, 2.5rem); }
+  .cw-pdp__larder .cw-pairing__head { grid-column: 1 / -1; }
+  .cw-pdp__larder .cw-pairing__card { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr); }
+  .cw-pdp__larder .cw-pairing__photo { aspect-ratio: auto; min-block-size: 100%; }
+}
+
+/* ---------- More from the counter ---------- */
+.cw-related__head { padding-block-end: 1rem; border-block-end: var(--cw-rule); margin-block-end: clamp(1.25rem, 3vw, 2rem); }
+
+/* ---------- Motion ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .cw-gallery__thumb, .cw-pairing__card, .cw-pairing__item, .cw-week__day { transition: transform var(--cw-fast) var(--cw-ease), box-shadow var(--cw-fast) var(--cw-ease), border-color var(--cw-fast), background var(--cw-fast); }
+  .cw-gallery__thumb:hover, .cw-pairing__card:hover, .cw-pairing__item:hover { transform: translateY(-2px); box-shadow: var(--cw-shadow); }
+}
+html[data-motion="off"] .cw-gallery__thumb, html[data-motion="off"] .cw-pairing__card, html[data-motion="off"] .cw-pairing__item { transition: none; transform: none; }
+
+/* ---------- Forced colours ---------- */
+@media (forced-colors: active) {
+  .cw-week__day.is-on { outline: 2px solid Highlight; }
+  .cw-gallery__thumb[aria-current="true"] { border-color: Highlight; }
+  .cw-food__chip, .cw-pdp__ticket, .cw-pdp__larder-grid > * { border: 1px solid CanvasText; }
+}

@@ -1,0 +1,90 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign mg_bk = 'mg.main_product.' | append: block.id | replace: '-', '_'
+  assign bt_heading = mg_bk | append: '_heading' | t
+  if bt_heading contains 'ranslation missing'
+    assign bt_heading = ''
+  endif
+  if block.settings.heading != blank
+    assign bt_heading = block.settings.heading
+  endif
+  assign bt_cutoff = mg_bk | append: '_cutoff' | t
+  if bt_cutoff contains 'ranslation missing'
+    assign bt_cutoff = ''
+  endif
+  if block.settings.cutoff != blank
+    assign bt_cutoff = block.settings.cutoff
+  endif
+  assign bt_fresh_note = mg_bk | append: '_fresh_note' | t
+  if bt_fresh_note contains 'ranslation missing'
+    assign bt_fresh_note = ''
+  endif
+  if block.settings.fresh_note != blank
+    assign bt_fresh_note = block.settings.fresh_note
+  endif
+-%}
+{%- comment -%}
+  Delivery days and freshness: a week strip with the days this product is baked or delivered,
+  the order cut-off, a freshness note, storage and shelf life.
+  Data: masgouf.delivery_days (list of day names, "Tuesday" or "tue") overrides the block days,
+        masgouf.fresh_note, masgouf.storage, masgouf.shelf_life (text).
+  Params: block, product
+{%- endcomment -%}
+{%- liquid
+  assign codes = 'mon,tue,wed,thu,fri,sat,sun' | split: ','
+  assign active = ''
+  assign field_days = product.metafields.masgouf.delivery_days.value
+  if field_days != blank
+    for day in field_days
+      assign code = day | strip | downcase | slice: 0, 3
+      assign active = active | append: ',' | append: code
+    endfor
+  else
+    for code in codes
+      assign setting_id = 'day_' | append: code
+      if block.settings[setting_id]
+        assign active = active | append: ',' | append: code
+      endif
+    endfor
+  endif
+  assign fresh_note = product.metafields.masgouf.fresh_note.value | default: bt_fresh_note
+  assign storage = product.metafields.masgouf.storage.value
+  assign shelf_life = product.metafields.masgouf.shelf_life.value
+-%}
+{%- if active != blank or bt_cutoff != blank or fresh_note != blank or storage != blank or shelf_life != blank -%}
+  <div class="cw-food cw-food--fresh" {{ block.shopify_attributes }}>
+    {%- if bt_heading != blank -%}
+      <h2 class="cw-food__title">{{ bt_heading | escape }}</h2>
+    {%- endif -%}
+    {%- if active != blank -%}
+      <ol class="cw-week" role="list">
+        {%- for code in codes -%}
+          {%- assign day_key = 'products.food.days.' | append: code -%}
+          {%- assign short_key = 'products.food.days_short.' | append: code -%}
+          {%- assign marker = ',' | append: code -%}
+          {%- assign day_name = day_key | t -%}
+          <li class="cw-week__day{% if active contains marker %} is-on{% endif %}">
+            <span aria-hidden="true">{{ short_key | t }}</span>
+            <span class="cw-visually-hidden">
+              {%- if active contains marker -%}{{ 'products.food.day_on' | t: day: day_name }}{%- else -%}{{ 'products.food.day_off' | t: day: day_name }}{%- endif -%}
+            </span>
+          </li>
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
+    <ul class="cw-food__lines" role="list">
+      {%- if bt_cutoff != blank -%}
+        <li>{% render 'icon', name: 'truck' %}<span>{{ bt_cutoff | escape }}</span></li>
+      {%- endif -%}
+      {%- if fresh_note != blank -%}
+        <li>{% render 'icon', name: 'spark' %}<span>{{ fresh_note | escape }}</span></li>
+      {%- endif -%}
+      {%- if storage != blank -%}
+        <li>{% render 'icon', name: 'check' %}<span><strong>{{ 'products.food.storage' | t }}:</strong> {{ storage | escape }}</span></li>
+      {%- endif -%}
+      {%- if shelf_life != blank -%}
+        <li>{% render 'icon', name: 'tag' %}<span><strong>{{ 'products.food.best_within' | t }}:</strong> {{ shelf_life | escape }}</span></li>
+      {%- endif -%}
+    </ul>
+  </div>
+{%- endif -%}

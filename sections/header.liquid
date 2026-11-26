@@ -1,0 +1,458 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign t_navigator_label = 'mg.header.navigator_label' | t
+  if section.settings.navigator_label != blank
+    assign t_navigator_label = section.settings.navigator_label
+  endif
+-%}
+{%- comment -%}
+  Header with five layouts: inline, center_below, split, minimal, editorial.
+  The navigator (a dialog) is the mega menu on desktop and the drawer on mobile.
+  When the chosen menu is empty, navigation is built from the store: collections, blog and key pages.
+{%- endcomment -%}
+{%- liquid
+  assign layout = section.settings.layout
+  assign logo_position = section.settings.logo_position
+  if layout == 'split' or layout == 'editorial' or layout == 'side'
+    assign logo_position = 'center'
+  endif
+  assign menu = section.settings.menu
+  assign fb_blog = blogs.journal
+  if fb_blog == blank or fb_blog.articles_count == 0
+    assign fb_blog = blogs.news
+  endif
+  assign nav_label = t_navigator_label
+  if nav_label == blank
+    assign nav_label = 'header.shop' | t
+  endif
+  assign key_pages = 'about-us,faq,contact' | split: ','
+  assign nav_label_down = nav_label | downcase | strip
+  assign logo_tag = 'p'
+  if request.page_type == 'index'
+    assign logo_tag = 'h1'
+  endif
+  assign transparent = false
+  if section.settings.transparent_home and request.page_type == 'index'
+    assign transparent = true
+  endif
+
+  # Store collections with products, used when the menu is empty.
+  assign auto_list = ''
+  assign auto_count = 0
+  for c in collections limit: 30
+    if c.products_count > 0 and c.handle != 'all' and c.handle != 'frontpage' and auto_count < 8
+      assign auto_list = auto_list | append: c.handle | append: ','
+      assign auto_count = auto_count | plus: 1
+    endif
+  endfor
+  assign auto_handles = auto_list | split: ','
+  assign use_auto = false
+  if menu.links.size == 0
+    assign use_auto = true
+  endif
+
+  # Top level links shown in the bar. A link that repeats the navigator button is skipped.
+  assign visible = ''
+  for link in menu.links
+    assign skip = false
+    if section.settings.show_navigator and layout != 'minimal'
+      assign title_down = link.title | downcase | strip
+      if forloop.first and section.settings.hide_first_item
+        assign skip = true
+      elsif title_down == nav_label_down
+        assign skip = true
+      elsif link.url == routes.all_products_collection_url and link.links.size == 0
+        assign skip = true
+      endif
+    endif
+    unless skip
+      assign visible = visible | append: forloop.index | append: ','
+    endunless
+  endfor
+  assign visible_indexes = visible | split: ','
+  assign half = visible_indexes.size | plus: 1 | divided_by: 2
+-%}
+
+{%- capture bar_links_start -%}
+  {%- for link in menu.links -%}
+    {%- assign index_text = forloop.index | append: '' -%}
+    {%- if visible_indexes contains index_text -%}
+      {%- assign position = 0 -%}
+      {%- for v in visible_indexes -%}{%- if v == index_text -%}{%- assign position = forloop.index -%}{%- endif -%}{%- endfor -%}
+      {%- if layout != 'split' or position <= half -%}
+        <li>{%- assign panel_id = 'Nav-' | append: section.id | append: '-' | append: forloop.index -%}{% render 'header-link', link: link, panel_id: panel_id %}</li>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if use_auto -%}
+    {%- if auto_handles.size > 0 -%}<li><button type="button" class="cw-header__link" data-cw-open="Navigator" data-cw-panel="Nav-{{ section.id }}-auto" aria-haspopup="dialog">{{ 'header.collections' | t }}</button></li>{%- endif -%}
+    {%- if layout != 'split' -%}
+      {%- if fb_blog.articles_count > 0 -%}<li><a class="cw-header__link" href="{{ fb_blog.url }}">{{ fb_blog.title | escape }}</a></li>{%- endif -%}
+      {%- if pages['about-us'].title != blank -%}<li><a class="cw-header__link" href="{{ pages['about-us'].url }}">{{ pages['about-us'].title | escape }}</a></li>{%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture bar_links_end -%}
+  {%- if layout == 'split' -%}
+    {%- for link in menu.links -%}
+      {%- assign index_text = forloop.index | append: '' -%}
+      {%- if visible_indexes contains index_text -%}
+        {%- assign position = 0 -%}
+        {%- for v in visible_indexes -%}{%- if v == index_text -%}{%- assign position = forloop.index -%}{%- endif -%}{%- endfor -%}
+        {%- if position > half -%}
+          <li>{%- assign panel_id = 'Nav-' | append: section.id | append: '-' | append: forloop.index -%}{% render 'header-link', link: link, panel_id: panel_id %}</li>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if use_auto -%}
+      {%- if fb_blog.articles_count > 0 -%}<li><a class="cw-header__link" href="{{ fb_blog.url }}">{{ fb_blog.title | escape }}</a></li>{%- endif -%}
+      {%- if pages['about-us'].title != blank -%}<li><a class="cw-header__link" href="{{ pages['about-us'].url }}">{{ pages['about-us'].title | escape }}</a></li>{%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture logo -%}
+  <{{ logo_tag }} class="cw-header__logo">
+    <a href="{{ routes.root_url }}" class="cw-header__logo-link">
+      {%- if section.settings.logo != blank -%}
+        {%- liquid
+          assign logo_width = section.settings.logo_width
+          if layout == 'editorial'
+            assign logo_width = logo_width | times: 1.6 | round
+          endif
+          assign logo_width_2x = logo_width | times: 2
+          assign logo_height = logo_width | divided_by: section.settings.logo.aspect_ratio | round
+        -%}
+        {{ section.settings.logo | image_url: width: logo_width_2x | image_tag: width: logo_width, height: logo_height, alt: shop.name, class: 'cw-header__logo-img cw-header__logo-img--default', loading: 'eager' }}
+        {%- if transparent and section.settings.transparent_logo != blank -%}
+          {{ section.settings.transparent_logo | image_url: width: logo_width_2x | image_tag: width: logo_width, alt: shop.name, class: 'cw-header__logo-img cw-header__logo-img--transparent', loading: 'eager' }}
+        {%- endif -%}
+      {%- else -%}
+        <span class="cw-header__wordmark cw-header__wordmark--{{ section.settings.text_logo_font }}">{{ section.settings.text_logo | default: shop.name | escape }}</span>
+      {%- endif -%}
+    </a>
+  </{{ logo_tag }}>
+{%- endcapture -%}
+
+{%- capture utility_icons -%}
+  {%- if section.settings.show_search -%}
+    <button type="button" class="cw-icon-button" data-cw-open="SearchDialog" aria-haspopup="dialog" aria-label="{{ 'header.search' | t }}">
+      {% render 'icon', name: 'search' %}
+    </button>
+  {%- endif -%}
+  {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+    <shopify-account class="cw-header__account" menu="{{ section.settings.customer_account_menu | default: 'customer-account-main-menu' }}"></shopify-account>
+  {%- endif -%}
+  {%- if section.settings.show_cart -%}
+    <a href="{{ routes.cart_url }}" class="cw-icon-button cw-header__cart" data-cw-cart-toggle>
+      {% render 'icon', name: 'bag' %}
+      <span class="cw-count" data-cw-cart-count aria-hidden="true"{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+      <span class="cw-visually-hidden" data-cw-cart-label>{{ 'cart.title_with_count' | t: count: cart.item_count }}</span>
+    </a>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture utilities -%}
+  {%- if section.settings.show_country or section.settings.show_language -%}
+    <div class="cw-header__locale">
+      {% render 'localization', id: 'HeaderLocalization', show_country: section.settings.show_country, show_language: section.settings.show_language %}
+    </div>
+  {%- endif -%}
+  {{ utility_icons }}
+{%- endcapture -%}
+
+
+
+{%- capture menu_button -%}
+  <button type="button" class="cw-header__menu{% if layout == 'side' %} cw-header__menu--mobile{% else %}{% unless section.settings.show_navigator or layout == 'minimal' %} cw-header__menu--mobile{% endunless %}{% endif %}" data-cw-open="Navigator" aria-haspopup="dialog">
+    {% render 'icon', name: 'menu' %}
+    <span class="cw-header__menu-label">{{ nav_label | escape }}</span>
+  </button>
+{%- endcapture -%}
+
+<cw-header
+  class="cw-header cw-header--{{ layout }} cw-header--logo-{{ logo_position }} cw-side-{{ section.settings.side_position }} color-{{ section.settings.color_scheme }}{% if transparent %} cw-header--transparent{% endif %}"
+  data-sticky="{% if layout == 'side' %}none{% else %}{{ section.settings.sticky }}{% endif %}"
+  style="--cw-logo-w: {{ section.settings.logo_width }}px; --cw-logo-w-m: {{ section.settings.logo_width_mobile }}px; --cw-wordmark: {{ section.settings.text_logo_size | divided_by: 10.0 }};{% if transparent %} --cw-overlay-text: {{ section.settings.transparent_text }};{% endif %}"
+>
+  {%- if layout == 'stall' -%}
+    {%- liquid
+      assign sign_note = 'mg.header.sign_note' | t
+      if section.settings.sign_note != blank
+        assign sign_note = section.settings.sign_note
+      endif
+    -%}
+    {%- liquid
+      # Chip hints such as bake times: one "collection-handle: hint" per line in the header settings.
+      assign hint_lines = section.settings.chip_hints | newline_to_br | split: '<br />'
+    -%}
+    {%- capture chips -%}
+      {%- if use_auto -%}
+        {%- for handle in auto_handles -%}
+          {%- assign c = collections[handle] -%}
+          {%- if c.title != blank -%}<li><a class="mg-chip" href="{{ c.url }}"{% if collection.handle == c.handle %} aria-current="page"{% endif %}>{{ c.title | escape }}</a></li>{%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for link in menu.links -%}
+          {%- if link.links.size > 0 -%}
+            {%- for child in link.links -%}
+              {%- if child.type != 'collections_link' -%}
+                {%- liquid
+                  assign hint = ''
+                  for line in hint_lines
+                    assign pair = line | strip | split: ':'
+                    assign key = pair.first | strip | downcase
+                    if key != blank and key == child.object.handle
+                      assign hint = line | strip | remove_first: pair.first | remove_first: ':' | strip
+                    endif
+                  endfor
+                -%}
+                <li><a class="mg-chip" href="{{ child.url }}"{% if child.current %} aria-current="page"{% endif %}>{{ child.title | escape }}{% if hint != blank %}<span class="mg-chip__hint"><span aria-hidden="true"> · </span><span class="cw-visually-hidden">, </span>{{ hint | escape }}</span>{% endif %}</a></li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- elsif link.type == 'collection_link' or link.type == 'catalog_link' -%}
+            <li><a class="mg-chip mg-chip--shelf" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></li>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endcapture -%}
+    {%- capture words -%}
+      {%- if use_auto -%}
+        {%- if fb_blog.articles_count > 0 -%}<li><a class="mg-word" href="{{ fb_blog.url }}">{{ fb_blog.title | escape }}</a></li>{%- endif -%}
+        {%- if pages['about-us'].title != blank -%}<li><a class="mg-word" href="{{ pages['about-us'].url }}">{{ pages['about-us'].title | escape }}</a></li>{%- endif -%}
+      {%- else -%}
+        {%- for link in menu.links -%}
+          {%- if link.links.size == 0 and link.type != 'collection_link' and link.type != 'catalog_link' -%}
+            <li><a class="mg-word" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></li>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endcapture -%}
+    <div class="mg-counter">
+      <div class="mg-counter__row">
+        <div class="mg-counter__sign">
+          {{ logo }}
+          {%- if sign_note != blank -%}<p class="mg-counter__note">{{ sign_note | escape }}</p>{%- endif -%}
+        </div>
+        {%- if section.settings.show_search -%}
+          <div class="mg-counter__find">
+            <button type="button" class="mg-counter__field" data-cw-open="SearchDialog" aria-haspopup="dialog" data-mg-search-anchor>
+              {% render 'icon', name: 'search' %}<span class="mg-counter__prompt">{{ 'mg.header.ask' | t }}</span>
+            </button>
+          </div>
+        {%- endif -%}
+        <div class="mg-counter__tools">
+          {%- if section.settings.show_country or section.settings.show_language -%}
+            <div class="cw-header__locale mg-counter__locale">
+              {% render 'localization', id: 'HeaderLocalization', show_country: section.settings.show_country, show_language: section.settings.show_language %}
+            </div>
+          {%- endif -%}
+          {%- if section.settings.show_search -%}
+            <button type="button" class="cw-icon-button mg-counter__search-icon" data-cw-open="SearchDialog" aria-haspopup="dialog" aria-label="{{ 'header.search' | t }}">
+              {% render 'icon', name: 'search' %}
+            </button>
+          {%- endif -%}
+          {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+            <shopify-account class="cw-header__account" menu="{{ section.settings.customer_account_menu | default: 'customer-account-main-menu' }}"></shopify-account>
+          {%- endif -%}
+          {%- if section.settings.show_cart -%}
+            <a href="{{ routes.cart_url }}" class="mg-counter__basket cw-header__cart" data-cw-cart-toggle data-mg-basket>
+              {% render 'icon', name: 'bag' %}
+              <span class="mg-counter__basket-label" aria-hidden="true">{{ 'mg.header.basket' | t }}</span>
+              <span class="cw-count" data-cw-cart-count aria-hidden="true"{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+              <span class="mg-counter__total" data-mg-cart-total aria-hidden="true"{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.total_price | money }}</span>
+              <span class="cw-visually-hidden" data-cw-cart-label>{{ 'cart.title_with_count' | t: count: cart.item_count }}</span>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+      <nav class="mg-awning color-{{ section.settings.menu_color_scheme }}" aria-label="{{ 'header.primary_nav' | t }}">
+        <div class="mg-awning__inner">
+          <ul class="mg-awning__chips" role="list">
+            {%- if section.settings.show_navigator -%}
+              <li><button type="button" class="mg-chip mg-chip--all" data-cw-open="Navigator" aria-haspopup="dialog">{% render 'icon', name: 'menu' %}{{ 'mg.board.everything' | t }}</button></li>
+            {%- endif -%}
+            {{ chips }}
+          </ul>
+          {%- if words != blank -%}<ul class="mg-awning__words" role="list">{{ words }}</ul>{%- endif -%}
+        </div>
+      </nav>
+    </div>
+  {%- elsif layout == 'editorial' -%}
+    <div class="cw-wrap cw-header__topline">
+      {{ menu_button }}
+      <div class="cw-header__end">{{ utilities }}</div>
+    </div>
+    <div class="cw-wrap cw-header__masthead">{{ logo }}</div>
+    {%- if bar_links_start != blank -%}
+      <nav class="cw-header__row" aria-label="{{ 'header.primary_nav' | t }}"><ul class="cw-wrap cw-header__links" role="list">{{ bar_links_start }}</ul></nav>
+    {%- endif -%}
+  {%- else -%}
+    <div class="cw-wrap cw-header__bar">
+      <div class="cw-header__start">
+        {{ menu_button }}
+        {%- if layout == 'inline' or layout == 'split' -%}
+          {%- if bar_links_start != blank -%}
+            <nav class="cw-header__inline" aria-label="{{ 'header.primary_nav' | t }}"><ul class="cw-header__links" role="list">{{ bar_links_start }}</ul></nav>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+      {{ logo }}
+      <div class="cw-header__end">
+        {%- if layout == 'split' and bar_links_end != blank -%}
+          <nav class="cw-header__inline" aria-label="{{ 'header.secondary_nav' | t }}"><ul class="cw-header__links" role="list">{{ bar_links_end }}</ul></nav>
+        {%- endif -%}
+        {{ utilities }}
+      </div>
+    </div>
+    {%- if layout == 'center_below' and bar_links_start != blank -%}
+      <nav class="cw-header__row" aria-label="{{ 'header.primary_nav' | t }}"><ul class="cw-wrap cw-header__links" role="list">{{ bar_links_start }}</ul></nav>
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- if layout == 'side' -%}
+    <div class="cw-side">
+      {{ logo | replace: '<h1 ', '<p ' | replace: '</h1>', '</p>' }}
+      {% render 'header-side-nav', menu: menu, use_auto: use_auto, auto_handles: auto_handles %}
+      <div class="cw-side__icons">
+        {%- if section.settings.show_country or section.settings.show_language -%}
+          <div class="cw-header__locale">
+            {% render 'localization', id: 'SideLocalization', show_country: section.settings.show_country, show_language: section.settings.show_language %}
+          </div>
+        {%- endif -%}
+        {{ utility_icons }}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.rail_menu.links.size > 0 -%}
+    <nav class="cw-rail" aria-label="{{ 'header.quick_nav' | t }}">
+      <ul class="cw-wrap cw-rail__list" role="list">
+        {%- for link in section.settings.rail_menu.links -%}
+          <li><a class="cw-rail__pill" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+  {%- endif -%}
+</cw-header>
+
+{% render 'header-navigator', menu: menu, use_auto: use_auto, auto_handles: auto_handles, key_pages: key_pages, section_id: section.id, nav_label: nav_label, scheme: section.settings.menu_color_scheme, style: layout %}
+
+{%- if section.settings.show_search and layout == 'stall' -%}
+  {%- comment -%} The order ticket: a paper ticket hanging from the search field, results as menu lines, a torn edge at the foot. {%- endcomment -%}
+  <dialog class="mg-searchticket" id="SearchDialog" aria-label="{{ 'header.search' | t }}" data-mg-drop="search">
+    {%- capture ticket_before -%}{% render 'search-discovery', id: 'SearchOverlay', style: 'ticket', heading_tag: 'p' %}{%- endcapture -%}
+    <div class="mg-searchticket__field">
+      {% render 'search-form', id: 'HeaderSearch', predictive: settings.predictive_search, ticket: ticket_before %}
+      <button type="button" class="cw-icon-button mg-searchticket__close" data-cw-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+  </dialog>
+{%- elsif section.settings.show_search -%}
+  <dialog class="cw-search-dialog color-{{ section.settings.menu_color_scheme }}" id="SearchDialog" aria-label="{{ 'header.search' | t }}">
+    <div class="cw-wrap cw-search-dialog__inner">
+      {% render 'search-form', id: 'HeaderSearch', predictive: settings.predictive_search %}
+      <button type="button" class="cw-icon-button" data-cw-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+    <div class="cw-wrap cw-search-dialog__body">
+      {% render 'search-discovery', id: 'SearchOverlay', show_products: false, heading_tag: 'p' %}
+    </div>
+  </dialog>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:names.header",
+  "class": "cw-header-section",
+  "enabled_on": { "groups": ["header"] },
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:labels.header_layout",
+      "options": [
+        { "value": "stall", "label": "t:options.header_stall" },
+        { "value": "inline", "label": "t:options.header_inline" },
+        { "value": "center_below", "label": "t:options.header_center_below" },
+        { "value": "split", "label": "t:options.header_split" },
+        { "value": "minimal", "label": "t:options.header_minimal" },
+        { "value": "editorial", "label": "t:options.header_editorial" },
+        { "value": "side", "label": "t:options.header_side" }
+      ],
+      "default": "stall"
+    },
+    {
+      "type": "select",
+      "id": "logo_position",
+      "label": "t:labels.logo_position",
+      "info": "t:info.logo_position",
+      "options": [
+        { "value": "start", "label": "t:options.position_start" },
+        { "value": "center", "label": "t:options.position_center" },
+        { "value": "end", "label": "t:options.position_end" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "side_position",
+      "label": "t:labels.side_position",
+      "options": [
+        { "value": "start", "label": "t:options.position_start" },
+        { "value": "end", "label": "t:options.position_end" }
+      ],
+      "default": "start"
+    },
+    { "type": "image_picker", "id": "logo", "label": "t:labels.logo" },
+    { "type": "range", "id": "logo_width", "label": "t:labels.logo_width_desktop", "min": 60, "max": 300, "step": 5, "unit": "px", "default": 120 },
+    { "type": "range", "id": "logo_width_mobile", "label": "t:labels.logo_width_mobile", "min": 50, "max": 200, "step": 5, "unit": "px", "default": 100 },
+    { "type": "text", "id": "text_logo", "label": "t:labels.text_logo", "info": "t:info.text_logo" },
+    {
+      "type": "select",
+      "id": "text_logo_font",
+      "label": "t:labels.text_logo_font",
+      "options": [
+        { "value": "heading", "label": "t:options.logo_font_heading" },
+        { "value": "body", "label": "t:options.logo_font_body" },
+        { "value": "serif", "label": "t:options.logo_font_serif" },
+        { "value": "mono", "label": "t:options.logo_font_mono" }
+      ],
+      "default": "heading"
+    },
+    { "type": "range", "id": "text_logo_size", "label": "t:labels.text_logo_size", "min": 10, "max": 40, "step": 1, "default": 16 },
+    {
+      "type": "select",
+      "id": "sticky",
+      "label": "t:labels.sticky_header",
+      "options": [
+        { "value": "none", "label": "t:options.sticky_none" },
+        { "value": "always", "label": "t:options.sticky_always" },
+        { "value": "up", "label": "t:options.sticky_up" }
+      ],
+      "default": "up"
+    },
+    { "type": "header", "content": "t:labels.navigation" },
+    { "type": "link_list", "id": "menu", "label": "t:labels.menu", "default": "main-menu", "info": "t:info.nested_menu" },
+    { "type": "checkbox", "id": "show_navigator", "label": "t:labels.show_navigator", "default": true, "info": "t:info.navigator" },
+    { "type": "text", "id": "navigator_label", "label": "t:labels.navigator_label" },
+    { "type": "text", "id": "sign_note", "label": "t:labels.sign_note", "info": "t:info.sign_note" },
+    { "type": "textarea", "id": "chip_hints", "label": "t:labels.mg_chip_hints", "info": "t:info.mg_chip_hints" },
+    { "type": "checkbox", "id": "hide_first_item", "label": "t:labels.hide_first_item", "default": false, "info": "t:info.hide_first_item" },
+    { "type": "link_list", "id": "rail_menu", "label": "t:labels.rail_menu", "info": "t:info.rail_menu" },
+    { "type": "header", "content": "t:labels.header_icons" },
+    { "type": "checkbox", "id": "show_search", "label": "t:labels.show_search", "default": true },
+    { "type": "checkbox", "id": "show_account", "label": "t:labels.show_account", "default": true },
+    { "type": "link_list", "id": "customer_account_menu", "label": "t:labels.customer_account_menu", "default": "customer-account-main-menu" },
+    { "type": "checkbox", "id": "show_cart", "label": "t:labels.show_cart", "default": true },
+    { "type": "checkbox", "id": "show_country", "label": "t:labels.show_country", "default": false },
+    { "type": "checkbox", "id": "show_language", "label": "t:labels.show_language", "default": false },
+    { "type": "header", "content": "t:labels.transparent_header" },
+    { "type": "checkbox", "id": "transparent_home", "label": "t:labels.transparent_home", "default": false, "info": "t:info.transparent_home" },
+    { "type": "color", "id": "transparent_text", "label": "t:labels.transparent_text", "default": "#FFFFFF" },
+    { "type": "image_picker", "id": "transparent_logo", "label": "t:labels.transparent_logo" },
+    { "type": "header", "content": "t:labels.colors" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" },
+    { "type": "color_scheme", "id": "menu_color_scheme", "label": "t:labels.menu_color_scheme", "default": "scheme-1" }
+  ]
+}
+{% endschema %}

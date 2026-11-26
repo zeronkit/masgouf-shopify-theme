@@ -1,0 +1,44 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  The basket meter: how far the basket is from free delivery, drawn as a reed rule that fills with turmeric.
+  Reads the amount and the countries from the theme settings (Cart), which should match Settings, Shipping and delivery.
+  Hidden when no amount is set, for shoppers outside the listed countries, and when the cart is in another currency.
+  Params: context ('drawer' or 'page')
+{%- endcomment -%}
+{%- liquid
+  assign meter_show = false
+  if settings.free_delivery_threshold > 0 and cart.item_count > 0 and cart.currency.iso_code == shop.currency
+    assign meter_show = true
+    assign meter_countries = settings.free_delivery_countries | upcase | remove: ' '
+    if meter_countries != blank
+      assign meter_list = meter_countries | split: ','
+      unless meter_list contains localization.country.iso_code
+        assign meter_show = false
+      endunless
+    endif
+  endif
+-%}
+{%- if meter_show -%}
+  {%- liquid
+    assign meter_goal = settings.free_delivery_threshold | times: 100
+    assign meter_total = cart.total_price
+    assign meter_left = meter_goal | minus: meter_total
+    assign meter_percent = meter_total | times: 100 | divided_by: meter_goal
+    if meter_percent > 100
+      assign meter_percent = 100
+    endif
+  -%}
+  <div class="mg-meter mg-meter--{{ context | default: 'page' }}{% if meter_left <= 0 %} is-full{% endif %}">
+    <p class="mg-meter__text">
+      {%- if meter_left > 0 -%}
+        {%- assign meter_amount = meter_left | money -%}
+        {{ 'cart.free_delivery.left_html' | t: amount: meter_amount }}
+      {%- else -%}
+        {% render 'icon', name: 'truck' %}<span>{{ 'cart.free_delivery.done' | t }}</span>
+      {%- endif -%}
+    </p>
+    <div class="mg-meter__rule" role="progressbar" aria-label="{{ 'cart.free_delivery.label' | t }}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ meter_percent }}">
+      <span class="mg-meter__fill" style="inline-size: {{ meter_percent }}%;"></span>
+    </div>
+  </div>
+{%- endif -%}

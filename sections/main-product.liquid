@@ -1,0 +1,711 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign t_larder_heading = 'mg.main_product.larder_heading' | t
+  if section.settings.larder_heading != blank
+    assign t_larder_heading = section.settings.larder_heading
+  endif
+-%}
+{%- comment -%}
+  Product page laid out like a shop counter: a masthead with the name and the shelf-label price,
+  the photos next to a rounded order ticket, and a larder row below for the food details.
+  Each block goes to one of three places: the masthead (title and price, when chosen),
+  the ticket, or the larder (blocks whose Placement is "Below the photos").
+{%- endcomment -%}
+{{ 'product.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign storage_heading = 'products.food.storage' | t
+  # Description parts that have their own block are moved out of the main description.
+  assign moved = ''
+  for tab in section.blocks
+    case tab.type
+      when 'ingredients'
+        assign moved = moved | append: 'ingredients,'
+      when 'nutrition'
+        assign moved = moved | append: 'nutrition,'
+      when 'pairing'
+        assign moved = moved | append: 'recipe,'
+      when 'collapsible'
+        assign tab_source = tab.settings.source | default: 'auto'
+        if tab_source == 'auto'
+          assign tab_heading = tab.settings.heading | downcase
+          assign tab_source = 'custom'
+          if tab_heading contains 'ship' or tab_heading contains 'return' or tab_heading contains 'deliver'
+            assign tab_source = 'shipping'
+          elsif tab_heading contains 'stor' or tab_heading contains 'keep' or tab_heading contains 'fresh'
+            assign tab_source = 'storage'
+          endif
+        endif
+        if tab_source != 'custom'
+          assign moved = moved | append: tab_source | append: ','
+        endif
+    endcase
+  endfor
+
+  assign crumb_collection = collection | default: product.collections.first
+  assign head_html = ''
+  assign ticket_html = ''
+  assign larder_html = ''
+-%}
+{%- liquid
+  # A gift card is not baked, stored or delivered: food and delivery blocks are left out for it.
+  assign gift_skip = 'freshness,serving,ingredients,nutrition,pairing,complementary,collapsible'
+  if product.gift_card? == false
+    assign gift_skip = ''
+  endif
+-%}
+{%- for block in section.blocks -%}
+{%- if gift_skip contains block.type -%}{%- continue -%}{%- endif -%}
+{%- liquid
+  assign mg_bk = 'mg.main_product.' | append: block.id | replace: '-', '_'
+  assign bt_heading = mg_bk | append: '_heading' | t
+  if bt_heading contains 'ranslation missing'
+    assign bt_heading = ''
+  endif
+  if block.settings.heading != blank
+    assign bt_heading = block.settings.heading
+  endif
+  assign bt_note = mg_bk | append: '_note' | t
+  if bt_note contains 'ranslation missing'
+    assign bt_note = ''
+  endif
+  if block.settings.note != blank
+    assign bt_note = block.settings.note
+  endif
+  assign bt_plan_note = mg_bk | append: '_plan_note' | t
+  if bt_plan_note contains 'ranslation missing'
+    assign bt_plan_note = ''
+  endif
+  if block.settings.plan_note != blank
+    assign bt_plan_note = block.settings.plan_note
+  endif
+  assign bt_cutoff = mg_bk | append: '_cutoff' | t
+  if bt_cutoff contains 'ranslation missing'
+    assign bt_cutoff = ''
+  endif
+  if block.settings.cutoff != blank
+    assign bt_cutoff = block.settings.cutoff
+  endif
+  assign bt_fresh_note = mg_bk | append: '_fresh_note' | t
+  if bt_fresh_note contains 'ranslation missing'
+    assign bt_fresh_note = ''
+  endif
+  if block.settings.fresh_note != blank
+    assign bt_fresh_note = block.settings.fresh_note
+  endif
+  assign bt_content = mg_bk | append: '_content_html' | t
+  if bt_content contains 'ranslation missing'
+    assign bt_content = ''
+  endif
+  if block.settings.content != blank
+    assign bt_content = block.settings.content
+  endif
+  assign bt_allergen_note = mg_bk | append: '_allergen_note' | t
+  if bt_allergen_note contains 'ranslation missing'
+    assign bt_allergen_note = ''
+  endif
+  if block.settings.allergen_note != blank
+    assign bt_allergen_note = block.settings.allergen_note
+  endif
+  assign bt_basis = mg_bk | append: '_basis' | t
+  if bt_basis contains 'ranslation missing'
+    assign bt_basis = ''
+  endif
+  if block.settings.basis != blank
+    assign bt_basis = block.settings.basis
+  endif
+  assign bt_serving_heading = mg_bk | append: '_serving_heading' | t
+  if bt_serving_heading contains 'ranslation missing'
+    assign bt_serving_heading = ''
+  endif
+  if block.settings.serving_heading != blank
+    assign bt_serving_heading = block.settings.serving_heading
+  endif
+  assign bt_rows = mg_bk | append: '_rows' | t
+  if bt_rows contains 'ranslation missing'
+    assign bt_rows = ''
+  endif
+  if block.settings.rows != blank
+    assign bt_rows = block.settings.rows
+  endif
+  assign bt_footnote = mg_bk | append: '_footnote' | t
+  if bt_footnote contains 'ranslation missing'
+    assign bt_footnote = ''
+  endif
+  if block.settings.footnote != blank
+    assign bt_footnote = block.settings.footnote
+  endif
+  assign bt_eyebrow = mg_bk | append: '_eyebrow' | t
+  if bt_eyebrow contains 'ranslation missing'
+    assign bt_eyebrow = ''
+  endif
+  if block.settings.eyebrow != blank
+    assign bt_eyebrow = block.settings.eyebrow
+  endif
+  assign bt_text = mg_bk | append: '_text_html' | t
+  if bt_text contains 'ranslation missing'
+    assign bt_text = ''
+  endif
+  if block.settings.text != blank
+    assign bt_text = block.settings.text
+  endif
+  assign bt_products_heading = mg_bk | append: '_products_heading' | t
+  if bt_products_heading contains 'ranslation missing'
+    assign bt_products_heading = ''
+  endif
+  if block.settings.products_heading != blank
+    assign bt_products_heading = block.settings.products_heading
+  endif
+-%}
+  {%- capture block_html -%}
+    {%- case block.type -%}
+      {%- when '@app' -%}
+        {% render block %}
+
+      {%- when 'text' -%}
+        <div class="cw-product__text cw-text--{{ block.settings.style }}" {{ block.shopify_attributes }}>{{ bt_text }}</div>
+
+      {%- when 'title' -%}
+        <div class="cw-product__title" {{ block.shopify_attributes }}>
+          {%- if block.settings.show_vendor -%}
+            <p class="cw-eyebrow">{{ product.vendor | escape }}</p>
+          {%- elsif block.settings.show_type and product.type != blank and product.gift_card? == false -%}
+            <p class="cw-eyebrow">{{ product.type | escape }}</p>
+          {%- endif -%}
+          <h1 class="cw-pdp__name">{{ product.title | escape }}</h1>
+        </div>
+
+      {%- when 'price' -%}
+        <div class="cw-product__price cw-pdp__label" data-cw-swap="price-{{ block.id }}" {{ block.shopify_attributes }}>
+          {% render 'price', product: product, variant: variant, class: 'cw-price--large', badge: true %}
+          {%- comment -%} When this size is full price but another one is reduced, say so here, as the cards do. {%- endcomment -%}
+          {%- unless variant.compare_at_price > variant.price -%}
+            {%- for offer in product.variants -%}
+              {%- if offer.available and offer.compare_at_price > offer.price -%}
+                {%- liquid
+                  assign offer_price = offer.price | money
+                  assign offer_was = offer.compare_at_price | money
+                -%}
+                <p class="mg-offer">
+                  <span class="cw-badge cw-badge--accent">{{ 'products.badge_sale' | t }}</span>
+                  <span>{{ 'products.price.variant_offer' | t: variant: offer.title, price: offer_price }}</span>
+                  <s><span class="cw-visually-hidden">{{ 'products.price.regular' | t }}</span>{{ offer_was }}</s>
+                </p>
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endunless -%}
+          {%- if cart.taxes_included -%}
+            <p class="cw-small cw-muted">{{ 'products.tax_included' | t }}</p>
+          {%- endif -%}
+        </div>
+
+      {%- when 'variant_picker' -%}
+        <div data-cw-swap="picker-{{ block.id }}" data-variant-id="{{ variant.id }}" data-variant-media="{{ variant.featured_media.id }}" {{ block.shopify_attributes }}>
+          {% render 'variant-picker', product: product, section_id: section.id, style: block.settings.style %}
+        </div>
+
+      {%- when 'buy_buttons' -%}
+        <div data-cw-swap="buy-{{ block.id }}" {{ block.shopify_attributes }}>
+          {% render 'buy-form',
+            product: product,
+            variant: variant,
+            section_id: section.id,
+            show_checkout: block.settings.show_dynamic_checkout,
+            show_pickup: block.settings.show_pickup,
+            show_quantity: block.settings.show_quantity,
+            show_savings: block.settings.show_plan_savings,
+            plan_note: bt_plan_note,
+            stock_box: true
+          %}
+        </div>
+
+      {%- when 'description' -%}
+        {%- capture main_description -%}{% render 'description-part', description: product.description, want: 'main', moved: moved %}{%- endcapture -%}
+        {%- if main_description != blank -%}
+          <div class="cw-rte cw-product__description" {{ block.shopify_attributes }}>{{ main_description }}</div>
+        {%- endif -%}
+
+      {%- when 'ingredients' -%}
+        {% render 'product-ingredients', block: block, product: product %}
+
+      {%- when 'nutrition' -%}
+        {% render 'product-nutrition', block: block, product: product %}
+
+      {%- when 'serving' -%}
+        {% render 'product-serving', block: block, product: product, variant: variant %}
+
+      {%- when 'freshness' -%}
+        {% render 'product-freshness', block: block, product: product %}
+
+      {%- when 'pairing' -%}
+        {% render 'product-pairing', block: block, product: product %}
+
+      {%- when 'collapsible' -%}
+        {%- liquid
+          assign tab_source = block.settings.source | default: 'auto'
+          if tab_source == 'auto'
+            assign tab_heading = bt_heading | downcase
+            assign tab_source = 'custom'
+            if tab_heading contains 'ship' or tab_heading contains 'return' or tab_heading contains 'deliver'
+              assign tab_source = 'shipping'
+            elsif tab_heading contains 'stor' or tab_heading contains 'keep' or tab_heading contains 'fresh'
+              assign tab_source = 'storage'
+            endif
+          endif
+          # Preference: product metafield, then the matching description part, then the block text, then a translated default.
+          capture tab_body
+            case tab_source
+              when 'storage'
+                capture from_storage
+                  render 'description-part', description: product.description, want: 'storage'
+                endcapture
+                if product.metafields.masgouf.storage != blank
+                  assign storage_text = product.metafields.masgouf.storage.value | escape
+                  echo '<p>' | append: storage_text | append: '</p>'
+                elsif from_storage != blank
+                  echo from_storage
+                elsif bt_content != blank
+                  echo bt_content
+                else
+                  echo 'products.food.storage_default_html' | t
+                endif
+              when 'shipping'
+                capture from_shipping
+                  render 'description-part', description: product.description, want: 'shipping'
+                endcapture
+                if bt_content != blank
+                  echo bt_content
+                elsif from_shipping != blank
+                  echo from_shipping
+                else
+                  echo 'products.food.delivery_default_html' | t
+                endif
+              else
+                echo bt_content
+            endcase
+            echo block.settings.page.content
+          endcapture
+          assign show_policy_links = false
+          if tab_source == 'shipping'
+            if shop.shipping_policy.body != blank or shop.refund_policy.body != blank
+              assign show_policy_links = true
+            endif
+          endif
+        -%}
+        {%- if tab_body != blank or show_policy_links -%}
+          <details class="cw-fold" {{ block.shopify_attributes }}>
+            <summary class="cw-fold__summary">
+              <span>{{ bt_heading | default: storage_heading | escape }}</span>
+              {% render 'icon', name: 'plus' %}
+            </summary>
+            <div class="cw-fold__body cw-rte">
+              {{ tab_body }}
+              {%- if show_policy_links -%}
+                <ul class="cw-fold__links" role="list">
+                  {%- if shop.shipping_policy.body != blank -%}<li><a href="{{ shop.shipping_policy.url }}">{{ 'products.tabs.shipping_policy' | t }}</a></li>{%- endif -%}
+                  {%- if shop.refund_policy.body != blank -%}<li><a href="{{ shop.refund_policy.url }}">{{ 'products.tabs.refund_policy' | t }}</a></li>{%- endif -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          </details>
+        {%- endif -%}
+
+      {%- when 'complementary' -%}
+        <cw-recommendations
+          class="cw-complementary"
+          data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ block.settings.limit }}&intent=complementary"
+          data-block="{{ block.id }}"
+          {{ block.shopify_attributes }}
+        >
+          {%- if recommendations.performed and recommendations.products_count > 0 -%}
+            <h2 class="cw-field__label">{{ bt_heading | escape }}</h2>
+            <ul class="cw-mini-list" role="list">
+              {%- for rec in recommendations.products -%}
+                <li class="cw-mini">
+                  <a class="cw-mini__link" href="{{ rec.url }}">
+                    {%- if rec.featured_media -%}
+                      {% render 'image', image: rec.featured_media.preview_image, sizes: '96px', max: 200, class: 'cw-mini__img', alt: '' %}
+                    {%- endif -%}
+                    <span class="cw-mini__title">{{ rec.title | escape }}</span>
+                  </a>
+                  {% render 'price', product: rec %}
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </cw-recommendations>
+
+      {%- when 'custom_liquid' -%}
+        <div {{ block.shopify_attributes }}>{{ block.settings.custom_liquid }}</div>
+    {%- endcase -%}
+  {%- endcapture -%}
+  {%- liquid
+    assign spot = 'ticket'
+    if block.settings.placement == 'below'
+      assign spot = 'larder'
+    elsif section.settings.title_position == 'masthead'
+      if block.type == 'title' or block.type == 'price'
+        assign spot = 'head'
+      endif
+    endif
+    case spot
+      when 'head'
+        assign head_html = head_html | append: block_html
+      when 'larder'
+        assign larder_html = larder_html | append: block_html
+      else
+        assign ticket_html = ticket_html | append: block_html
+    endcase
+  -%}
+{%- endfor -%}
+
+<section class="cw-product cw-pdp color-{{ section.settings.color_scheme }} cw-section" aria-label="{{ product.title | escape }}">
+  <cw-product class="cw-wrap cw-pdp__inner" data-section-id="{{ section.id }}" data-url="{{ product.url }}">
+    {%- if section.settings.show_breadcrumb or head_html != blank -%}
+      <div class="cw-pdp__head">
+        {%- if section.settings.show_breadcrumb -%}
+          <nav class="cw-pdp__crumbs" aria-label="{{ 'products.food.breadcrumb' | t }}">
+            <ol role="list">
+              <li><a href="{{ routes.root_url }}">{{ 'products.food.home' | t }}</a></li>
+              {%- if crumb_collection != blank and crumb_collection.handle != 'all' -%}
+                <li><a href="{{ crumb_collection.url }}">{{ crumb_collection.title | escape }}</a></li>
+              {%- endif -%}
+              <li><span aria-current="page">{{ product.title | escape }}</span></li>
+            </ol>
+          </nav>
+        {%- endif -%}
+        {%- if head_html != blank -%}
+          <div class="cw-pdp__masthead">{{ head_html }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="cw-product__grid cw-pdp__body mg-menucard cw-product__grid--{{ section.settings.gallery_layout }}{% if section.settings.media_position == 'end' %} cw-pdp__body--flip{% endif %}">
+      {% render 'product-gallery', product: product, variant: variant, section_id: section.id, layout: section.settings.gallery_layout, colour_filter: section.settings.colour_gallery %}
+
+      <div class="cw-product__info cw-pdp__ticket{% if section.settings.sticky_info %} cw-product__info--sticky{% endif %}">
+        {{ ticket_html }}
+      </div>
+    </div>
+
+    {%- if larder_html != blank -%}
+      <div class="cw-pdp__larder">
+        {%- if t_larder_heading != blank -%}
+          <h2 class="cw-h3 cw-pdp__larder-title">{{ t_larder_heading | escape }}</h2>
+        {%- endif -%}
+        <div class="cw-pdp__larder-grid">{{ larder_html }}</div>
+      </div>
+    {%- endif -%}
+  </cw-product>
+
+  <script type="application/ld+json">
+    {{ product | structured_data }}
+  </script>
+  {%- liquid
+    assign crumb_position = 2
+    assign crumb_home = 'products.food.home' | t
+  -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": {{ crumb_home | json }}, "item": {{ request.origin | append: routes.root_url | json }} }
+        {%- if crumb_collection != blank and crumb_collection.handle != 'all' -%}
+          {%- assign crumb_position = 3 -%},
+        { "@type": "ListItem", "position": 2, "name": {{ crumb_collection.title | json }}, "item": {{ request.origin | append: crumb_collection.url | json }} }
+        {%- endif -%},
+        { "@type": "ListItem", "position": {{ crumb_position }}, "name": {{ product.title | json }}, "item": {{ request.origin | append: product.url | json }} }
+      ]
+    }
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.product_information",
+  "tag": "div",
+  "class": "cw-shopify-section",
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" },
+    {
+      "type": "select",
+      "id": "gallery_layout",
+      "label": "t:labels.gallery_layout",
+      "options": [
+        { "value": "plate", "label": "t:options.gallery_plate" },
+        { "value": "mosaic", "label": "t:options.gallery_mosaic" },
+        { "value": "stack", "label": "t:options.single_column" }
+      ],
+      "default": "plate"
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "t:labels.media_position",
+      "options": [
+        { "value": "start", "label": "t:options.position_start" },
+        { "value": "end", "label": "t:options.position_end" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "title_position",
+      "label": "t:labels.title_position",
+      "options": [
+        { "value": "masthead", "label": "t:options.above_photos" },
+        { "value": "ticket", "label": "t:options.in_ticket" }
+      ],
+      "default": "masthead"
+    },
+    { "type": "checkbox", "id": "show_breadcrumb", "label": "t:labels.show_breadcrumb", "default": true },
+    { "type": "checkbox", "id": "sticky_info", "label": "t:labels.sticky_info", "default": true },
+    { "type": "checkbox", "id": "colour_gallery", "label": "t:labels.colour_gallery", "default": true, "info": "t:info.colour_gallery" },
+    { "type": "text", "id": "larder_heading", "label": "t:labels.larder_heading", "info": "t:info.larder_heading" },
+    { "type": "paragraph", "content": "t:info.food_metafields" }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "text",
+      "name": "t:names.text",
+      "settings": [
+        { "type": "inline_richtext", "id": "text", "label": "t:labels.text" },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "t:labels.style",
+          "options": [
+            { "value": "body", "label": "t:options.body" },
+            { "value": "small", "label": "t:options.small" },
+            { "value": "eyebrow", "label": "t:options.eyebrow" }
+          ],
+          "default": "small"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "t:names.title",
+      "limit": 1,
+      "settings": [
+        { "type": "checkbox", "id": "show_vendor", "label": "t:labels.show_vendor", "default": false },
+        { "type": "checkbox", "id": "show_type", "label": "t:labels.show_product_type", "default": true }
+      ]
+    },
+    {
+      "type": "price",
+      "name": "t:names.price",
+      "limit": 1,
+      "settings": [
+        { "type": "checkbox", "id": "show_stock", "label": "t:labels.show_stock", "default": true }
+      ]
+    },
+    {
+      "type": "variant_picker",
+      "name": "t:names.variant_picker",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "style",
+          "label": "t:labels.style",
+          "options": [
+            { "value": "chips", "label": "t:options.chips" },
+            { "value": "dropdown", "label": "t:options.dropdown" },
+            { "value": "menu", "label": "t:options.mg_menu_lines" }
+          ],
+          "default": "chips"
+        },
+        { "type": "paragraph", "content": "t:info.swatches" }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "t:names.buy_buttons",
+      "limit": 1,
+      "settings": [
+        { "type": "checkbox", "id": "show_quantity", "label": "t:labels.show_quantity", "default": true },
+        { "type": "checkbox", "id": "show_dynamic_checkout", "label": "t:labels.show_dynamic_checkout", "default": true, "info": "t:info.dynamic_checkout" },
+        { "type": "checkbox", "id": "show_pickup", "label": "t:labels.show_pickup", "default": true },
+        { "type": "header", "content": "t:labels.subscriptions" },
+        { "type": "paragraph", "content": "t:info.subscriptions" },
+        { "type": "checkbox", "id": "show_plan_savings", "label": "t:labels.show_plan_savings", "default": true },
+        { "type": "text", "id": "plan_note", "label": "t:labels.plan_note" }
+      ]
+    },
+    { "type": "description", "name": "t:names.description", "limit": 1 },
+    {
+      "type": "ingredients",
+      "name": "t:names.ingredients",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "t:info.ingredients_block" },
+        { "type": "text", "id": "heading", "label": "t:labels.heading" },
+        { "type": "richtext", "id": "content", "label": "t:labels.ingredients_fallback", "info": "t:info.single_product_fallback" },
+        { "type": "checkbox", "id": "show_allergens", "label": "t:labels.show_allergens", "default": true },
+        { "type": "checkbox", "id": "bold_allergens", "label": "t:labels.bold_allergens", "default": true },
+        { "type": "text", "id": "allergen_note", "label": "t:labels.allergen_note" },
+        {
+          "type": "select",
+          "id": "placement",
+          "label": "t:labels.placement",
+          "options": [
+            { "value": "ticket", "label": "t:options.in_ticket" },
+            { "value": "below", "label": "t:options.below_photos" }
+          ],
+          "default": "below"
+        }
+      ]
+    },
+    {
+      "type": "nutrition",
+      "name": "t:names.nutrition",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "t:info.nutrition_block" },
+        { "type": "text", "id": "heading", "label": "t:labels.heading" },
+        { "type": "text", "id": "basis", "label": "t:labels.nutrition_basis" },
+        { "type": "text", "id": "serving_heading", "label": "t:labels.nutrition_serving" },
+        { "type": "textarea", "id": "rows", "label": "t:labels.nutrition_rows", "info": "t:info.single_product_fallback" },
+        { "type": "text", "id": "footnote", "label": "t:labels.footnote" },
+        {
+          "type": "select",
+          "id": "placement",
+          "label": "t:labels.placement",
+          "options": [
+            { "value": "ticket", "label": "t:options.in_ticket" },
+            { "value": "below", "label": "t:options.below_photos" }
+          ],
+          "default": "below"
+        }
+      ]
+    },
+    {
+      "type": "serving",
+      "name": "t:names.serving",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "t:info.serving_block" },
+        { "type": "text", "id": "heading", "label": "t:labels.heading" },
+        { "type": "checkbox", "id": "show_weight", "label": "t:labels.show_weight", "default": true },
+        { "type": "text", "id": "note", "label": "t:labels.serving_note" },
+        {
+          "type": "select",
+          "id": "placement",
+          "label": "t:labels.placement",
+          "options": [
+            { "value": "ticket", "label": "t:options.in_ticket" },
+            { "value": "below", "label": "t:options.below_photos" }
+          ],
+          "default": "ticket"
+        }
+      ]
+    },
+    {
+      "type": "freshness",
+      "name": "t:names.freshness",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "t:info.freshness_block" },
+        { "type": "text", "id": "heading", "label": "t:labels.heading" },
+        { "type": "header", "content": "t:labels.delivery_days" },
+        { "type": "checkbox", "id": "day_mon", "label": "t:labels.day_mon", "default": false },
+        { "type": "checkbox", "id": "day_tue", "label": "t:labels.day_tue", "default": true },
+        { "type": "checkbox", "id": "day_wed", "label": "t:labels.day_wed", "default": true },
+        { "type": "checkbox", "id": "day_thu", "label": "t:labels.day_thu", "default": true },
+        { "type": "checkbox", "id": "day_fri", "label": "t:labels.day_fri", "default": true },
+        { "type": "checkbox", "id": "day_sat", "label": "t:labels.day_sat", "default": true },
+        { "type": "checkbox", "id": "day_sun", "label": "t:labels.day_sun", "default": false },
+        { "type": "text", "id": "cutoff", "label": "t:labels.cutoff" },
+        { "type": "text", "id": "fresh_note", "label": "t:labels.fresh_note" },
+        {
+          "type": "select",
+          "id": "placement",
+          "label": "t:labels.placement",
+          "options": [
+            { "value": "ticket", "label": "t:options.in_ticket" },
+            { "value": "below", "label": "t:options.below_photos" }
+          ],
+          "default": "ticket"
+        }
+      ]
+    },
+    {
+      "type": "pairing",
+      "name": "t:names.pairing",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "t:info.pairing_block" },
+        { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow" },
+        { "type": "text", "id": "heading", "label": "t:labels.heading" },
+        { "type": "richtext", "id": "text", "label": "t:labels.recipe_text", "info": "t:info.single_product_fallback" },
+        { "type": "article", "id": "article", "label": "t:labels.recipe_article" },
+        { "type": "text", "id": "products_heading", "label": "t:labels.products_heading" },
+        { "type": "product_list", "id": "products", "label": "t:labels.products", "limit": 6 },
+        { "type": "range", "id": "limit", "label": "t:labels.products_to_show", "min": 1, "max": 6, "step": 1, "default": 3 },
+        { "type": "checkbox", "id": "fallback", "label": "t:labels.pairing_fallback", "default": true },
+        {
+          "type": "select",
+          "id": "placement",
+          "label": "t:labels.placement",
+          "options": [
+            { "value": "ticket", "label": "t:options.in_ticket" },
+            { "value": "below", "label": "t:options.below_photos" }
+          ],
+          "default": "below"
+        }
+      ]
+    },
+    {
+      "type": "collapsible",
+      "name": "t:names.collapsible",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "t:labels.heading" },
+        {
+          "type": "select",
+          "id": "source",
+          "label": "t:labels.tab_source",
+          "info": "t:info.tab_source_food",
+          "options": [
+            { "value": "auto", "label": "t:options.auto_from_heading" },
+            { "value": "storage", "label": "t:options.tab_storage" },
+            { "value": "shipping", "label": "t:options.tab_shipping" },
+            { "value": "custom", "label": "t:options.tab_custom" }
+          ],
+          "default": "auto"
+        },
+        { "type": "richtext", "id": "content", "label": "t:labels.content", "info": "t:info.tab_content" },
+        { "type": "page", "id": "page", "label": "t:labels.page_content" },
+        {
+          "type": "select",
+          "id": "placement",
+          "label": "t:labels.placement",
+          "options": [
+            { "value": "ticket", "label": "t:options.in_ticket" },
+            { "value": "below", "label": "t:options.below_photos" }
+          ],
+          "default": "ticket"
+        }
+      ]
+    },
+    {
+      "type": "complementary",
+      "name": "t:names.complementary",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "t:info.complementary" },
+        { "type": "text", "id": "heading", "label": "t:labels.heading" },
+        { "type": "range", "id": "limit", "label": "t:labels.products_to_show", "min": 1, "max": 6, "step": 1, "default": 3 }
+      ]
+    },
+    {
+      "type": "custom_liquid",
+      "name": "t:names.custom_liquid",
+      "settings": [{ "type": "liquid", "id": "custom_liquid", "label": "t:labels.custom_liquid" }]
+    }
+  ]
+}
+{% endschema %}

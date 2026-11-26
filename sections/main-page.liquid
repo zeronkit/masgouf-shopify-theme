@@ -1,0 +1,46 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+<section class="cw-section cw-page color-{{ section.settings.color_scheme }}">
+  <div class="cw-wrap cw-wrap--narrow">
+    <header class="cw-page__head cw-page__head--{{ section.settings.title_align }}">
+      <h1 class="cw-h1">{{ page.title | escape }}</h1>
+    </header>
+    <div class="cw-rte cw-page__body">{{ page.content }}</div>
+    {%- comment -%} A page with the handle contact gets a working form even on the default page template. {%- endcomment -%}
+    {%- if page.handle == 'contact' and template.suffix != 'contact' -%}
+      {%- form 'contact', class: 'cw-form cw-contact__form' -%}
+        {%- if form.posted_successfully? -%}
+          <p class="cw-notice cw-notice--success" role="status">{% render 'icon', name: 'check' %} {{ 'contact.success' | t }}</p>
+        {%- elsif form.errors -%}
+          <div class="cw-notice cw-notice--error" role="alert" id="PageContact-errors">{{ form.errors | default_errors }}</div>
+        {%- endif -%}
+        <div class="cw-contact__fields">
+          {% render 'contact-field', type: 'name', id: 'PageContact-name', form: form, form_id: 'PageContact', width: 'half' %}
+          {% render 'contact-field', type: 'email', id: 'PageContact-email', form: form, form_id: 'PageContact', width: 'half', required: true %}
+          {% render 'contact-field', type: 'message', id: 'PageContact-message', form: form, form_id: 'PageContact', width: 'full', required: true %}
+        </div>
+        <button type="submit" class="cw-button cw-button--primary">{{ 'contact.send' | t }}</button>
+      {%- endform -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.page",
+  "class": "cw-shopify-section",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    {
+      "type": "select",
+      "id": "title_align",
+      "label": "t:labels.alignment",
+      "options": [
+        { "value": "start", "label": "t:options.position_start" },
+        { "value": "center", "label": "t:options.position_center" }
+      ],
+      "default": "center"
+    },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ]
+}
+{% endschema %}

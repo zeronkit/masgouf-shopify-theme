@@ -1,0 +1,116 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign mg_bk = 'mg.main_product.' | append: block.id | replace: '-', '_'
+  assign bt_heading = mg_bk | append: '_heading' | t
+  if bt_heading contains 'ranslation missing'
+    assign bt_heading = ''
+  endif
+  if block.settings.heading != blank
+    assign bt_heading = block.settings.heading
+  endif
+  assign bt_eyebrow = mg_bk | append: '_eyebrow' | t
+  if bt_eyebrow contains 'ranslation missing'
+    assign bt_eyebrow = ''
+  endif
+  if block.settings.eyebrow != blank
+    assign bt_eyebrow = block.settings.eyebrow
+  endif
+  assign bt_text = mg_bk | append: '_text_html' | t
+  if bt_text contains 'ranslation missing'
+    assign bt_text = ''
+  endif
+  if block.settings.text != blank
+    assign bt_text = block.settings.text
+  endif
+  assign bt_products_heading = mg_bk | append: '_products_heading' | t
+  if bt_products_heading contains 'ranslation missing'
+    assign bt_products_heading = ''
+  endif
+  if block.settings.products_heading != blank
+    assign bt_products_heading = block.settings.products_heading
+  endif
+-%}
+{%- comment -%}
+  Recipe and pairing: a recipe card (article or text) next to products that go with this one.
+  Data, first match wins:
+    recipe article: masgouf.recipe_article (article reference), the block article
+    recipe text: masgouf.recipe (rich or multi-line text), the "Recipe" part of the description, the block text
+    products: masgouf.pairing (list of products), the block products, other products from this product's first collection
+  Params: block, product
+{%- endcomment -%}
+{%- liquid
+  assign limit = block.settings.limit
+  assign article = product.metafields.masgouf.recipe_article.value | default: block.settings.article
+  if product.metafields.masgouf.recipe != blank
+    assign recipe = product.metafields.masgouf.recipe | metafield_tag
+  else
+    capture recipe
+      render 'description-part', description: product.description, want: 'recipe'
+    endcapture
+    if recipe == blank
+      assign recipe = bt_text
+    endif
+  endif
+  assign pairs = product.metafields.masgouf.pairing.value | default: block.settings.products
+  assign from_collection = false
+  if pairs == blank and block.settings.fallback
+    assign pairs = product.collections.first.products
+    assign from_collection = true
+  endif
+-%}
+{%- capture pair_items -%}
+  {%- assign shown = 0 -%}
+  {%- for item in pairs -%}
+    {%- if item.id == product.id or item.available == false and from_collection -%}{%- continue -%}{%- endif -%}
+    {%- if shown >= limit -%}{%- break -%}{%- endif -%}
+    {%- assign shown = shown | plus: 1 -%}
+    <li class="cw-pairing__item">
+      <a class="cw-pairing__link" href="{{ item.url }}">
+        <span class="cw-pairing__media">
+          {%- if item.featured_media -%}
+            {% render 'image', image: item.featured_media.preview_image, sizes: '120px', max: 240, alt: '' %}
+          {%- endif -%}
+        </span>
+        <span class="cw-pairing__name">{{ item.title | escape }}</span>
+      </a>
+      {% render 'price', product: item %}
+    </li>
+  {%- endfor -%}
+{%- endcapture -%}
+{%- if article != blank or recipe != blank or pair_items != blank -%}
+  <div class="cw-food cw-food--pairing cw-pairing" {{ block.shopify_attributes }}>
+    <div class="cw-pairing__head">
+      {%- if bt_eyebrow != blank -%}<p class="cw-eyebrow">{{ bt_eyebrow | escape }}</p>{%- endif -%}
+      {%- if bt_heading != blank -%}<h2 class="cw-food__title cw-pairing__title">{{ bt_heading | escape }}</h2>{%- endif -%}
+    </div>
+    {%- if article != blank or recipe != blank -%}
+      <div class="cw-pairing__recipe">
+        {%- if article != blank -%}
+          <a class="cw-pairing__card" href="{{ article.url }}">
+            {%- if article.image -%}
+              <span class="cw-pairing__photo">{% render 'image', image: article.image, sizes: '(min-width: 990px) 30vw, 100vw', max: 900, alt: '' %}</span>
+            {%- endif -%}
+            <span class="cw-pairing__card-body">
+              <span class="cw-h4">{{ article.title | escape }}</span>
+              {%- if article.excerpt_or_content != blank -%}
+                <span class="cw-small cw-muted">{{ article.excerpt_or_content | strip_html | truncatewords: 22 }}</span>
+              {%- endif -%}
+              <span class="cw-pairing__cta">{{ 'products.food.read_recipe' | t }} {% render 'icon', name: 'arrow' %}</span>
+            </span>
+          </a>
+        {%- endif -%}
+        {%- if recipe != blank -%}
+          <div class="cw-food__body cw-rte">{{ recipe }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    {%- if pair_items != blank -%}
+      <div class="cw-pairing__products">
+        <h3 class="cw-field__label">{{ bt_products_heading | escape }}</h3>
+        <ul class="cw-pairing__list" role="list">{{ pair_items }}</ul>
+      </div>
+    {%- endif -%}
+  </div>
+{%- elsif request.design_mode -%}
+  <p class="cw-food cw-food--hint" {{ block.shopify_attributes }}>{{ 'products.food.editor_hint' | t: name: bt_heading }}</p>
+{%- endif -%}

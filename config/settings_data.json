@@ -1,0 +1,354 @@
+{
+  "current": "Riverside",
+  "presets": {
+    "Riverside": {
+      "body_scheme": "scheme-1",
+      "drawer_scheme": "scheme-1",
+      "body_scale": 100,
+      "card_show_secondary": true,
+      "card_show_sizes": true,
+      "card_show_swatches": true,
+      "card_show_vendor": false,
+      "new_badge_days": 30,
+      "cart_type": "drawer",
+      "cart_note": true,
+      "currency_code_enabled": false,
+      "predictive_search": true,
+      "show_credit": true,
+      "palette": "custom",
+      "background_style": "solid",
+      "font_pairing": "custom",
+      "search_popular": "",
+      "page_width": 1300,
+      "color_schemes": {
+        "scheme-1": {
+          "settings": {
+            "background": "#F1E3B8",
+            "text": "#1E2A28",
+            "accent": "#8B2335",
+            "button": "#10463F",
+            "button_label": "#FFFBEF"
+          }
+        },
+        "scheme-2": {
+          "settings": {
+            "background": "#10463F",
+            "text": "#F6EFD9",
+            "accent": "#F0B232",
+            "button": "#F0B232",
+            "button_label": "#1E2A28"
+          }
+        },
+        "scheme-3": {
+          "settings": {
+            "background": "#FFFBEF",
+            "text": "#1E2A28",
+            "accent": "#8B2335",
+            "button": "#10463F",
+            "button_label": "#FFFBEF"
+          }
+        },
+        "scheme-4": {
+          "settings": {
+            "background": "#E9A21B",
+            "text": "#1E2A28",
+            "accent": "#5E1424",
+            "button": "#10463F",
+            "button_label": "#FFFBEF"
+          }
+        },
+        "scheme-5": {
+          "settings": {
+            "background": "#2B2421",
+            "text": "#F6EFD9",
+            "accent": "#F0B232",
+            "button": "#F0B232",
+            "button_label": "#2B2421"
+          }
+        },
+        "scheme-6": {
+          "settings": {
+            "background": "#FFFFFF",
+            "text": "#1E2A28",
+            "accent": "#8B2335",
+            "button": "#10463F",
+            "button_label": "#FFFFFF"
+          }
+        }
+      },
+      "type_heading_font": "bricolage_grotesque_n8",
+      "type_body_font": "rubik_n4",
+      "heading_scale": 100,
+      "corner_radius": 6,
+      "corner_style": "soft",
+      "button_style": "solid",
+      "card_ratio": "1",
+      "card_style": "shelf",
+      "spacing": "regular",
+      "type_scale": "balanced",
+      "animations": "subtle",
+      "type_hand_font": "caveat_n7"
+    },
+    "Roastery": {
+      "body_scheme": "scheme-1",
+      "drawer_scheme": "scheme-1",
+      "body_scale": 100,
+      "card_show_secondary": true,
+      "card_show_sizes": true,
+      "card_show_swatches": true,
+      "card_show_vendor": false,
+      "new_badge_days": 30,
+      "cart_type": "drawer",
+      "cart_note": true,
+      "currency_code_enabled": false,
+      "predictive_search": true,
+      "show_credit": true,
+      "palette": "custom",
+      "background_style": "solid",
+      "font_pairing": "custom",
+      "search_popular": "",
+      "page_width": 1300,
+      "color_schemes": {
+        "scheme-1": {
+          "settings": {
+            "background": "#1E1612",
+            "text": "#F2E6D6",
+            "accent": "#D69A5A",
+            "button": "#F2E6D6",
+            "button_label": "#1E1612"
+          }
+        },
+        "scheme-2": {
+          "settings": {
+            "background": "#F2E6D6",
+            "text": "#1E1612",
+            "accent": "#8C4A1F",
+            "button": "#1E1612",
+            "button_label": "#F2E6D6"
+          }
+        },
+        "scheme-3": {
+          "settings": {
+            "background": "#2A201A",
+            "text": "#F2E6D6",
+            "accent": "#D69A5A",
+            "button": "#F2E6D6",
+            "button_label": "#2A201A"
+          }
+        },
+        "scheme-4": {
+          "settings": {
+            "background": "#D69A5A",
+            "text": "#1E1612",
+            "accent": "#1E1612",
+            "button": "#1E1612",
+            "button_label": "#F2E6D6"
+          }
+        },
+        "scheme-5": {
+          "settings": {
+            "background": "#33402F",
+            "text": "#EEF0E4",
+            "accent": "#C9D6A8",
+            "button": "#EEF0E4",
+            "button_label": "#33402F"
+          }
+        },
+        "scheme-6": {
+          "settings": {
+            "background": "#FFFFFF",
+            "text": "#1A1A1A",
+            "accent": "#8C4A1F",
+            "button": "#1A1A1A",
+            "button_label": "#FFFFFF"
+          }
+        }
+      },
+      "type_heading_font": "zilla_slab_n7",
+      "type_body_font": "work_sans_n4",
+      "heading_scale": 100,
+      "corner_radius": 4,
+      "corner_style": "soft",
+      "button_style": "solid",
+      "card_ratio": "1",
+      "card_style": "framed",
+      "spacing": "regular",
+      "type_scale": "bold",
+      "animations": "subtle"
+    },
+    "Greengrocer": {
+      "body_scheme": "scheme-1",
+      "drawer_scheme": "scheme-1",
+      "body_scale": 100,
+      "card_show_secondary": true,
+      "card_show_sizes": true,
+      "card_show_swatches": true,
+      "card_show_vendor": false,
+      "new_badge_days": 30,
+      "cart_type": "drawer",
+      "cart_note": true,
+      "currency_code_enabled": false,
+      "predictive_search": true,
+      "show_credit": true,
+      "palette": "custom",
+      "background_style": "solid",
+      "font_pairing": "custom",
+      "search_popular": "",
+      "page_width": 1300,
+      "color_schemes": {
+        "scheme-1": {
+          "settings": {
+            "background": "#F4F6EC",
+            "text": "#1F2A1C",
+            "accent": "#C8412C",
+            "button": "#2F4A2A",
+            "button_label": "#F4F6EC"
+          }
+        },
+        "scheme-2": {
+          "settings": {
+            "background": "#22331F",
+            "text": "#F4F6EC",
+            "accent": "#F2C14E",
+            "button": "#F4F6EC",
+            "button_label": "#22331F"
+          }
+        },
+        "scheme-3": {
+          "settings": {
+            "background": "#E5ECD3",
+            "text": "#1F2A1C",
+            "accent": "#A8341F",
+            "button": "#2F4A2A",
+            "button_label": "#F4F6EC"
+          }
+        },
+        "scheme-4": {
+          "settings": {
+            "background": "#F2C14E",
+            "text": "#1F2A1C",
+            "accent": "#8A2A18",
+            "button": "#1F2A1C",
+            "button_label": "#F2C14E"
+          }
+        },
+        "scheme-5": {
+          "settings": {
+            "background": "#FBE3D9",
+            "text": "#3A1E16",
+            "accent": "#A8341F",
+            "button": "#3A1E16",
+            "button_label": "#FBE3D9"
+          }
+        },
+        "scheme-6": {
+          "settings": {
+            "background": "#FFFFFF",
+            "text": "#1A1A1A",
+            "accent": "#2F4A2A",
+            "button": "#1A1A1A",
+            "button_label": "#FFFFFF"
+          }
+        }
+      },
+      "type_heading_font": "chivo_n7",
+      "type_body_font": "nunito_sans_n4",
+      "heading_scale": 100,
+      "corner_radius": 16,
+      "corner_style": "custom",
+      "button_style": "pill",
+      "card_ratio": "1",
+      "card_style": "minimal",
+      "spacing": "airy",
+      "type_scale": "balanced",
+      "animations": "expressive"
+    },
+    "Patisserie": {
+      "body_scheme": "scheme-1",
+      "drawer_scheme": "scheme-1",
+      "body_scale": 100,
+      "card_show_secondary": true,
+      "card_show_sizes": true,
+      "card_show_swatches": true,
+      "card_show_vendor": false,
+      "new_badge_days": 30,
+      "cart_type": "drawer",
+      "cart_note": true,
+      "currency_code_enabled": false,
+      "predictive_search": true,
+      "show_credit": true,
+      "palette": "custom",
+      "background_style": "solid",
+      "font_pairing": "custom",
+      "search_popular": "",
+      "page_width": 1300,
+      "color_schemes": {
+        "scheme-1": {
+          "settings": {
+            "background": "#FFF4F1",
+            "text": "#3A1F2B",
+            "accent": "#B8466A",
+            "button": "#3A1F2B",
+            "button_label": "#FFF4F1"
+          }
+        },
+        "scheme-2": {
+          "settings": {
+            "background": "#3A1F2B",
+            "text": "#FFF4F1",
+            "accent": "#F3B6C6",
+            "button": "#FFF4F1",
+            "button_label": "#3A1F2B"
+          }
+        },
+        "scheme-3": {
+          "settings": {
+            "background": "#F9E3E2",
+            "text": "#3A1F2B",
+            "accent": "#9C3657",
+            "button": "#3A1F2B",
+            "button_label": "#F9E3E2"
+          }
+        },
+        "scheme-4": {
+          "settings": {
+            "background": "#DCE8D2",
+            "text": "#24331F",
+            "accent": "#5E7F44",
+            "button": "#24331F",
+            "button_label": "#DCE8D2"
+          }
+        },
+        "scheme-5": {
+          "settings": {
+            "background": "#F6E7C8",
+            "text": "#3B2A12",
+            "accent": "#9A6A1C",
+            "button": "#3B2A12",
+            "button_label": "#F6E7C8"
+          }
+        },
+        "scheme-6": {
+          "settings": {
+            "background": "#FFFFFF",
+            "text": "#1A1A1A",
+            "accent": "#B8466A",
+            "button": "#1A1A1A",
+            "button_label": "#FFFFFF"
+          }
+        }
+      },
+      "type_heading_font": "cormorant_n6",
+      "type_body_font": "montserrat_n4",
+      "heading_scale": 115,
+      "corner_radius": 8,
+      "corner_style": "custom",
+      "button_style": "outline",
+      "card_ratio": "0.75",
+      "card_style": "overlay",
+      "spacing": "airy",
+      "type_scale": "bold",
+      "animations": "subtle"
+    }
+  }
+}

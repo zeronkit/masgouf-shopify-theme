@@ -1,0 +1,326 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Toolbar, colour bar, active filters and the filter drawer.
+  Params: show_per_page, per_page, search_type (search only), filters, sort_options, sort_by, default_sort, count, section_id, clear_url,
+          enable_filtering, enable_sorting, show_colour_bar, terms (search only), scheme
+  Board layout (Masgouf chalk menu): layout: 'board', board_head (HTML of the board's header line, re-rendered with the results),
+          tabs_menu (a menu whose first item with children gives the category tabs when no filter group can be tabs)
+{%- endcomment -%}
+{%- liquid
+  assign form_id = 'FacetsForm-' | append: section_id
+  assign active_count = 0
+  for filter in filters
+    if filter.type == 'price_range'
+      if filter.min_value.value != nil or filter.max_value.value != nil
+        assign active_count = active_count | plus: 1
+      endif
+    else
+      assign active_count = active_count | plus: filter.active_values.size
+    endif
+  endfor
+  assign locale_colour_names = 'products.option_names.colour' | t
+  assign colour_names = settings.colour_option_names | append: ',' | append: locale_colour_names | downcase | replace: ', ', ',' | split: ','
+  assign colour_filter = nil
+  for filter in filters
+    if filter.presentation == 'swatch'
+      assign colour_filter = filter
+      break
+    endif
+    assign label = filter.label | downcase | strip
+    if colour_names contains label
+      assign colour_filter = filter
+    endif
+  endfor
+-%}
+<div class="cw-facets__head{% if layout == 'board' %} mg-tabsbar-wrap{% endif %}" data-cw-facets-head>
+  {%- if layout == 'board' -%}
+    {{ board_head }}
+    {%- liquid
+      # Tabs: the first list filter with two or more real choices; otherwise the category links of the menu.
+      assign tab_filter = nil
+      if enable_filtering
+        for filter in filters
+          if filter.type == 'list' and filter.presentation != 'swatch'
+            assign tab_choices = 0
+            for value in filter.values
+              if value.count > 0 or value.active
+                assign tab_choices = tab_choices | plus: 1
+              endif
+            endfor
+            if tab_choices >= 2
+              assign tab_filter = filter
+              break
+            endif
+          endif
+        endfor
+      endif
+      assign tab_parent = nil
+      if tab_filter == nil and tabs_menu != blank
+        for link in linklists[tabs_menu].links
+          if link.links.size > 0
+            assign tab_parent = link
+            break
+          endif
+        endfor
+      endif
+      assign more_groups = 0
+      for filter in filters
+        if filter.label != tab_filter.label
+          assign more_groups = more_groups | plus: 1
+        endif
+      endfor
+      assign long_list = false
+      if count >= 12 or active_count > 0
+        assign long_list = true
+      endif
+    -%}
+    <div class="mg-tabsbar">
+      {%- if tab_filter -%}
+        <nav class="mg-tabs" aria-label="{{ tab_filter.label | escape }}">
+          <ul role="list">
+            <li><a class="mg-tab" href="{{ tab_filter.url_to_remove }}" data-cw-facet-link{% if tab_filter.active_values.size == 0 %} aria-current="true"{% endif %}>{{ 'mg.board.all' | t }}</a></li>
+            {%- for value in tab_filter.values -%}
+              {%- if value.count > 0 or value.active -%}
+                <li><a class="mg-tab" href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" data-cw-facet-link{% if value.active %} aria-current="true"{% endif %}>{{ value.label | escape }}</a></li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- elsif tab_parent -%}
+        <nav class="mg-tabs" aria-label="{{ 'mg.board.tabs_label' | t }}">
+          <ul role="list">
+            <li><a class="mg-tab" href="{{ tab_parent.url }}"{% if tab_parent.current %} aria-current="page"{% endif %}>{{ 'mg.board.everything' | t }}</a></li>
+            {%- for link in tab_parent.links -%}
+              {%- if link.type != 'collections_link' -%}
+                <li><a class="mg-tab" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- endif -%}
+      <div class="mg-tabsbar__tools">
+        <p class="cw-toolbar__count cw-visually-hidden" role="status">{{ 'collections.product_count' | t: count: count }}</p>
+        {%- if enable_filtering and more_groups > 0 and long_list -%}
+          <button type="button" class="mg-tab mg-tab--more" data-cw-open="Filters-{{ section_id }}" aria-haspopup="dialog">
+            {% render 'icon', name: 'filter' %}
+            {%- if tab_filter %}{{ 'mg.board.more_filters' | t }}{% else %}{{ 'collections.filter' | t }}{% endif -%}
+            {%- if active_count > 0 %} <span class="cw-count">{{ active_count }}</span>{% endif -%}
+          </button>
+        {%- endif -%}
+        {%- if show_per_page and count > 12 -%}
+          <div class="mg-chalk-select cw-js-only">
+            <label class="cw-visually-hidden" for="Show-{{ section_id }}">{{ 'collections.show' | t }}</label>
+            <select id="Show-{{ section_id }}" data-cw-per-page>
+              {%- for n in (1..4) -%}
+                {%- assign option_value = n | times: 12 -%}
+                <option value="{{ option_value }}"{% if option_value == per_page %} selected{% endif %}>{{ 'collections.per_page' | t: number: option_value }}</option>
+              {%- endfor -%}
+            </select>
+            {% render 'icon', name: 'down' %}
+          </div>
+        {%- endif -%}
+        {%- if enable_sorting -%}
+          <div class="mg-chalk-select">
+            <label class="mg-chalk-select__label" for="Sort-{{ section_id }}">{{ 'collections.sort_by' | t }}</label>
+            <select id="Sort-{{ section_id }}" name="sort_by" form="{{ form_id }}" data-cw-facet-input>
+              {%- assign current_sort = sort_by | default: default_sort -%}
+              {%- for option in sort_options -%}
+                <option value="{{ option.value }}"{% if option.value == current_sort %} selected{% endif %}>{{ option.name | escape }}</option>
+              {%- endfor -%}
+            </select>
+            {% render 'icon', name: 'down' %}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- else -%}
+  <div class="cw-toolbar">
+    {%- liquid
+      # Short lists (under 12 products) need neither filters nor a per page choice. An active filter keeps the button so it can be cleared.
+      assign long_list = false
+      if count >= 12 or active_count > 0
+        assign long_list = true
+      endif
+    -%}
+    {%- if enable_filtering and filters.size > 0 and long_list -%}
+      <button type="button" class="cw-button cw-button--ghost cw-toolbar__filter" data-cw-open="Filters-{{ section_id }}" aria-haspopup="dialog">
+        {% render 'icon', name: 'filter' %}
+        {{ 'collections.filter' | t }}
+        {%- if active_count > 0 %} <span class="cw-count">{{ active_count }}</span>{% endif -%}
+      </button>
+    {%- endif -%}
+    <p class="cw-toolbar__count cw-small cw-muted" role="status">{{ 'collections.product_count' | t: count: count }}</p>
+    {%- if show_per_page and count > 12 -%}
+      <div class="cw-field cw-toolbar__sort cw-toolbar__show cw-js-only">
+        <label class="cw-field__label" for="Show-{{ section_id }}">{{ 'collections.show' | t }}</label>
+        <div class="cw-select">
+          <select id="Show-{{ section_id }}" data-cw-per-page>
+            {%- for n in (1..4) -%}
+              {%- assign option_value = n | times: 12 -%}
+              <option value="{{ option_value }}"{% if option_value == per_page %} selected{% endif %}>{{ 'collections.per_page' | t: number: option_value }}</option>
+            {%- endfor -%}
+          </select>
+          {% render 'icon', name: 'down' %}
+        </div>
+      </div>
+    {%- endif -%}
+    {%- if enable_sorting -%}
+      <div class="cw-field cw-toolbar__sort">
+        <label class="cw-field__label" for="Sort-{{ section_id }}">{{ 'collections.sort_by' | t }}</label>
+        <div class="cw-select">
+          <select id="Sort-{{ section_id }}" name="sort_by" form="{{ form_id }}" data-cw-facet-input>
+            {%- assign current_sort = sort_by | default: default_sort -%}
+            {%- for option in sort_options -%}
+              <option value="{{ option.value }}"{% if option.value == current_sort %} selected{% endif %}>{{ option.name | escape }}</option>
+            {%- endfor -%}
+          </select>
+          {% render 'icon', name: 'down' %}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- endif -%}
+
+  {%- if layout != 'board' and enable_filtering and show_colour_bar and colour_filter and colour_filter.values.size > 1 -%}
+    <nav class="cw-colourbar" aria-label="{{ 'collections.shop_by_colour' | t }}">
+      <ul class="cw-colourbar__list" role="list">
+        {%- for value in colour_filter.values -%}
+          {%- if value.count > 0 or value.active -%}
+            <li>
+              <a
+                class="cw-colourbar__item{% if value.active %} is-active{% endif %}"
+                href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}"
+                data-cw-facet-link
+                {% if value.active %}aria-current="true"{% endif %}
+              >
+                {% render 'swatch', value: value, size: 'large' %}
+                <span>{{ value.label | escape }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </nav>
+  {%- endif -%}
+
+  {%- if active_count > 0 -%}
+    <ul class="cw-active-filters" role="list">
+      {%- for filter in filters -%}
+        {%- if filter.type == 'price_range' -%}
+          {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+            <li>
+              <a class="cw-pill" href="{{ filter.url_to_remove }}" data-cw-facet-link>
+                {{ filter.min_value.value | default: 0 | money }} - {{ filter.max_value.value | default: filter.range_max | money }}
+                {% render 'icon', name: 'close' %}<span class="cw-visually-hidden">{{ 'collections.remove_filter' | t }}</span>
+              </a>
+            </li>
+          {%- endif -%}
+        {%- else -%}
+          {%- for value in filter.active_values -%}
+            <li>
+              <a class="cw-pill" href="{{ value.url_to_remove }}" data-cw-facet-link>
+                {{ filter.label | escape }}: {{ value.label | escape }}
+                {% render 'icon', name: 'close' %}<span class="cw-visually-hidden">{{ 'collections.remove_filter' | t }}</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endfor -%}
+      <li><a class="cw-link-button" href="{{ clear_url }}" data-cw-facet-link>{{ 'collections.clear_all' | t }}</a></li>
+    </ul>
+  {%- endif -%}
+</div>
+
+{%- if enable_filtering and filters.size > 0 -%}
+  <dialog class="cw-drawer cw-drawer--start color-{{ scheme }}" id="Filters-{{ section_id }}" aria-labelledby="FiltersTitle-{{ section_id }}">
+    <div class="cw-drawer__head">
+      <h2 class="cw-h4" id="FiltersTitle-{{ section_id }}">{{ 'collections.filter' | t }}</h2>
+      <button type="button" class="cw-icon-button" data-cw-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+    <form id="{{ form_id }}" class="cw-drawer__body cw-facets__form" data-cw-facets-form>
+      {%- if terms != blank -%}
+        <input type="hidden" name="q" value="{{ terms | escape }}">
+        <input type="hidden" name="options[prefix]" value="last">
+        {%- if search_type != blank and search_type != 'all' -%}<input type="hidden" name="type" value="{{ search_type | escape }}">{%- endif -%}
+      {%- endif -%}
+      {%- for filter in filters -%}
+        {%- liquid
+          # A group with only one real choice (for example one brand) helps nobody, so it is left out.
+          if filter.type != 'price_range' and filter.active_values.size == 0
+            assign real_choices = 0
+            for value in filter.values
+              if value.count > 0
+                assign real_choices = real_choices | plus: 1
+              endif
+            endfor
+            if real_choices < 2
+              continue
+            endif
+          endif
+        -%}
+        {%- assign filter_id = section_id | append: '-filter-' | append: forloop.index -%}
+        <details class="cw-fold" id="{{ filter_id }}"{% if forloop.index <= 2 or filter.active_values.size > 0 %} open{% endif %}>
+          <summary class="cw-fold__summary">
+            <span>{{ filter.label | escape }}{% if filter.active_values.size > 0 %} ({{ filter.active_values.size }}){% endif %}</span>
+            {% render 'icon', name: 'plus' %}
+          </summary>
+          <div class="cw-fold__body">
+            {%- case filter.type -%}
+              {%- when 'price_range' -%}
+                <fieldset class="cw-price-range">
+                  <legend class="cw-visually-hidden">{{ filter.label | escape }}</legend>
+                  <div class="cw-field">
+                    <label class="cw-field__label" for="{{ filter_id }}-min">{{ 'collections.from' | t }} ({{ cart.currency.symbol }})</label>
+                    <input class="cw-input" type="number" inputmode="decimal" id="{{ filter_id }}-min" name="{{ filter.min_value.param_name }}" min="0" max="{{ filter.range_max | divided_by: 100.0 }}" placeholder="0"
+                      {% if filter.min_value.value %}value="{{ filter.min_value.value | divided_by: 100.0 }}"{% endif %} data-cw-facet-input>
+                  </div>
+                  <div class="cw-field">
+                    <label class="cw-field__label" for="{{ filter_id }}-max">{{ 'collections.to' | t }} ({{ cart.currency.symbol }})</label>
+                    <input class="cw-input" type="number" inputmode="decimal" id="{{ filter_id }}-max" name="{{ filter.max_value.param_name }}" min="0" max="{{ filter.range_max | divided_by: 100.0 }}" placeholder="{{ filter.range_max | divided_by: 100.0 }}"
+                      {% if filter.max_value.value %}value="{{ filter.max_value.value | divided_by: 100.0 }}"{% endif %} data-cw-facet-input>
+                  </div>
+                </fieldset>
+              {%- else -%}
+                <fieldset>
+                  <legend class="cw-visually-hidden">{{ filter.label | escape }}</legend>
+                  <ul class="cw-checks{% if filter.presentation == 'swatch' %} cw-checks--swatch{% endif %}" role="list">
+                    {%- for value in filter.values -%}
+                      {%- assign value_id = filter_id | append: '-' | append: forloop.index -%}
+                      <li>
+                        <input type="checkbox" class="cw-check__input" id="{{ value_id }}" name="{{ value.param_name }}" value="{{ value.value }}"
+                          {% if value.active %}checked{% endif %}
+                          {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                          data-cw-facet-input>
+                        <label class="cw-check" for="{{ value_id }}">
+                          {%- if filter.presentation == 'swatch' -%}
+                            {% render 'swatch', value: value, size: 'small' %}
+                          {%- elsif filter.presentation == 'image' and value.image -%}
+                            {{ value.image | image_url: width: 64 | image_tag: class: 'cw-check__img', alt: '', loading: 'lazy' }}
+                          {%- endif -%}
+                          <span>{{ value.label | escape }}</span>
+                          <span class="cw-muted">({{ value.count }})</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </fieldset>
+            {%- endcase -%}
+          </div>
+        </details>
+      {%- endfor -%}
+      <div class="cw-drawer__actions">
+        <a class="cw-button cw-button--ghost" href="{{ clear_url }}" data-cw-facet-link>{{ 'collections.clear_all' | t }}</a>
+        <button type="submit" class="cw-button cw-button--primary" data-cw-apply>{{ 'collections.show_results' | t }}</button>
+      </div>
+    </form>
+  </dialog>
+{%- elsif enable_sorting -%}
+  <form id="{{ form_id }}" data-cw-facets-form>
+    {%- if terms != blank -%}
+      <input type="hidden" name="q" value="{{ terms | escape }}">
+      <input type="hidden" name="options[prefix]" value="last">
+        {%- if search_type != blank and search_type != 'all' -%}<input type="hidden" name="type" value="{{ search_type | escape }}">{%- endif -%}
+    {%- endif -%}
+  </form>
+{%- endif -%}

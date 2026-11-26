@@ -1,0 +1,135 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Fonts, global tokens and one class per colour scheme.
+  Theme settings > Style offers ready-made choices (palette, background style, font pairing, corners,
+  spacing, type scale) that map onto these variables. "Custom" keeps the raw pickers in charge.
+{%- endcomment -%}
+{%- liquid
+  assign heading_font = settings.type_heading_font
+  assign body_font = settings.type_body_font
+  assign body_bold = body_font | font_modify: 'weight', 'bold'
+  assign body_italic = body_font | font_modify: 'style', 'italic'
+  assign pairing = settings.font_pairing | default: 'custom'
+
+  assign sans = 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+  case pairing
+    when 'market'
+      assign stack_heading = sans
+      assign stack_body = sans
+    when 'bistro'
+      assign stack_heading = '"Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif'
+      assign stack_body = sans
+    when 'patisserie'
+      assign stack_heading = 'Didot, "Bodoni 72", "Bodoni MT", "Hoefler Text", "Times New Roman", serif'
+      assign stack_body = 'Georgia, "Times New Roman", serif'
+    when 'label'
+      assign stack_heading = 'ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace'
+      assign stack_body = sans
+    when 'bakehouse'
+      assign stack_heading = 'ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito", system-ui, sans-serif'
+      assign stack_body = sans
+    when 'arabic'
+      assign stack_heading = '"Noto Kufi Arabic", "Noto Sans Arabic", "Segoe UI", Tahoma, "Geeza Pro", system-ui, sans-serif'
+      assign stack_body = '"Noto Sans Arabic", "Noto Kufi Arabic", "Segoe UI", Tahoma, "Geeza Pro", system-ui, sans-serif'
+  endcase
+
+  case settings.corner_style
+    when 'sharp'
+      assign radius = 0
+    when 'soft'
+      assign radius = 6
+    when 'round'
+      assign radius = 18
+    else
+      assign radius = settings.corner_radius
+  endcase
+
+  case settings.type_scale
+    when 'compact'
+      assign type_factor = 0.88
+    when 'bold'
+      assign type_factor = 1.16
+    else
+      assign type_factor = 1
+  endcase
+-%}
+{%- if pairing == 'custom' -%}
+  {{ heading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
+  {{ body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
+{%- endif -%}
+{% style %}
+  {%- if settings.type_hand_font != blank %}
+    {{ settings.type_hand_font | font_face: font_display: 'swap' }}
+  {%- endif %}
+  {%- if pairing == 'custom' %}
+    {{ heading_font | font_face: font_display: 'swap' }}
+    {{ body_font | font_face: font_display: 'swap' }}
+    {{ body_bold | font_face: font_display: 'swap' }}
+    {{ body_italic | font_face: font_display: 'swap' }}
+  {%- endif %}
+
+  :root {
+    --mg-font-hand: {% if settings.type_hand_font != blank %}{{ settings.type_hand_font.family }}, {% endif %}var(--cw-font-heading);
+    --cw-font-script: "Noto Kufi Arabic", "Noto Sans Arabic", "Geeza Pro", Tahoma;
+    {%- if pairing == 'custom' %}
+      --cw-font-heading: {{ heading_font.family }}, var(--cw-font-script), {{ heading_font.fallback_families }};
+      --cw-font-heading-weight: {{ heading_font.weight }};
+      --cw-font-heading-style: {{ heading_font.style }};
+      --cw-font-body: {{ body_font.family }}, var(--cw-font-script), {{ body_font.fallback_families }};
+      --cw-font-body-weight: {{ body_font.weight }};
+      --cw-font-body-weight-bold: {{ body_bold.weight | default: 700 }};
+    {%- else %}
+      --cw-font-heading: {{ stack_heading }};
+      --cw-font-heading-weight: 700;
+      --cw-font-heading-style: normal;
+      --cw-font-body: {{ stack_body }};
+      --cw-font-body-weight: 400;
+      --cw-font-body-weight-bold: 700;
+    {%- endif %}
+    --cw-heading-scale: {{ settings.heading_scale | divided_by: 100.0 | times: type_factor }};
+    --cw-body-scale: {{ settings.body_scale | divided_by: 100.0 }};
+    --cw-page-width: {{ settings.page_width }}px;
+    --cw-radius: {{ radius }}px;
+    --cw-button-radius: {% if settings.button_style == 'pill' %}999px{% else %}{{ radius }}px{% endif %};
+    --cw-card-ratio: {{ settings.card_ratio }};
+  }
+
+  {% for scheme in settings.color_schemes -%}
+    {% render 'scheme-vars', id: scheme.id, bg: scheme.settings.background, gradient: scheme.settings.background_gradient, text: scheme.settings.text, accent: scheme.settings.accent, button: scheme.settings.button, label: scheme.settings.button_label %}
+  {% endfor %}
+
+  {%- comment -%} A ready-made palette replaces the main scheme (1) and the soft scheme (3). {%- endcomment -%}
+  {%- liquid
+    case settings.palette
+      when 'flour'
+        assign p = '#FBF5EA,#2B1D14,#B4432A,#2B1D14,#FBF5EA,#F3E4CB' | split: ','
+      when 'espresso'
+        assign p = '#1E1612,#F2E6D6,#D69A5A,#F2E6D6,#1E1612,#2A201A' | split: ','
+      when 'crust'
+        assign p = '#F3E1C2,#33210F,#9A4A12,#33210F,#F3E1C2,#E8D0A8' | split: ','
+      when 'herb'
+        assign p = '#F4F6EC,#1F2A1C,#C8412C,#2F4A2A,#F4F6EC,#E5ECD3' | split: ','
+      when 'raspberry'
+        assign p = '#FFF4F1,#3A1F2B,#B8466A,#3A1F2B,#FFF4F1,#F9E3E2' | split: ','
+      when 'contrast'
+        assign p = '#FFFFFF,#000000,#A3260F,#000000,#FFFFFF,#F0F0F0' | split: ','
+      when 'sea_salt'
+        assign p = '#F1F4F4,#14262B,#1F6B74,#14262B,#F1F4F4,#DFE8E8' | split: ','
+      when 'paprika'
+        assign p = '#FFF1E6,#2E140B,#C8461F,#C8461F,#FFF7F0,#F8DCC8' | split: ','
+      when 'charcoal'
+        assign p = '#F7F6F3,#1C1B19,#5A5650,#1C1B19,#F7F6F3,#ECEAE4' | split: ','
+      when 'olive'
+        assign p = '#F3F1E2,#262A17,#66702E,#3D4420,#F3F1E2,#E5E2C8' | split: ','
+      else
+        assign p = nil
+    endcase
+    if settings.background_style == 'dark'
+      assign p = '#1A1411,#F2E6D6,#D69A5A,#F2E6D6,#1A1411,#2A201A' | split: ','
+    endif
+  -%}
+  {%- if p -%}
+    {% render 'scheme-vars', id: 'scheme-1', bg: p[0], text: p[1], accent: p[2], button: p[3], label: p[4] %}
+    {% render 'scheme-vars', id: 'scheme-3', bg: p[5], text: p[1], accent: p[2], button: p[3], label: p[4] %}
+  {%- endif -%}
+{% endstyle %}

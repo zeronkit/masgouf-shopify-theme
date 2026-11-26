@@ -1,0 +1,107 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign t_banner_note = 'mg.main_collection.banner_note' | t
+  if section.settings.banner_note != blank
+    assign t_banner_note = section.settings.banner_note
+  endif
+-%}
+{%- liquid
+  # A shopper's "Show" choice is kept in a hidden cart attribute, because Liquid cannot read URL parameters.
+  assign per_page = section.settings.per_page
+  assign chosen = cart.attributes['_cw_per_page'] | plus: 0
+  if section.settings.show_per_page and chosen >= 8 and chosen <= 48
+    assign per_page = chosen
+  endif
+-%}
+<section class="cw-section mg-menu-page color-{{ section.settings.color_scheme }}">
+  <div class="cw-wrap">
+    <div class="mg-board mg-board--menu">
+      {%- paginate collection.products by per_page -%}
+        {%- capture board_head -%}
+          <header class="mg-board__head">
+            <h1 class="mg-board__title">{{ collection.title | escape }}</h1>
+            <p class="mg-board__meta">
+              {{- 'mg.board.items' | t: count: collection.products_count -}}
+              {%- if t_banner_note != blank %}<span aria-hidden="true"> · </span><span class="cw-visually-hidden">, </span>{{ t_banner_note | escape }}{% endif -%}
+            </p>
+          </header>
+          {%- if section.settings.show_description and collection.description != blank and paginate.current_page == 1 -%}
+            <div class="cw-rte mg-board__intro">{{ collection.description }}</div>
+          {%- endif -%}
+        {%- endcapture -%}
+        <cw-facets class="cw-facets" data-section-id="{{ section.id }}">
+          {%- assign clear_url = collection.url | append: '?sort_by=' | append: collection.sort_by -%}
+          {% render 'facets',
+            layout: 'board',
+            board_head: board_head,
+            tabs_menu: section.settings.tabs_menu,
+            filters: collection.filters,
+            sort_options: collection.sort_options,
+            sort_by: collection.sort_by,
+            default_sort: collection.default_sort_by,
+            count: collection.products_count,
+            section_id: section.id,
+            clear_url: clear_url,
+            enable_filtering: section.settings.enable_filtering,
+            enable_sorting: section.settings.enable_sorting,
+            show_colour_bar: false,
+            scheme: 'scheme-1',
+            show_per_page: section.settings.show_per_page,
+            per_page: per_page
+          %}
+
+          <div class="cw-facets__results mg-board__body" data-cw-results>
+            {%- if collection.products.size > 0 -%}
+              <ul class="mg-menu" role="list" data-cw-list>
+                {%- for product in collection.products -%}
+                  <li>{% render 'mg-menu-line', product: product, show_image: section.settings.show_plates, show_desc: section.settings.show_line_desc %}</li>
+                {%- endfor -%}
+              </ul>
+            {%- else -%}
+              <div class="mg-board__empty">
+                <p class="mg-board__empty-title">{{ 'collections.empty' | t }}</p>
+                <a class="mg-tab" href="{{ clear_url }}" data-cw-facet-link>{{ 'collections.clear_all' | t }}</a>
+              </div>
+            {%- endif -%}
+            <div class="mg-board__foot">
+              {%- assign shown = paginate.current_offset | plus: collection.products.size -%}
+              {% render 'pagination', paginate: paginate, style: section.settings.pagination_style, shown: shown, more_label: 'mg.board.more' %}
+            </div>
+          </div>
+        </cw-facets>
+      {%- endpaginate -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.collection_grid",
+  "class": "cw-shopify-section",
+  "enabled_on": { "templates": ["collection"] },
+  "settings": [
+    { "type": "checkbox", "id": "show_description", "label": "t:labels.show_description", "default": true },
+    { "type": "text", "id": "banner_note", "label": "t:labels.banner_note", "info": "t:info.banner_note" },
+    { "type": "header", "content": "t:labels.products" },
+    { "type": "checkbox", "id": "show_plates", "label": "t:labels.mg_show_plates", "default": true },
+    { "type": "checkbox", "id": "show_line_desc", "label": "t:labels.mg_show_line_desc", "default": true },
+    { "type": "range", "id": "per_page", "label": "t:labels.products_per_page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    {
+      "type": "select",
+      "id": "pagination_style",
+      "label": "t:labels.pagination_style",
+      "options": [
+        { "value": "numbered", "label": "t:options.pagination_numbered" },
+        { "value": "load_more", "label": "t:options.pagination_load_more" },
+        { "value": "infinite", "label": "t:options.pagination_infinite" }
+      ],
+      "default": "load_more"
+    },
+    { "type": "checkbox", "id": "show_per_page", "label": "t:labels.show_per_page", "default": true, "info": "t:info.show_per_page" },
+    { "type": "checkbox", "id": "enable_filtering", "label": "t:labels.enable_filtering", "default": true, "info": "t:info.filters" },
+    { "type": "link_list", "id": "tabs_menu", "label": "t:labels.mg_tabs_menu", "default": "main-menu", "info": "t:info.mg_tabs_menu" },
+    { "type": "checkbox", "id": "enable_sorting", "label": "t:labels.enable_sorting", "default": true },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ]
+}
+{% endschema %}

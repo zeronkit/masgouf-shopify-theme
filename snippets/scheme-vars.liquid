@@ -1,0 +1,20 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  CSS variables for one colour scheme. Derived tones use color-mix, so any colour works.
+  Params: id, bg, gradient (optional), text, accent, button, label
+{%- endcomment -%}
+.color-{{ id }} {
+  --cw-bg: {{ bg }};
+  --cw-bg-gradient: {% if gradient != blank %}{{ gradient }}{% else %}{{ bg }}{% endif %};
+  --cw-text: {{ text }};
+  --cw-accent: {{ accent }};
+  --cw-button: {{ button }};
+  --cw-button-label: {{ label }};
+  --cw-line: color-mix(in srgb, {{ text }} 22%, transparent);
+  --cw-muted: color-mix(in srgb, {{ text }} 82%, {{ bg }});
+  --cw-tint: color-mix(in srgb, {{ text }} 6%, transparent);
+  --cw-accent-soft: color-mix(in srgb, {{ accent }} 14%, {{ bg }});
+  --cw-soft: color-mix(in srgb, {{ text }} 5%, {{ bg }});
+  background: var(--cw-bg-gradient);
+  color: var(--cw-text);
+}

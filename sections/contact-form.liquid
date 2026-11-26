@@ -1,0 +1,388 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign t_heading = 'mg.contact_form.heading' | t
+  if section.settings.heading != blank
+    assign t_heading = section.settings.heading
+  endif
+  assign t_intro = 'mg.contact_form.intro_html' | t
+  if section.settings.intro != blank
+    assign t_intro = section.settings.intro
+  endif
+  assign t_button_label = 'mg.contact_form.button_label' | t
+  if section.settings.button_label != blank
+    assign t_button_label = section.settings.button_label
+  endif
+  assign t_success_message = 'mg.contact_form.success_message' | t
+  if section.settings.success_message != blank
+    assign t_success_message = section.settings.success_message
+  endif
+  assign t_info_heading = 'mg.contact_form.info_heading' | t
+  if section.settings.info_heading != blank
+    assign t_info_heading = section.settings.info_heading
+  endif
+  assign t_info_hours = 'mg.contact_form.info_hours_html' | t
+  if section.settings.info_hours != blank
+    assign t_info_hours = section.settings.info_hours
+  endif
+  assign t_info_note = 'mg.contact_form.info_note_html' | t
+  if section.settings.info_note != blank
+    assign t_info_note = section.settings.info_note
+  endif
+-%}
+{%- comment -%}
+  Contact form. Uses Shopify's own contact form, so messages go to the store's sender email.
+  Field blocks can be added, removed and reordered. An email field is always present, because
+  Shopify needs it to send the message.
+{%- endcomment -%}
+{%- if section.settings.enabled -%}
+  {%- liquid
+    assign has_email_block = false
+    for block in section.blocks
+      if block.type == 'email'
+        assign has_email_block = true
+      endif
+    endfor
+    assign form_id = 'ContactForm-' | append: section.id
+    assign success_text = t_success_message
+    if success_text == blank
+      assign success_text = 'contact.success' | t
+    endif
+    assign button_text = t_button_label
+    if button_text == blank
+      assign button_text = 'contact.send' | t
+    endif
+  -%}
+  {%- capture contact_form_html -%}
+        {%- form 'contact', id: form_id, class: 'cw-form cw-contact__form' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="cw-notice cw-notice--success" role="status">
+              {% render 'icon', name: 'check' %}
+              {{ success_text | escape }}
+            </p>
+          {%- elsif form.errors -%}
+            <div class="cw-notice cw-notice--error" role="alert" id="{{ form_id }}-errors">
+              <div>
+                <p class="cw-strong">{{ 'contact.error_heading' | t }}</p>
+                {{ form.errors | default_errors }}
+              </div>
+            </div>
+          {%- endif -%}
+
+          <div class="cw-contact__fields">
+            {%- unless has_email_block -%}
+              {%- assign email_id = form_id | append: '-email' -%}
+              {% render 'contact-field', type: 'email', id: email_id, form: form, form_id: form_id, width: 'full', required: true %}
+            {%- endunless -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'hours' -%}{%- continue -%}{%- endif -%}
+{%- liquid
+  assign mg_bk = 'mg.contact_form.' | append: block.id | replace: '-', '_'
+  assign bt_label = mg_bk | append: '_label' | t
+  if bt_label contains 'ranslation missing'
+    assign bt_label = ''
+  endif
+  if block.settings.label != blank
+    assign bt_label = block.settings.label
+  endif
+  assign bt_placeholder = mg_bk | append: '_placeholder' | t
+  if bt_placeholder contains 'ranslation missing'
+    assign bt_placeholder = ''
+  endif
+  if block.settings.placeholder != blank
+    assign bt_placeholder = block.settings.placeholder
+  endif
+  assign bt_options = mg_bk | append: '_options' | t
+  if bt_options contains 'ranslation missing'
+    assign bt_options = ''
+  endif
+  if block.settings.options != blank
+    assign bt_options = block.settings.options
+  endif
+-%}
+              {%- liquid
+                assign field_id = form_id | append: '-' | append: block.id
+                assign required = block.settings.required
+                if block.type == 'email'
+                  assign required = true
+                endif
+              -%}
+              {% render 'contact-field',
+                type: block.type,
+                id: field_id,
+                form: form,
+                form_id: form_id,
+                label: bt_label,
+                placeholder: bt_placeholder,
+                width: block.settings.width,
+                required: required,
+                options: bt_options,
+                consent_text: block.settings.text,
+                attributes: block.shopify_attributes
+              %}
+            {%- endfor -%}
+          </div>
+          <p class="cw-small cw-muted">{{ 'contact.required_note' | t }}</p>
+          <button type="submit" class="cw-button cw-button--primary">
+            {{- button_text | escape -}}
+          </button>
+        {%- endform -%}
+  {%- endcapture -%}
+  {%- if section.settings.layout == 'stall_front' -%}
+    {%- comment -%}
+      The stall front: a wide photo of the stall, the opening hours on a dark board over its lower start corner
+      (days as menu lines, the address and the phone), then the form as a centred order ticket with the reply time on its stub.
+    {%- endcomment -%}
+    <section class="cw-section mg-front color-{{ section.settings.color_scheme }}" aria-labelledby="ContactTitle-{{ section.id }}">
+      <div class="cw-wrap">
+        <div class="mg-front__scene">
+          <div class="mg-front__photo">
+            {%- if section.settings.front_image != blank -%}
+              {% render 'image', image: section.settings.front_image, sizes: '(min-width: 1300px) 1220px, 100vw', max: 2400, eager: true, alt: '' %}
+            {%- else -%}
+              {{ 'lifestyle-2' | placeholder_svg_tag: 'cw-placeholder' }}
+            {%- endif -%}
+          </div>
+          <div class="mg-board mg-front__hours">
+            {%- if page.title != blank -%}<h1 class="mg-front__title">{{ page.title | escape }}</h1>{%- endif -%}
+            {%- if t_info_heading != blank -%}<h2 class="mg-front__sub">{{ t_info_heading | escape }}</h2>{%- endif -%}
+            {%- assign hour_blocks = section.blocks | where: 'type', 'hours' -%}
+            {%- if hour_blocks.size > 0 -%}
+              <ul class="mg-front__lines" role="list">
+                {%- for block in hour_blocks -%}
+                  {%- liquid
+                    assign mg_bk = 'mg.contact_form.' | append: block.id | replace: '-', '_'
+                    assign bt_days = mg_bk | append: '_days' | t
+                    if bt_days contains 'ranslation missing'
+                      assign bt_days = ''
+                    endif
+                    if block.settings.days != blank
+                      assign bt_days = block.settings.days
+                    endif
+                    assign bt_hours = mg_bk | append: '_hours' | t
+                    if bt_hours contains 'ranslation missing'
+                      assign bt_hours = ''
+                    endif
+                    if block.settings.hours != blank
+                      assign bt_hours = block.settings.hours
+                    endif
+                  -%}
+                  <li class="mg-front__line" {{ block.shopify_attributes }}><span class="mg-front__days">{{ bt_days | escape }}</span><span class="mg-front__time">{{ bt_hours | escape }}</span></li>
+                {%- endfor -%}
+              </ul>
+            {%- elsif t_info_hours != blank -%}
+              <div class="cw-rte">{{ t_info_hours }}</div>
+            {%- endif -%}
+            {%- if section.settings.info_address != blank -%}<div class="cw-rte mg-front__address">{% render 'icon', name: 'pin' %}{{ section.settings.info_address }}</div>{%- endif -%}
+            {%- if section.settings.info_phone != blank -%}<p class="mg-front__phone"><a href="tel:{{ section.settings.info_phone | remove: ' ' | escape }}">{{ section.settings.info_phone | escape }}</a></p>{%- endif -%}
+            {%- assign info_email = section.settings.info_email | default: settings.contact_email | strip -%}
+            {%- if info_email != blank -%}<p class="mg-front__phone"><a class="mg-mail" href="mailto:{{ info_email | escape }}">{{ info_email | escape }}</a></p>{%- endif -%}
+            {%- if t_info_note != blank -%}<div class="cw-rte mg-front__note">{{ t_info_note }}</div>{%- endif -%}
+          </div>
+        </div>
+        <div class="mg-front__ticket">
+          <h2 class="mg-front__ticket-title" id="ContactTitle-{{ section.id }}">{{ t_heading | escape }}</h2>
+          {%- if page.content != blank -%}
+            <div class="cw-rte mg-front__intro">{{ page.content }}</div>
+          {%- elsif t_intro != blank -%}
+            <div class="cw-rte mg-front__intro">{{ t_intro }}</div>
+          {%- endif -%}
+          {{ contact_form_html }}
+          <div class="mg-stub mg-front__stub">
+            <p class="mg-stub__title">{{ 'mg.contact_form.stub_title' | t }}</p>
+            <p class="mg-front__reply">{{ 'mg.contact_form.stub_text' | t }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  {%- else -%}
+  <section class="cw-section cw-contact color-{{ section.settings.color_scheme }}" aria-labelledby="ContactTitle-{{ section.id }}">
+    <div class="cw-wrap cw-contact__grid cw-contact__grid--{{ section.settings.layout }}">
+      <div class="cw-contact__main cw-contact__card">
+        {%- if t_heading != blank -%}
+          <h2 class="cw-h2" id="ContactTitle-{{ section.id }}">{{ t_heading | escape }}</h2>
+        {%- else -%}
+          <h2 class="cw-visually-hidden" id="ContactTitle-{{ section.id }}">{{ 'contact.title' | t }}</h2>
+        {%- endif -%}
+        {%- if t_intro != blank -%}
+          <div class="cw-rte cw-muted">{{ t_intro }}</div>
+        {%- endif -%}
+
+        {{ contact_form_html }}
+      </div>
+
+      {%- if section.settings.layout == 'form_info' -%}
+        <aside class="cw-contact__info cw-contact__counter color-{{ section.settings.info_scheme }}" aria-label="{{ 'contact.info_label' | t }}">
+          {%- if t_info_heading != blank -%}
+            <p class="cw-contact__counter-title">{{ t_info_heading | escape }}</p>
+          {%- endif -%}
+          {%- assign info_email = section.settings.info_email | default: settings.contact_email | strip -%}
+          {%- if info_email != blank -%}
+            <div class="cw-contact__info-item">
+              <p class="cw-field__label">{{ 'contact.email' | t }}</p>
+              <p><a class="mg-mail" href="mailto:{{ info_email | escape }}">{{ info_email | escape }}</a></p>
+            </div>
+          {%- endif -%}
+          {%- if t_info_hours != blank -%}
+            <div class="cw-contact__info-item cw-contact__hours">
+              <p class="cw-field__label">{{ 'contact.hours' | t }}</p>
+              <div class="cw-rte">{{ t_info_hours }}</div>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.info_address != blank -%}
+            <div class="cw-contact__info-item">
+              <p class="cw-field__label">{{ 'contact.address' | t }}</p>
+              <div class="cw-rte">{{ section.settings.info_address }}</div>
+            </div>
+          {%- endif -%}
+          {%- if t_info_note != blank -%}
+            <div class="cw-contact__info-item cw-contact__pickup">
+              {% render 'icon', name: 'pin' %}
+              <div class="cw-rte">{{ t_info_note }}</div>
+            </div>
+          {%- endif -%}
+          {%- if section.settings.info_menu.links.size > 0 -%}
+            <div class="cw-contact__info-item">
+              <p class="cw-field__label">{{ 'mg.contact_form.links_heading' | t }}</p>
+              <ul class="cw-contact__links" role="list">
+                {%- for link in section.settings.info_menu.links -%}
+                  <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+        </aside>
+      {%- endif -%}
+    </div>
+  </section>
+  {%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:names.contact_form",
+  "class": "cw-shopify-section",
+  "settings": [
+    { "type": "checkbox", "id": "enabled", "label": "t:labels.show_contact_form", "default": true },
+    { "type": "text", "id": "heading", "label": "t:labels.heading" },
+    { "type": "richtext", "id": "intro", "label": "t:labels.intro" },
+    { "type": "text", "id": "button_label", "label": "t:labels.button_label" },
+    { "type": "text", "id": "success_message", "label": "t:labels.success_message" },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:labels.layout",
+      "options": [
+        { "value": "form", "label": "t:options.form_only" },
+        { "value": "form_info", "label": "t:options.form_with_info" },
+        { "value": "stall_front", "label": "t:options.mg_stall_front" }
+      ],
+      "default": "form_info"
+    },
+    { "type": "image_picker", "id": "front_image", "label": "t:labels.mg_stall_photo" },
+    { "type": "header", "content": "t:labels.info_column" },
+    { "type": "text", "id": "info_heading", "label": "t:labels.heading" },
+    { "type": "text", "id": "info_email", "label": "t:labels.info_email", "info": "t:info.info_email" },
+    { "type": "richtext", "id": "info_hours", "label": "t:labels.info_hours" },
+    { "type": "richtext", "id": "info_address", "label": "t:labels.info_address" },
+    { "type": "text", "id": "info_phone", "label": "t:labels.mg_phone" },
+    { "type": "richtext", "id": "info_note", "label": "t:labels.info_note" },
+    { "type": "link_list", "id": "info_menu", "label": "t:labels.info_menu", "info": "t:info.info_menu" },
+    { "type": "color_scheme", "id": "info_scheme", "label": "t:labels.info_scheme", "default": "scheme-3" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" },
+    { "type": "paragraph", "content": "t:info.contact_form" }
+  ],
+  "blocks": [
+    {
+      "type": "hours",
+      "name": "t:names.hours_row",
+      "settings": [
+        { "type": "text", "id": "days", "label": "t:labels.days" },
+        { "type": "text", "id": "hours", "label": "t:labels.hours" }
+      ]
+    },
+    {
+      "type": "name",
+      "name": "t:names.field_name",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "t:labels.field_label" },
+        { "type": "text", "id": "placeholder", "label": "t:labels.placeholder" },
+        { "type": "checkbox", "id": "required", "label": "t:labels.required", "default": false },
+        { "type": "select", "id": "width", "label": "t:labels.width", "options": [{ "value": "half", "label": "t:options.half" }, { "value": "full", "label": "t:options.full" }], "default": "half" }
+      ]
+    },
+    {
+      "type": "email",
+      "name": "t:names.field_email",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "t:info.email_required" },
+        { "type": "text", "id": "label", "label": "t:labels.field_label" },
+        { "type": "text", "id": "placeholder", "label": "t:labels.placeholder" },
+        { "type": "select", "id": "width", "label": "t:labels.width", "options": [{ "value": "half", "label": "t:options.half" }, { "value": "full", "label": "t:options.full" }], "default": "half" }
+      ]
+    },
+    {
+      "type": "phone",
+      "name": "t:names.field_phone",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "t:labels.field_label" },
+        { "type": "text", "id": "placeholder", "label": "t:labels.placeholder" },
+        { "type": "checkbox", "id": "required", "label": "t:labels.required", "default": false },
+        { "type": "select", "id": "width", "label": "t:labels.width", "options": [{ "value": "half", "label": "t:options.half" }, { "value": "full", "label": "t:options.full" }], "default": "half" }
+      ]
+    },
+    {
+      "type": "order",
+      "name": "t:names.field_order",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "t:labels.field_label" },
+        { "type": "text", "id": "placeholder", "label": "t:labels.placeholder" },
+        { "type": "checkbox", "id": "required", "label": "t:labels.required", "default": false },
+        { "type": "select", "id": "width", "label": "t:labels.width", "options": [{ "value": "half", "label": "t:options.half" }, { "value": "full", "label": "t:options.full" }], "default": "half" }
+      ]
+    },
+    {
+      "type": "topic",
+      "name": "t:names.field_topic",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "t:labels.field_label" },
+        { "type": "text", "id": "options", "label": "t:labels.topic_options", "info": "t:info.topic_options" },
+        { "type": "text", "id": "placeholder", "label": "t:labels.placeholder" },
+        { "type": "checkbox", "id": "required", "label": "t:labels.required", "default": false },
+        { "type": "select", "id": "width", "label": "t:labels.width", "options": [{ "value": "half", "label": "t:options.half" }, { "value": "full", "label": "t:options.full" }], "default": "half" }
+      ]
+    },
+    {
+      "type": "message",
+      "name": "t:names.field_message",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "t:labels.field_label" },
+        { "type": "text", "id": "placeholder", "label": "t:labels.placeholder" },
+        { "type": "checkbox", "id": "required", "label": "t:labels.required", "default": true },
+        { "type": "select", "id": "width", "label": "t:labels.width", "options": [{ "value": "half", "label": "t:options.half" }, { "value": "full", "label": "t:options.full" }], "default": "full" }
+      ]
+    },
+    {
+      "type": "consent",
+      "name": "t:names.field_consent",
+      "limit": 1,
+      "settings": [
+        { "type": "inline_richtext", "id": "text", "label": "t:labels.consent_text", "default": "I agree that my details are used to answer this message." },
+        { "type": "checkbox", "id": "required", "label": "t:labels.required", "default": true },
+        { "type": "select", "id": "width", "label": "t:labels.width", "options": [{ "value": "half", "label": "t:options.half" }, { "value": "full", "label": "t:options.full" }], "default": "full" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.contact_form",
+      "blocks": [{ "type": "name" }, { "type": "email" }, { "type": "message" }]
+    }
+  ]
+}
+{% endschema %}

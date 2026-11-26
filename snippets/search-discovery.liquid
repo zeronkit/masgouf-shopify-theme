@@ -1,0 +1,95 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  What a shopper sees before typing: popular searches, recent searches (filled by search.js) and new products.
+  Params: id (unique), show_products (boolean), heading_tag, style ('ticket': popular terms as words and Popular today as menu lines), show_today (false hides Popular today)
+{%- endcomment -%}
+{%- liquid
+  assign popular_text = 'mg.search.popular' | t
+  if settings.search_popular != blank
+    assign popular_text = settings.search_popular
+  endif
+  assign popular = popular_text | split: ','
+  assign heading_tag = heading_tag | default: 'h2'
+-%}
+{%- if style == 'ticket' -%}
+  <div class="mg-searchticket__before">
+    {%- if popular.size > 0 -%}
+      <div class="mg-tk-block">
+        <{{ heading_tag }} class="mg-tk-block__title">{{ 'search.popular' | t }}</{{ heading_tag }}>
+        <ul class="mg-tk-words" role="list">
+          {%- for term in popular -%}
+            {%- assign clean = term | strip -%}
+            {%- if clean != blank -%}
+              <li><a class="mg-tk-word" href="{{ routes.search_url }}?q={{ clean | url_encode }}&amp;options%5Bprefix%5D=last">{{ clean | escape }}</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endif -%}
+    <div class="mg-tk-block" data-cw-recent hidden>
+      <div class="cw-recent__head">
+        <{{ heading_tag }} class="mg-tk-block__title">{{ 'search.recent' | t }}</{{ heading_tag }}>
+        <button type="button" class="cw-link-button" data-cw-recent-clear>{{ 'search.recent_clear' | t }}</button>
+      </div>
+      <ul class="cw-chips mg-tk-words" role="list" data-cw-recent-list></ul>
+    </div>
+    {%- liquid
+      assign today = settings.search_featured
+      if today == blank
+        assign today = collections.all
+      endif
+    -%}
+    {%- if show_today != false and today.products.size > 0 -%}
+      <div class="mg-tk-block">
+        <{{ heading_tag }} class="mg-tk-block__title">{{ 'mg.search.popular_today' | t }}</{{ heading_tag }}>
+        <ul class="mg-tk-lines" role="list">
+          {%- for product in today.products limit: 5 -%}
+            <li>
+              <a class="mg-pline" href="{{ product.url }}">
+                <span class="mg-pline__plate">{%- if product.featured_media -%}{{ product.featured_media.preview_image | image_url: width: 72, height: 72, crop: 'center' | image_tag: alt: '', width: 36, height: 36, loading: 'lazy' }}{%- endif -%}</span>
+                <span class="mg-pline__name">{{ product.title | escape }}</span>
+                <span class="mg-pline__price">{% render 'price', product: product %}</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endif -%}
+  </div>
+{%- else -%}
+{%- if popular.size > 0 -%}
+  <div class="cw-search-block">
+    <{{ heading_tag }} class="cw-field__label">{{ 'search.popular' | t }}</{{ heading_tag }}>
+    <ul class="cw-chips" role="list">
+      {%- for term in popular -%}
+        {%- assign clean = term | strip -%}
+        {%- if clean != blank -%}
+          <li><a class="cw-pill" href="{{ routes.search_url }}?q={{ clean | url_encode }}&amp;options%5Bprefix%5D=last">{{ clean | escape }}</a></li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}
+
+<div class="cw-search-block" data-cw-recent hidden>
+  <div class="cw-recent__head">
+    <{{ heading_tag }} class="cw-field__label">{{ 'search.recent' | t }}</{{ heading_tag }}>
+    <button type="button" class="cw-link-button" data-cw-recent-clear>{{ 'search.recent_clear' | t }}</button>
+  </div>
+  <ul class="cw-chips" role="list" data-cw-recent-list></ul>
+</div>
+
+{%- if show_products -%}
+  {%- assign newest = collections.all.products | sort: 'published_at' | reverse -%}
+  {%- if newest.size > 0 -%}
+    <div class="cw-search-block">
+      <{{ heading_tag }} class="cw-field__label">{{ 'search.new_in' | t }}</{{ heading_tag }}>
+      <ul class="cw-grid cw-grid--4 cw-grid--m2" role="list">
+        {%- for product in newest limit: 4 -%}
+          <li>{% render 'product-card', product: product, sizes: '(min-width: 990px) 22vw, 50vw' %}</li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+{%- endif -%}
+{%- endif -%}

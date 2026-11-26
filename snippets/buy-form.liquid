@@ -1,0 +1,152 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Product form: selling plans, quantity, add to cart, accelerated checkout,
+  Shop Pay Installments banner and pickup availability.
+  Params: product, variant, section_id, show_checkout, show_pickup, show_quantity,
+          show_savings (optional), plan_note (optional, shown under the subscription options),
+          stock_box (optional, stock and delivery box under the buttons)
+{%- endcomment -%}
+{%- assign form_id = 'ProductForm-' | append: section_id -%}
+<cw-product-form>
+  {%- form 'product', product, id: form_id, class: 'cw-buy', novalidate: 'novalidate' -%}
+    <input type="hidden" name="id" value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
+
+    {%- if product.selling_plan_groups.size > 0 and variant.selling_plan_allocations.size > 0 -%}
+      {%- comment -%} Subscription-friendly options: one card per plan, grouped, with the saving shown. {%- endcomment -%}
+      <fieldset class="cw-plans">
+        <legend class="cw-field__label">{{ 'products.purchase_options' | t }}</legend>
+        {%- unless product.requires_selling_plan -%}
+          <label class="cw-plans__row">
+            <input type="radio" name="selling_plan" value="" checked>
+            <span class="cw-plans__name">{{ 'products.one_time' | t }}</span>
+            <span class="cw-plans__price">{{ variant.price | money }}</span>
+          </label>
+        {%- endunless -%}
+        {%- for group in product.selling_plan_groups -%}
+          {%- assign group_allocations = variant.selling_plan_allocations | where: 'selling_plan_group_id', group.id -%}
+          {%- if group_allocations.size == 0 -%}{%- continue -%}{%- endif -%}
+          {%- if product.selling_plan_groups.size > 1 -%}
+            <p class="cw-plans__group">{{ group.name | escape }}</p>
+          {%- endif -%}
+          {%- for allocation in group_allocations -%}
+            {%- liquid
+              assign saving = 0
+              if show_savings and allocation.compare_at_price > allocation.price
+                assign saving = allocation.compare_at_price | minus: allocation.price | times: 100 | divided_by: allocation.compare_at_price
+              endif
+              assign is_first_required = false
+              if product.requires_selling_plan and allocation.selling_plan.id == variant.selling_plan_allocations.first.selling_plan.id
+                assign is_first_required = true
+              endif
+            -%}
+            <label class="cw-plans__row">
+              <input type="radio" name="selling_plan" value="{{ allocation.selling_plan.id }}" {% if is_first_required %}checked{% endif %}>
+              <span class="cw-plans__name">
+                {{ allocation.selling_plan.name | escape }}
+                {%- if allocation.selling_plan.description != blank -%}
+                  <span class="cw-plans__desc">{{ allocation.selling_plan.description | escape }}</span>
+                {%- endif -%}
+              </span>
+              {%- if saving > 0 -%}
+                <span class="cw-plans__save">{{ 'products.food.save_percent' | t: percent: saving }}</span>
+              {%- endif -%}
+              <span class="cw-plans__price">
+                {{ allocation.price | money }}
+                {%- if allocation.per_delivery_price != allocation.price -%}
+                  {%- assign per_delivery = allocation.per_delivery_price | money -%}
+                  <span class="cw-plans__desc">{{ 'products.food.per_delivery' | t: price: per_delivery }}</span>
+                {%- endif -%}
+              </span>
+            </label>
+          {%- endfor -%}
+        {%- endfor -%}
+        {%- if plan_note != blank -%}
+          <p class="cw-plans__note">{% render 'icon', name: 'return' %}<span>{{ plan_note | escape }}</span></p>
+        {%- endif -%}
+      </fieldset>
+    {%- endif -%}
+
+    <div class="cw-buy__row">
+      {%- if show_quantity -%}
+        {%- assign qty_id = 'Quantity-' | append: section_id -%}
+        <div class="cw-field cw-buy__qty">
+          <label class="cw-visually-hidden" for="{{ qty_id }}">{{ 'products.quantity' | t }}</label>
+          {% render 'quantity', id: qty_id, name: 'quantity', value: 1, min: 1 %}
+        </div>
+      {%- endif -%}
+      <button type="submit" name="add" class="cw-button cw-button--primary cw-buy__add" {% unless variant.available %}disabled{% endunless %}>
+        {%- if variant.available -%}
+          {{ 'products.add_to_cart' | t }}
+        {%- elsif variant == blank -%}
+          {{ 'products.unavailable' | t }}
+        {%- else -%}
+          {{ 'products.sold_out' | t }}
+        {%- endif -%}
+      </button>
+    </div>
+
+    {%- if show_checkout and product.gift_card? == false -%}
+      <div class="cw-buy__checkout">{{ form | payment_button }}</div>
+    {%- endif -%}
+
+    {%- if stock_box -%}
+      {%- liquid
+        assign stock_state = 'out'
+        if variant.available
+          assign stock_state = 'in'
+          if variant.inventory_management == 'shopify' and variant.inventory_policy == 'deny' and variant.inventory_quantity > 0 and variant.inventory_quantity <= 10
+            assign stock_state = 'low'
+          endif
+        endif
+      -%}
+      <div class="mg-stock mg-stock--{{ stock_state }}" role="status">
+        <p class="mg-stock__state">
+          <span class="mg-stock__dot" aria-hidden="true"></span>
+          {%- if stock_state == 'in' and product.gift_card? -%}
+            {{ 'products.stock.gift_card' | t }}
+          {%- elsif stock_state == 'in' -%}
+            {{ 'products.stock.in' | t }}
+          {%- elsif stock_state == 'low' -%}
+            {{ 'products.stock.low' | t: count: variant.inventory_quantity }}
+          {%- else -%}
+            {{ 'products.stock.out' | t }}
+          {%- endif -%}
+        </p>
+        {%- unless product.gift_card? or variant.requires_shipping == false -%}
+          {%- liquid
+            # One delivery line, from the same amount and countries as the basket meter (theme settings, Cart).
+            assign free_here = false
+            if settings.free_delivery_threshold > 0
+              assign free_here = true
+              assign free_countries = settings.free_delivery_countries | upcase | remove: ' '
+              if free_countries != blank
+                assign free_list = free_countries | split: ','
+                unless free_list contains localization.country.iso_code
+                  assign free_here = false
+                endunless
+              endif
+            endif
+          -%}
+          <p class="mg-stock__line">
+            {% render 'icon', name: 'truck' %}
+            <span>
+              {%- if free_here -%}
+                {%- assign free_amount = settings.free_delivery_threshold | times: 100 | money_without_trailing_zeros -%}
+                {{ 'products.stock.delivery_free' | t: amount: free_amount }}
+              {%- else -%}
+                {{ 'products.stock.delivery_checkout' | t }}
+              {%- endif -%}
+            </span>
+          </p>
+        {%- endunless -%}
+      </div>
+    {%- endif -%}
+
+    <div class="cw-buy__terms">{{ form | payment_terms }}</div>
+    <p class="cw-buy__error" role="alert" hidden data-cw-error></p>
+  {%- endform -%}
+</cw-product-form>
+
+{%- if show_pickup and variant.available -%}
+  <cw-pickup class="cw-pickup" data-url="{{ routes.root_url | append: '/variants/' | replace: '//', '/' }}{{ variant.id }}/?section_id=pickup-availability"></cw-pickup>
+{%- endif -%}

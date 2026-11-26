@@ -1,0 +1,284 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign fb_blog = blogs.journal
+  if fb_blog == blank or fb_blog.articles_count == 0
+    assign fb_blog = blogs.news
+  endif
+-%}
+{%- comment -%}
+  The navigator dialog: numbered departments, collection image tiles and link groups. Mega menu on desktop, drawer on mobile.
+  Params: menu, use_auto, auto_handles, key_pages, section_id, nav_label, scheme, style (the header layout; 'stall' draws the whole board)
+{%- endcomment -%}
+{%- if style == 'stall' -%}
+{%- comment -%}
+  The whole board: a dark chalk board dropping from under the awning. Every top level item is a column headed in chalk script;
+  its collections are text lines (name, dotted leader, product count), a collection without sub-items lists its first products
+  with prices, and the pages close the board. Language and currency sit in the board's bottom edge.
+{%- endcomment -%}
+<dialog class="mg-boardnav color-{{ scheme }}" id="Navigator" aria-labelledby="NavigatorTitle" data-mg-drop="header">
+  <div class="mg-boardnav__inner">
+    <div class="mg-boardnav__head">
+      <p class="mg-boardnav__title" id="NavigatorTitle">{{ 'mg.header.navigator_title' | t | default: nav_label | escape }}</p>
+      <button type="button" class="mg-plus mg-boardnav__close" data-cw-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+    <div class="mg-boardnav__cols">
+      {%- liquid
+        assign page_links = ''
+        if use_auto
+          capture auto_col
+            echo '<section class="mg-boardnav__col"><h2 class="mg-boardnav__heading"><a href="' | append: routes.collections_url | append: '">'
+            echo 'header.collections' | t | escape
+            echo '</a></h2><ul class="mg-boardnav__lines" role="list">'
+            for handle in auto_handles
+              assign c = collections[handle]
+              if c.title != blank
+                assign count_text = 'collections.product_count' | t: count: c.products_count
+                echo '<li><a class="mg-boardnav__line" href="' | append: c.url | append: '"><span class="mg-boardnav__name">' | append: c.title | append: '</span><span class="mg-boardnav__hint"><span aria-hidden="true">' | append: c.products_count | append: '</span><span class="cw-visually-hidden">' | append: count_text | append: '</span></span></a></li>'
+              endif
+            endfor
+            echo '</ul></section>'
+          endcapture
+          echo auto_col
+          if fb_blog.articles_count > 0
+            assign page_links = page_links | append: '<li><a class="mg-boardnav__line" href="' | append: fb_blog.url | append: '"><span class="mg-boardnav__name">' | append: fb_blog.title | append: '</span></a></li>'
+          endif
+          for handle in key_pages
+            if pages[handle].title != blank
+              assign page_links = page_links | append: '<li><a class="mg-boardnav__line" href="' | append: pages[handle].url | append: '"><span class="mg-boardnav__name">' | append: pages[handle].title | append: '</span></a></li>'
+            endif
+          endfor
+        endif
+      -%}
+      {%- unless use_auto -%}
+        {%- for link in menu.links -%}
+          {%- if link.links.size > 0 -%}
+            <section class="mg-boardnav__col">
+              <h2 class="mg-boardnav__heading"><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></h2>
+              <ul class="mg-boardnav__lines" role="list">
+                {%- for child in link.links -%}
+                  {%- liquid
+                    assign line_collection = nil
+                    if child.type == 'collection_link'
+                      assign line_collection = child.object
+                    endif
+                  -%}
+                  <li>
+                    <a class="mg-boardnav__line" href="{{ child.url }}"{% if child.current %} aria-current="page"{% endif %}>
+                      <span class="mg-boardnav__name">{{ child.title | escape }}</span>
+                      {%- if line_collection -%}
+                        <span class="mg-boardnav__hint"><span aria-hidden="true">{{ line_collection.products_count }}</span><span class="cw-visually-hidden">{{ 'collections.product_count' | t: count: line_collection.products_count }}</span></span>
+                      {%- else -%}
+                        <span class="mg-boardnav__hint" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+                      {%- endif -%}
+                    </a>
+                    {%- if child.links.size > 0 -%}
+                      <ul class="mg-boardnav__sub" role="list">
+                        {%- for grand in child.links -%}
+                          <li><a class="mg-boardnav__line mg-boardnav__line--sub" href="{{ grand.url }}"{% if grand.current %} aria-current="page"{% endif %}><span class="mg-boardnav__name">{{ grand.title | escape }}</span></a></li>
+                        {%- endfor -%}
+                      </ul>
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </section>
+          {%- elsif link.type == 'collection_link' and link.object.products_count > 0 -%}
+            <section class="mg-boardnav__col">
+              <h2 class="mg-boardnav__heading"><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></h2>
+              <ul class="mg-boardnav__lines" role="list">
+                {%- for product in link.object.products limit: 4 -%}
+                  <li>
+                    <a class="mg-boardnav__line" href="{{ product.url }}">
+                      <span class="mg-boardnav__name">{{ product.title | escape }}</span>
+                      <span class="mg-boardnav__hint mg-boardnav__hint--price">
+                        {%- assign line_price = product.price | money -%}
+                        {%- if product.price_varies -%}{{ 'products.price.from' | t: price: line_price }}{%- else -%}{{ line_price }}{%- endif -%}
+                      </span>
+                    </a>
+                  </li>
+                {%- endfor -%}
+                <li><a class="mg-boardnav__line mg-boardnav__line--all" href="{{ link.url }}"><span class="mg-boardnav__name">{{ 'mg.nav.see_all' | t: count: link.object.products_count }}<span class="cw-visually-hidden">: {{ link.title | escape }}</span></span><span class="mg-boardnav__hint" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span></a></li>
+              </ul>
+            </section>
+          {%- else -%}
+            {%- capture page_link -%}
+              <li><a class="mg-boardnav__line" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}><span class="mg-boardnav__name">{{ link.title | escape }}</span>
+                {%- if link.type == 'blog_link' and link.object.articles_count > 0 -%}
+                  <span class="mg-boardnav__hint">{{ 'mg.nav.stories' | t: count: link.object.articles_count }}</span>
+                {%- else -%}
+                  <span class="mg-boardnav__hint" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>
+                {%- endif -%}
+              </a></li>
+            {%- endcapture -%}
+            {%- assign page_links = page_links | append: page_link -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endunless -%}
+      {%- if page_links != blank -%}
+        <section class="mg-boardnav__col mg-boardnav__col--pages">
+          <h2 class="mg-boardnav__heading">{{ 'mg.nav.around' | t }}</h2>
+          <ul class="mg-boardnav__lines" role="list">{{ page_links }}</ul>
+        </section>
+      {%- endif -%}
+    </div>
+    <div class="mg-boardnav__foot">
+      {% render 'localization', id: 'NavLocalization', show_country: true, show_language: true %}
+    </div>
+  </div>
+</dialog>
+{%- else -%}
+{%- comment -%} The navigator: index of departments on the start side, image tiles and link groups beside it. {%- endcomment -%}
+<dialog class="cw-nav color-{{ scheme }}" id="Navigator" aria-labelledby="NavigatorTitle">
+  <cw-navigator class="cw-nav__inner">
+    <div class="cw-nav__head">
+      <p class="cw-nav__title" id="NavigatorTitle">{{ 'mg.header.navigator_title' | t | default: nav_label | escape }}</p>
+      <button type="button" class="cw-icon-button" data-cw-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+    <div class="cw-nav__body">
+      <ol class="cw-nav__root" role="list">
+        {%- if use_auto -%}
+          {%- if auto_handles.size > 0 -%}
+            <li>
+              <button type="button" class="cw-nav__item" aria-expanded="false" aria-controls="Nav-{{ section_id }}-auto">
+                <span class="cw-nav__index" aria-hidden="true">01</span><span class="cw-nav__label">{{ 'header.collections' | t }}</span>{% render 'icon', name: 'chevron' %}
+              </button>
+            </li>
+          {%- endif -%}
+          {%- if fb_blog.articles_count > 0 -%}
+            <li><a class="cw-nav__item" href="{{ fb_blog.url }}"><span class="cw-nav__index" aria-hidden="true">02</span><span class="cw-nav__label">{{ fb_blog.title | escape }}</span></a></li>
+          {%- endif -%}
+          {%- for handle in key_pages -%}
+            {%- if pages[handle].title != blank -%}
+              <li><a class="cw-nav__item" href="{{ pages[handle].url }}"><span class="cw-nav__index" aria-hidden="true">0{{ forloop.index | plus: 2 }}</span><span class="cw-nav__label">{{ pages[handle].title | escape }}</span></a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- for link in menu.links -%}
+            <li>
+              {%- if link.links.size > 0 -%}
+                <button type="button" class="cw-nav__item" aria-expanded="false" aria-controls="Nav-{{ section_id }}-{{ forloop.index }}">
+                  <span class="cw-nav__index" aria-hidden="true">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span><span class="cw-nav__label">{{ link.title | escape }}</span>{% render 'icon', name: 'chevron' %}
+                </button>
+              {%- else -%}
+                <a class="cw-nav__item" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>
+                  <span class="cw-nav__index" aria-hidden="true">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span><span class="cw-nav__label">{{ link.title | escape }}</span>
+                </a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        {%- endif -%}
+      </ol>
+
+      {%- comment -%} Phones: the shelves of the first dropdown as photo rows under the list, so the menu shows the food at once. {%- endcomment -%}
+      {%- liquid
+        assign shelf_rows = ''
+        assign shelf_count = 0
+        for link in menu.links
+          if link.links.size > 0
+            for child in link.links
+              assign shelf = nil
+              if child.type == 'collection_link'
+                assign shelf = child.object
+              elsif child.url contains '/collections/'
+                assign shelf_handle = child.url | split: '/collections/' | last | split: '?' | first | split: '/' | first
+                if shelf_handle != blank and shelf_handle != 'all'
+                  assign shelf = collections[shelf_handle]
+                endif
+              endif
+              if shelf and shelf.products_count > 0 and shelf_count < 6
+                assign shelf_image = shelf.featured_image | default: shelf.products.first.featured_media.preview_image
+                assign shelf_title = child.title | escape
+                assign shelf_count_text = 'collections.product_count' | t: count: shelf.products_count
+                capture shelf_row
+                  echo '<li><a class="mg-shelf" href="' | append: child.url | append: '"><span class="mg-shelf__photo">'
+                  if shelf_image
+                    render 'image', image: shelf_image, sizes: '64px', max: 160, alt: ''
+                  endif
+                  echo '</span><span class="mg-shelf__name">' | append: shelf_title | append: '</span>'
+                  echo '<span class="mg-shelf__count">' | append: shelf_count_text | append: '</span></a></li>'
+                endcapture
+                assign shelf_rows = shelf_rows | append: shelf_row
+                assign shelf_count = shelf_count | plus: 1
+              endif
+            endfor
+            break
+          endif
+        endfor
+      -%}
+      {%- if shelf_rows != blank -%}
+        <div class="mg-nav-shelves">
+          <p class="mg-nav-shelves__title">{{ 'mg.header.shelves' | t }}</p>
+          <ul class="mg-nav-shelves__list" role="list">{{ shelf_rows }}</ul>
+        </div>
+      {%- endif -%}
+
+      {%- if use_auto and auto_handles.size > 0 -%}
+        <div class="cw-nav__panel" id="Nav-{{ section_id }}-auto" hidden>
+          <button type="button" class="cw-nav__back" data-cw-back>{% render 'icon', name: 'back' %} {{ 'general.back' | t }}</button>
+          <div class="cw-nav__panel-head">
+            <p class="cw-nav__panel-title">{{ 'header.collections' | t }}</p>
+            <a class="cw-button cw-button--text" href="{{ routes.collections_url }}">{{ 'header.view_all_plain' | t }} {% render 'icon', name: 'arrow' %}</a>
+          </div>
+          <ul class="cw-nav__tiles" role="list">
+            {%- for handle in auto_handles -%}
+              {%- assign c = collections[handle] -%}
+              <li>{% render 'nav-tile', url: c.url, title: c.title, collection: c, count: c.products_count %}</li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      {%- for link in menu.links -%}
+        {%- if link.links.size > 0 -%}
+          <div class="cw-nav__panel" id="Nav-{{ section_id }}-{{ forloop.index }}" hidden>
+            <button type="button" class="cw-nav__back" data-cw-back>{% render 'icon', name: 'back' %} {{ 'general.back' | t }}</button>
+            <div class="cw-nav__panel-head">
+              <p class="cw-nav__panel-title">{{ link.title | escape }}</p>
+              <a class="cw-button cw-button--text" href="{{ link.url }}">{{ 'header.view_all_plain' | t }}<span class="cw-visually-hidden">: {{ link.title | escape }}</span> {% render 'icon', name: 'arrow' %}</a>
+            </div>
+            {%- liquid
+              # A child becomes an image tile when it points to a collection with products, whether it was
+              # added as a collection link or typed as a web address such as /collections/dresses.
+              assign tiles = ''
+              assign groups = ''
+              for child in link.links
+                assign tile_collection = nil
+                if child.links.size == 0
+                  if child.type == 'collection_link'
+                    assign tile_collection = child.object
+                  elsif child.url contains '/collections/'
+                    assign tile_handle = child.url | split: '/collections/' | last | split: '?' | first | split: '/' | first
+                    if tile_handle != blank and tile_handle != 'all'
+                      assign tile_collection = collections[tile_handle]
+                    endif
+                  endif
+                endif
+                if tile_collection and tile_collection.products_count > 0
+                  capture tile
+                    render 'nav-tile', url: child.url, title: child.title, collection: tile_collection, count: tile_collection.products_count, current: child.current
+                  endcapture
+                  assign tiles = tiles | append: '<li>' | append: tile | append: '</li>'
+                else
+                  capture group
+                    render 'nav-group', link: child
+                  endcapture
+                  assign groups = groups | append: group
+                endif
+              endfor
+            -%}
+            {%- if tiles != blank -%}
+              <ul class="cw-nav__tiles" role="list">{{ tiles }}</ul>
+            {%- endif -%}
+            {%- if groups != blank -%}
+              <div class="cw-nav__groups">{{ groups }}</div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    <div class="cw-nav__foot">
+      {% render 'localization', id: 'NavLocalization', show_country: true, show_language: true %}
+    </div>
+  </cw-navigator>
+</dialog>
+{%- endif -%}

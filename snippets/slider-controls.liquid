@@ -1,0 +1,9 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Previous and next buttons for an cw-slider. Hidden until the row overflows.
+  Params: label (what the row contains, for screen readers)
+{%- endcomment -%}
+<div class="cw-slider__controls" data-cw-slider-controls hidden>
+  <button type="button" class="cw-slider__button" data-cw-slider-prev aria-label="{{ 'general.slider.previous' | t: label: label }}">{% render 'icon', name: 'back' %}</button>
+  <button type="button" class="cw-slider__button" data-cw-slider-next aria-label="{{ 'general.slider.next' | t: label: label }}">{% render 'icon', name: 'chevron' %}</button>
+</div>

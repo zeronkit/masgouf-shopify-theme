@@ -1,0 +1,14 @@
+{%- comment -%}
+  Display name of a blog tag. Shopify does not translate tags, so common Journal topics
+  have names in the locale files (blogs.tag_names, keyed by the tag handle with underscores).
+  Any other tag is shown as written.
+  Usage: {% render 'tag-label', tag: tag %}
+{%- endcomment -%}
+{%- liquid
+  assign tag_key = tag | handleize | replace: '-', '_' | prepend: 'blogs.tag_names.'
+  assign tag_name = tag_key | t
+  if tag_name contains 'ranslation missing' or tag_name contains 'blogs.tag_names.'
+    assign tag_name = tag
+  endif
+  echo tag_name | escape
+-%}

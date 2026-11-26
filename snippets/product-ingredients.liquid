@@ -1,0 +1,142 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign mg_bk = 'mg.main_product.' | append: block.id | replace: '-', '_'
+  assign bt_heading = mg_bk | append: '_heading' | t
+  if bt_heading contains 'ranslation missing'
+    assign bt_heading = ''
+  endif
+  if block.settings.heading != blank
+    assign bt_heading = block.settings.heading
+  endif
+  assign bt_content = mg_bk | append: '_content_html' | t
+  if bt_content contains 'ranslation missing'
+    assign bt_content = ''
+  endif
+  if block.settings.content != blank
+    assign bt_content = block.settings.content
+  endif
+  assign bt_allergen_note = mg_bk | append: '_allergen_note' | t
+  if bt_allergen_note contains 'ranslation missing'
+    assign bt_allergen_note = ''
+  endif
+  if block.settings.allergen_note != blank
+    assign bt_allergen_note = block.settings.allergen_note
+  endif
+-%}
+{%- comment -%}
+  Ingredients and allergens block of the product page.
+  Data, first match wins:
+    ingredients: masgouf.ingredients (multi-line text), the "Ingredients" part of the description, the block text
+    allergens: masgouf.allergens (list of text), else product tags "allergen:nuts"
+    diet: masgouf.dietary (list of text), else product tags "diet:vegan"
+    may contain: masgouf.may_contain (text)
+  Params: block, product
+{%- endcomment -%}
+{%- liquid
+  assign source = 'metafield'
+  assign ingredients = product.metafields.masgouf.ingredients.value | escape | newline_to_br
+  if ingredients == blank
+    assign source = 'html'
+    capture ingredients
+      render 'description-part', description: product.description, want: 'ingredients'
+    endcapture
+    if ingredients == blank
+      assign ingredients = bt_content
+    endif
+  endif
+
+  assign allergens = product.metafields.masgouf.allergens.value
+  assign diet = product.metafields.masgouf.dietary.value
+  if allergens == blank or diet == blank
+    assign tag_allergens = ''
+    assign tag_diet = ''
+    for tag in product.tags
+      assign tag_start = tag | downcase | slice: 0, 9
+      assign tag_short = tag | downcase | slice: 0, 5
+      if tag_start == 'allergen:'
+        assign tag_allergens = tag_allergens | append: '|' | append: tag
+      elsif tag_short == 'diet:'
+        assign tag_diet = tag_diet | append: '|' | append: tag
+      endif
+    endfor
+    if allergens == blank and tag_allergens != blank
+      assign allergens = tag_allergens | remove: 'allergen:' | remove: 'Allergen:' | remove_first: '|' | split: '|'
+    endif
+    if diet == blank and tag_diet != blank
+      assign diet = tag_diet | remove: 'diet:' | remove: 'Diet:' | remove_first: '|' | split: '|'
+    endif
+  endif
+  assign may_contain = product.metafields.masgouf.may_contain.value
+
+  # Food labels show allergens in bold inside the ingredient list.
+  if block.settings.bold_allergens and source == 'metafield' and allergens != blank
+    for allergen in allergens
+      assign plain = allergen | strip | escape
+      if plain.size > 2
+        assign lower = plain | downcase
+        assign upper = plain | capitalize
+        assign forms = plain | append: '|' | append: lower | append: '|' | append: upper | split: '|' | uniq
+        for form in forms
+          assign bold = '<strong>' | append: form | append: '</strong>'
+          assign ingredients = ingredients | replace: form, bold
+        endfor
+      endif
+    endfor
+  endif
+
+  assign has_tags = false
+  if block.settings.show_allergens
+    if allergens != blank or diet != blank or may_contain != blank
+      assign has_tags = true
+    endif
+  endif
+-%}
+{%- if ingredients != blank or has_tags -%}
+  <div class="cw-food cw-food--ingredients" {{ block.shopify_attributes }}>
+    {%- if bt_heading != blank -%}
+      <h2 class="cw-food__title">{{ bt_heading | escape }}</h2>
+    {%- endif -%}
+    {%- if ingredients != blank -%}
+      <div class="cw-food__body cw-rte">{{ ingredients }}</div>
+    {%- endif -%}
+    {%- if has_tags -%}
+      <dl class="cw-food__tags">
+        {%- if allergens != blank -%}
+          <div class="cw-food__tagrow">
+            <dt>{{ 'products.food.contains' | t }}</dt>
+            <dd>
+              <ul class="cw-food__chips" role="list">
+                {%- for allergen in allergens -%}
+                  <li class="cw-food__chip cw-food__chip--allergen">{{ allergen | strip | escape }}</li>
+                {%- endfor -%}
+              </ul>
+            </dd>
+          </div>
+        {%- endif -%}
+        {%- if diet != blank -%}
+          <div class="cw-food__tagrow">
+            <dt>{{ 'products.food.suitable_for' | t }}</dt>
+            <dd>
+              <ul class="cw-food__chips" role="list">
+                {%- for item in diet -%}
+                  <li class="cw-food__chip cw-food__chip--diet">{% render 'icon', name: 'check' %}{{ item | strip | escape }}</li>
+                {%- endfor -%}
+              </ul>
+            </dd>
+          </div>
+        {%- endif -%}
+        {%- if may_contain != blank -%}
+          <div class="cw-food__tagrow">
+            <dt>{{ 'products.food.may_contain' | t }}</dt>
+            <dd>{{ may_contain | join: ', ' | escape }}</dd>
+          </div>
+        {%- endif -%}
+      </dl>
+    {%- endif -%}
+    {%- if bt_allergen_note != blank -%}
+      <p class="cw-food__note">{{ bt_allergen_note | escape }}</p>
+    {%- endif -%}
+  </div>
+{%- elsif request.design_mode -%}
+  <p class="cw-food cw-food--hint" {{ block.shopify_attributes }}>{{ 'products.food.editor_hint' | t: name: bt_heading }}</p>
+{%- endif -%}

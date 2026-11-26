@@ -1,0 +1,212 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign t_heading = 'mg.home_ingredients.heading' | t
+  if section.settings.heading != blank
+    assign t_heading = section.settings.heading
+  endif
+  assign t_text = 'mg.home_ingredients.text_html' | t
+  if section.settings.text != blank
+    assign t_text = section.settings.text
+  endif
+  assign t_ingredients = 'mg.home_ingredients.ingredients_html' | t
+  if section.settings.ingredients != blank
+    assign t_ingredients = section.settings.ingredients
+  endif
+  assign t_disclaimer = 'mg.home_ingredients.disclaimer' | t
+  if section.settings.disclaimer != blank
+    assign t_disclaimer = section.settings.disclaimer
+  endif
+-%}
+{%- comment -%}
+  Ingredients and allergens: one product's recipe in plain words, with allergens grouped
+  as Contains, May contain and Free from. Text first, so screen readers get the same facts.
+  Data: section settings, then the product metafields masgouf.ingredients (multi-line text)
+  and masgouf.allergens (list of single line text, shown as Contains).
+{%- endcomment -%}
+{%- liquid
+  assign product = section.settings.product
+  if product == blank
+    for candidate in collections.all.products limit: 20
+      if candidate.available
+        assign product = candidate
+        break
+      endif
+    endfor
+  endif
+
+  assign ingredients = t_ingredients
+  if ingredients == blank and product.metafields.masgouf.ingredients != blank
+    assign ingredients = product.metafields.masgouf.ingredients.value | escape | newline_to_br
+  endif
+
+  assign list_contains = ''
+  assign list_may = ''
+  assign list_free = ''
+  for block in section.blocks
+    assign mg_bk = 'mg.home_ingredients.' | append: block.id | replace: '-', '_'
+    assign bt_name = mg_bk | append: '_name' | t
+    if bt_name contains 'ranslation missing'
+      assign bt_name = ''
+    endif
+    if block.settings.name != blank
+      assign bt_name = block.settings.name
+    endif
+    if bt_name == blank
+      continue
+    endif
+    assign name = bt_name | escape | append: '|'
+    case block.settings.status
+      when 'contains'
+        assign list_contains = list_contains | append: name
+      when 'may_contain'
+        assign list_may = list_may | append: name
+      else
+        assign list_free = list_free | append: name
+    endcase
+  endfor
+  if section.blocks.size == 0 and product.metafields.masgouf.allergens != blank
+    for allergen in product.metafields.masgouf.allergens.value
+      assign name = allergen | escape | append: '|'
+      assign list_contains = list_contains | append: name
+    endfor
+  endif
+  assign list_contains = list_contains | split: '|' | compact
+  assign list_may = list_may | split: '|' | compact
+  assign list_free = list_free | split: '|' | compact
+-%}
+{{ 'home.css' | asset_url | stylesheet_tag }}
+<section class="cw-section cw-recipe color-{{ section.settings.color_scheme }}" aria-labelledby="Recipe-{{ section.id }}">
+  <div class="cw-wrap cw-recipe__grid cw-recipe__grid--{{ section.settings.media_position }}">
+    {%- if section.settings.show_image -%}
+      <div class="cw-recipe__photo">
+        {%- if section.settings.image != blank -%}
+          {% render 'image', image: section.settings.image, sizes: '(min-width: 990px) 40vw, 100vw' %}
+        {%- elsif product.featured_media -%}
+          {% render 'image', image: product.featured_media.preview_image, sizes: '(min-width: 990px) 40vw, 100vw' %}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'cw-placeholder' }}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="cw-recipe__card">
+      {%- if section.settings.eyebrow != blank -%}<p class="cw-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+      <h2 class="cw-h2" id="Recipe-{{ section.id }}">
+        {%- if t_heading != blank -%}
+          {{ t_heading | escape }}
+        {%- elsif product != blank -%}
+          {{ product.title | escape }}
+        {%- else -%}
+          {{ 'products.placeholder_title' | t }}
+        {%- endif -%}
+      </h2>
+      {%- if t_text != blank -%}<div class="cw-rte">{{ t_text }}</div>{%- endif -%}
+
+      <h3 class="cw-recipe__label">{{ 'sections.ingredients.ingredients' | t }}</h3>
+      <div class="cw-rte cw-recipe__list">
+        {%- if ingredients != blank -%}
+          {{ ingredients }}
+        {%- else -%}
+          <p class="cw-muted">{{ 'sections.ingredients.none' | t }}</p>
+        {%- endif -%}
+      </div>
+
+      <h3 class="cw-recipe__label">{{ 'sections.ingredients.allergens' | t }}</h3>
+      {%- if list_contains.size > 0 or list_may.size > 0 or list_free.size > 0 -%}
+        <dl class="cw-recipe__allergens">
+          {%- if list_contains.size > 0 -%}
+            <div class="cw-recipe__group cw-recipe__group--contains">
+              <dt>{{ 'sections.ingredients.contains' | t }}</dt>
+              {%- for a in list_contains -%}<dd class="cw-recipe__chip">{{ a }}</dd>{%- endfor -%}
+            </div>
+          {%- endif -%}
+          {%- if list_may.size > 0 -%}
+            <div class="cw-recipe__group cw-recipe__group--may">
+              <dt>{{ 'sections.ingredients.may_contain' | t }}</dt>
+              {%- for a in list_may -%}<dd class="cw-recipe__chip">{{ a }}</dd>{%- endfor -%}
+            </div>
+          {%- endif -%}
+          {%- if list_free.size > 0 -%}
+            <div class="cw-recipe__group cw-recipe__group--free">
+              <dt>{{ 'sections.ingredients.free_from' | t }}</dt>
+              {%- for a in list_free -%}<dd class="cw-recipe__chip">{% render 'icon', name: 'check' %}{{ a }}</dd>{%- endfor -%}
+            </div>
+          {%- endif -%}
+        </dl>
+      {%- else -%}
+        <p class="cw-muted">{{ 'sections.ingredients.no_allergens' | t }}</p>
+      {%- endif -%}
+
+      {%- if t_disclaimer != blank -%}<p class="cw-small cw-muted cw-recipe__print">{{ t_disclaimer | escape }}</p>{%- endif -%}
+
+      {%- if product != blank and section.settings.show_button -%}
+        <a class="cw-button cw-button--primary" href="{{ product.url }}">{{ 'products.view_details' | t }} {% render 'icon', name: 'arrow' %}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.ingredients",
+  "class": "cw-shopify-section",
+  "max_blocks": 14,
+  "settings": [
+    { "type": "product", "id": "product", "label": "t:labels.product", "info": "t:info.ingredients_product" },
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow" },
+    { "type": "text", "id": "heading", "label": "t:labels.heading", "info": "t:info.ingredients_heading" },
+    { "type": "richtext", "id": "text", "label": "t:labels.text" },
+    { "type": "richtext", "id": "ingredients", "label": "t:labels.ingredients", "info": "t:info.ingredients" },
+    { "type": "paragraph", "content": "t:info.allergens" },
+    { "type": "text", "id": "disclaimer", "label": "t:labels.small_print" },
+    { "type": "checkbox", "id": "show_image", "label": "t:labels.show_image", "default": true },
+    { "type": "image_picker", "id": "image", "label": "t:labels.image", "info": "t:info.ingredients_image" },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "t:labels.media_position",
+      "options": [
+        { "value": "start", "label": "t:options.position_start" },
+        { "value": "end", "label": "t:options.position_end" }
+      ],
+      "default": "start"
+    },
+    { "type": "checkbox", "id": "show_button", "label": "t:labels.show_product_button", "default": true },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-5" }
+  ],
+  "blocks": [
+    {
+      "type": "allergen",
+      "name": "t:names.allergen",
+      "settings": [
+        { "type": "text", "id": "name", "label": "t:labels.allergen_name" },
+        {
+          "type": "select",
+          "id": "status",
+          "label": "t:labels.allergen_status",
+          "options": [
+            { "value": "contains", "label": "t:options.contains" },
+            { "value": "may_contain", "label": "t:options.may_contain" },
+            { "value": "free_from", "label": "t:options.free_from" }
+          ],
+          "default": "contains"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.ingredients",
+      "settings": {
+        "ingredients": "<p>Stone-ground wheat flour, water, sea salt, rye sourdough starter.</p>"
+      },
+      "blocks": [
+        { "type": "allergen", "settings": { "name": "Gluten (wheat, rye)", "status": "contains" } },
+        { "type": "allergen", "settings": { "name": "Sesame", "status": "may_contain" } },
+        { "type": "allergen", "settings": { "name": "Milk", "status": "free_from" } },
+        { "type": "allergen", "settings": { "name": "Eggs", "status": "free_from" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

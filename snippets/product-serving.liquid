@@ -1,0 +1,60 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign mg_bk = 'mg.main_product.' | append: block.id | replace: '-', '_'
+  assign bt_heading = mg_bk | append: '_heading' | t
+  if bt_heading contains 'ranslation missing'
+    assign bt_heading = ''
+  endif
+  if block.settings.heading != blank
+    assign bt_heading = block.settings.heading
+  endif
+  assign bt_note = mg_bk | append: '_note' | t
+  if bt_note contains 'ranslation missing'
+    assign bt_note = ''
+  endif
+  if block.settings.note != blank
+    assign bt_note = block.settings.note
+  endif
+-%}
+{%- comment -%}
+  Weight and serving facts as small label tiles. Re-rendered when the variant changes.
+  Data (variant metafield first, then product metafield):
+    masgouf.net_weight (text, else the variant shipping weight), masgouf.servings (text, "8 slices"),
+    masgouf.serving_size (text, "40 g"), masgouf.pieces (text, "Box of 6")
+  Params: block, product, variant
+{%- endcomment -%}
+{%- liquid
+  assign net_weight = variant.metafields.masgouf.net_weight.value | default: product.metafields.masgouf.net_weight.value
+  if net_weight == blank and block.settings.show_weight and variant.weight > 0
+    assign net_weight = variant.weight | weight_with_unit
+  endif
+  assign servings = variant.metafields.masgouf.servings.value | default: product.metafields.masgouf.servings.value
+  assign serving_size = variant.metafields.masgouf.serving_size.value | default: product.metafields.masgouf.serving_size.value
+  assign pieces = variant.metafields.masgouf.pieces.value | default: product.metafields.masgouf.pieces.value
+-%}
+<div class="cw-food cw-food--serving" data-cw-swap="serving-{{ block.id }}" {{ block.shopify_attributes }}>
+  {%- if net_weight != blank or servings != blank or serving_size != blank or pieces != blank or bt_note != blank -%}
+    {%- if bt_heading != blank -%}
+      <h2 class="cw-food__title">{{ bt_heading | escape }}</h2>
+    {%- endif -%}
+    <dl class="cw-stats">
+      {%- if net_weight != blank -%}
+        <div class="cw-stat"><dt>{{ 'products.food.net_weight' | t }}</dt><dd>{{ net_weight | escape }}</dd></div>
+      {%- endif -%}
+      {%- if pieces != blank -%}
+        <div class="cw-stat"><dt>{{ 'products.food.pieces' | t }}</dt><dd>{{ pieces | escape }}</dd></div>
+      {%- endif -%}
+      {%- if servings != blank -%}
+        <div class="cw-stat"><dt>{{ 'products.food.serves' | t }}</dt><dd>{{ servings | escape }}</dd></div>
+      {%- endif -%}
+      {%- if serving_size != blank -%}
+        <div class="cw-stat"><dt>{{ 'products.food.serving_size' | t }}</dt><dd>{{ serving_size | escape }}</dd></div>
+      {%- endif -%}
+    </dl>
+    {%- if bt_note != blank -%}
+      <p class="cw-food__note">{{ bt_note | escape }}</p>
+    {%- endif -%}
+  {%- elsif request.design_mode -%}
+    <p class="cw-food--hint">{{ 'products.food.editor_hint' | t: name: bt_heading }}</p>
+  {%- endif -%}
+</div>

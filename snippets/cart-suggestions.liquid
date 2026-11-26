@@ -1,0 +1,39 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Products offered when the cart is empty: the chosen collection, or the newest products.
+  Params: collection, heading, limit, compact (boolean: small rows for the drawer)
+{%- endcomment -%}
+{%- liquid
+  assign limit = limit | default: 4
+  if collection != blank and collection.products.size > 0
+    assign picks = collection.products
+  else
+    assign picks = collections.all.products | sort: 'published_at' | reverse
+  endif
+-%}
+{%- if picks.size > 0 -%}
+  <div class="cw-cart-picks{% if compact %} cw-cart-picks--compact{% endif %}">
+    {%- if heading != blank -%}<h2 class="cw-cart-picks__title">{{ heading | escape }}</h2>{%- endif -%}
+    {%- if compact -%}
+      <ul class="cw-cart-picks__rows" role="list">
+        {%- for product in picks limit: limit -%}
+          <li>
+            <a class="cw-cart-picks__row" href="{{ product.url }}">
+              {%- if product.featured_media -%}
+                {% render 'image', image: product.featured_media.preview_image, sizes: '64px', max: 160, alt: '' %}
+              {%- endif -%}
+              <span class="cw-cart-picks__name">{{ product.title | escape }}</span>
+              <span class="cw-cart-picks__price">{{ product.price | money }}</span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <ul class="cw-grid cw-grid--4 cw-grid--m2" role="list">
+        {%- for product in picks limit: limit -%}
+          <li>{% render 'product-card', product: product, sizes: '(min-width: 990px) 22vw, 50vw' %}</li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+{%- endif -%}

@@ -1,0 +1,103 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  The recipe board: the newest post as a round plate photo with its title and date beside it, then every post as a menu line
+  in two columns on a dark board (title, dotted leader, read time, the tag under it). Topics are chalk words above the list.
+{%- endcomment -%}
+<section class="cw-section mg-recipes color-{{ section.settings.color_scheme }}">
+  <div class="cw-wrap">
+    {%- capture topics_html -%}
+        {%- liquid
+          # Topics: the blog's tags, or the tags of its posts when Shopify returns none for the blog.
+          assign blog_tags = blog.all_tags
+          if blog_tags.size == 0
+            assign tag_list = ''
+            for a in blog.articles limit: 50
+              for t in a.tags
+                assign key = '|' | append: t | append: '|'
+                unless tag_list contains key
+                  assign tag_list = tag_list | append: key
+                endunless
+              endfor
+            endfor
+            assign blog_tags = tag_list | replace: '||', '|' | split: '|' | compact
+          endif
+        -%}
+        {%- if blog_tags.size > 0 -%}
+          <nav class="mg-tabs mg-recipes__topics" aria-label="{{ 'blogs.tags' | t }}">
+            <ul role="list">
+              <li><a class="mg-tab" href="{{ blog.url }}"{% unless current_tags %} aria-current="page"{% endunless %}>{{ 'blogs.all' | t }}</a></li>
+              {%- for tag in blog_tags -%}{%- if tag == blank -%}{%- continue -%}{%- endif -%}
+                <li><a class="mg-tab" href="{{ blog.url }}/tagged/{{ tag | handleize }}"{% if current_tags contains tag %} aria-current="page"{% endif %}>{% render 'tag-label', tag: tag %}</a></li>
+              {%- endfor -%}
+            </ul>
+          </nav>
+        {%- endif -%}
+    {%- endcapture -%}
+    {%- paginate blog.articles by section.settings.per_page -%}
+      {%- assign newest = blog.articles.first -%}
+      <header class="mg-recipes__head">
+        {%- if section.settings.feature_first and newest and paginate.current_page == 1 -%}
+          <a class="mg-recipes__plate" href="{{ newest.url }}" tabindex="-1" aria-hidden="true">
+            {%- if newest.image -%}
+              {% render 'image', image: newest.image, sizes: '(min-width: 750px) 360px, 70vw', max: 900, eager: true, alt: '' %}
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'cw-placeholder' }}
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+        <div class="mg-recipes__intro">
+          {%- if section.settings.eyebrow != blank -%}<p class="cw-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+          <h1 class="cw-h1 mg-recipes__title">{{ blog.title | escape }}</h1>
+          {%- if section.settings.feature_first and newest and paginate.current_page == 1 -%}
+            <p class="mg-recipes__label">{{ 'mg.blog.newest' | t }}</p>
+            <h2 class="mg-recipes__feature"><a href="{{ newest.url }}">{{ newest.title | escape }}</a></h2>
+            <p class="mg-recipes__meta">
+              {{ newest.published_at | time_tag: format: 'date' }}
+              {%- assign minutes = newest.content | strip_html | split: ' ' | size | divided_by: 200 | at_least: 1 -%}
+              <span aria-hidden="true"> · </span>{{ 'blogs.read_time' | t: minutes: minutes }}
+            </p>
+            {%- if newest.excerpt_or_content != blank -%}<p class="mg-recipes__excerpt">{{ newest.excerpt_or_content | strip_html | truncatewords: 30 }}</p>{%- endif -%}
+          {%- endif -%}
+        </div>
+      </header>
+
+      <div class="mg-board mg-recipes__board">
+        {{ topics_html }}
+        {%- if blog.articles.size == 0 -%}
+          <p class="mg-board__empty-title">{{ 'blogs.empty' | t }}</p>
+        {%- else -%}
+          <ul class="mg-menu mg-recipes__lines" role="list">
+            {%- for article in blog.articles -%}
+              {%- liquid
+                assign minutes = article.content | strip_html | split: ' ' | size | divided_by: 200 | at_least: 1
+                assign read = 'blogs.read_time' | t: minutes: minutes
+                assign note = ''
+                if article.tags.size > 0
+                  capture note
+                    render 'tag-label', tag: article.tags.first
+                  endcapture
+                endif
+              -%}
+              <li>{% render 'mg-text-line', url: article.url, title: article.title, hint: read, note: note, heading: 'h3' %}</li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+        <div class="mg-board__foot">{% render 'pagination', paginate: paginate %}</div>
+      </div>
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.blog_posts",
+  "class": "cw-shopify-section",
+  "enabled_on": { "templates": ["blog"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "t:labels.eyebrow" },
+    { "type": "checkbox", "id": "feature_first", "label": "t:labels.feature_first", "default": true },
+    { "type": "range", "id": "per_page", "label": "t:labels.posts_per_page", "min": 3, "max": 24, "step": 1, "default": 10 },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ]
+}
+{% endschema %}

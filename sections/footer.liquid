@@ -1,0 +1,362 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign fb_blog = blogs.journal
+  if fb_blog == blank or fb_blog.articles_count == 0
+    assign fb_blog = blogs.news
+  endif
+-%}
+{%- liquid
+  assign t_brand_text = 'mg.footer.brand_text_html' | t
+  if section.settings.brand_text != blank
+    assign t_brand_text = section.settings.brand_text
+  endif
+-%}
+{%- comment -%}
+  Footer with three layouts. Menu blocks fall back to the "footer" menu, then to the store's
+  common pages and blog, so the footer is never empty. Policies are always listed automatically.
+{%- endcomment -%}
+{%- liquid
+  assign auto_pages = 'about-us,contact,faq,delivery,shipping-and-returns,wholesale,shipping' | split: ','
+-%}
+<footer class="cw-footer cw-footer--{{ section.settings.layout }} color-{{ section.settings.color_scheme }}">
+  <div class="cw-wrap">
+    {%- if section.settings.layout == 'riverside' and section.settings.show_week -%}
+      {%- liquid
+        assign week_codes = 'mon,tue,wed,thu,fri,sat,sun' | split: ','
+        assign baking = section.settings.baking_days | downcase | remove: ' '
+        assign baking = ',' | append: baking | append: ','
+      -%}
+      <div class="mg-week" aria-labelledby="FooterWeek-{{ section.id }}">
+        <h2 class="mg-week__title" id="FooterWeek-{{ section.id }}">{{ 'mg.footer.week_heading' | t }}</h2>
+        <ol class="mg-week__days" role="list">
+          {%- for code in week_codes -%}
+            {%- assign marker = ',' | append: code | append: ',' -%}
+            {%- assign day_key = 'products.food.days.' | append: code -%}
+            <li class="mg-week__day{% if baking contains marker %} is-on{% endif %}">
+              <span class="mg-week__name">{{ day_key | t }}</span>
+              <span class="mg-week__state">{%- if baking contains marker -%}{{ 'mg.footer.week_on' | t }}{%- else -%}{{ 'mg.footer.week_off' | t }}{%- endif -%}</span>
+            </li>
+          {%- endfor -%}
+        </ol>
+        <p class="mg-week__note">{{ 'mg.footer.week_note' | t }}</p>
+      </div>
+    {%- endif -%}
+    {%- if section.settings.layout == 'riverside' -%}
+      {%- liquid
+        # The menu board: Shop (collections of the first menu block), Around the stall (pages and blog of the second),
+        # Small print (policies of the second menu, or the store policies). Every link is a line with a short hint.
+        assign shop_menu = nil
+        assign help_menu = nil
+        for block in section.blocks
+          if block.type == 'menu'
+            if shop_menu == nil
+              assign shop_menu = block.settings.menu
+            elsif help_menu == nil
+              assign help_menu = block.settings.menu
+            endif
+          endif
+        endfor
+        if help_menu.links.size == 0
+          assign help_menu = linklists['footer']
+        endif
+        assign free_hint = ''
+        if settings.free_delivery_threshold > 0
+          assign free_amount = settings.free_delivery_threshold | times: 100 | money_without_trailing_zeros
+          assign free_hint = 'mg.footer.hint_free' | t: amount: free_amount
+        endif
+      -%}
+      {%- capture shop_lines -%}
+        {%- for link in shop_menu.links -%}
+          {%- if link.links.size > 0 -%}
+            {%- for child in link.links -%}
+              {%- if child.type == 'collection_link' -%}
+                <li><a class="mg-footline" href="{{ child.url }}"><span class="mg-footline__name">{{ child.title | escape }}</span><span class="mg-footline__hint">{{ 'mg.board.items' | t: count: child.object.products_count }}</span></a></li>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- elsif link.type == 'collection_link' -%}
+            <li><a class="mg-footline" href="{{ link.url }}"><span class="mg-footline__name">{{ link.title | escape }}</span><span class="mg-footline__hint">{{ 'mg.board.items' | t: count: link.object.products_count }}</span></a></li>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- capture stall_lines -%}
+        {%- for link in help_menu.links -%}
+          {%- unless link.type == 'policy_link' -%}
+            {%- liquid
+              assign hint = ''
+              if link.type == 'blog_link'
+                assign hint = 'mg.nav.stories' | t: count: link.object.articles_count
+              elsif link.type == 'page_link'
+                assign hint_key = 'mg.footer.hints.' | append: link.object.handle | replace: '-', '_'
+                assign hint = hint_key | t
+                if hint contains 'ranslation missing'
+                  assign hint = ''
+                endif
+                if link.object.handle contains 'shipping' and free_hint != blank
+                  assign hint = free_hint
+                endif
+              endif
+            -%}
+            <li><a class="mg-footline" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}><span class="mg-footline__name">{{ link.title | escape }}</span><span class="mg-footline__hint">{% if hint != blank %}{{ hint }}{% else %}<span aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>{% endif %}</span></a></li>
+          {%- endunless -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- capture print_lines -%}
+        {%- assign policy_count = 0 -%}
+        {%- for link in help_menu.links -%}
+          {%- if link.type == 'policy_link' -%}
+            {%- assign policy_count = policy_count | plus: 1 -%}
+            <li><a class="mg-footline" href="{{ link.url }}"><span class="mg-footline__name">{{ link.title | escape }}</span><span class="mg-footline__hint" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span></a></li>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if policy_count == 0 -%}
+          {%- for policy in shop.policies -%}
+            {%- if policy != blank -%}
+              <li><a class="mg-footline" href="{{ policy.url }}"><span class="mg-footline__name">{{ policy.title | escape }}</span><span class="mg-footline__hint" aria-hidden="true">{% render 'icon', name: 'arrow' %}</span></a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endcapture -%}
+      <div class="mg-footboard">
+        {%- if shop_lines != blank -%}
+          <section class="mg-footboard__col" aria-labelledby="FootShop-{{ section.id }}">
+            <h2 class="mg-footboard__title" id="FootShop-{{ section.id }}">{{ 'mg.footer.col_shop' | t }}</h2>
+            <ul class="mg-footboard__lines" role="list">{{ shop_lines }}</ul>
+          </section>
+        {%- endif -%}
+        {%- if stall_lines != blank -%}
+          <section class="mg-footboard__col" aria-labelledby="FootStall-{{ section.id }}">
+            <h2 class="mg-footboard__title" id="FootStall-{{ section.id }}">{{ 'mg.nav.around' | t }}</h2>
+            <ul class="mg-footboard__lines" role="list">{{ stall_lines }}</ul>
+          </section>
+        {%- endif -%}
+        {%- if print_lines != blank -%}
+          <section class="mg-footboard__col" aria-labelledby="FootPrint-{{ section.id }}">
+            <h2 class="mg-footboard__title" id="FootPrint-{{ section.id }}">{{ 'mg.footer.col_print' | t }}</h2>
+            <ul class="mg-footboard__lines" role="list">{{ print_lines }}</ul>
+          </section>
+        {%- endif -%}
+      </div>
+      <div class="mg-footband">
+        <div class="mg-footband__sign">
+          <p class="mg-footband__name">{{ shop.name | link_to: routes.root_url }}</p>
+          <p class="mg-footband__note">{{ 'mg.header.sign_note' | t }}</p>
+        </div>
+        <div class="mg-footband__end">
+          {%- if section.settings.show_social -%}{% render 'social-icons' %}{%- endif -%}
+          {% render 'localization', id: 'FooterLocalization', show_country: section.settings.show_country, show_language: section.settings.show_language %}
+          {%- if section.settings.show_payment and shop.enabled_payment_types.size > 0 -%}
+            <ul class="cw-footer__payments" role="list" aria-label="{{ 'footer.payment_methods' | t }}">
+              {%- for type in shop.enabled_payment_types -%}
+                <li>{{ type | payment_type_svg_tag: class: 'cw-payment-icon' }}</li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+          <p class="mg-footband__legal">
+            &copy; {{ 'now' | date: '%Y' }} {{ shop.name | escape }}
+            {%- if settings.show_credit %} <span aria-hidden="true">&middot;</span> <a href="https://zeronkit.com" rel="noopener">{{ 'footer.credit' | t }}</a>{%- endif -%}
+            {%- if section.settings.show_powered_by %} <span aria-hidden="true">&middot;</span> {{ powered_by_link }}{% endif %}
+          </p>
+          {%- if section.settings.show_policies and shop.policies.size > 0 -%}
+            <ul class="mg-footband__policies" role="list" aria-label="{{ 'footer.policies' | t }}">
+              {%- for policy in shop.policies -%}
+                {%- if policy != blank -%}<li><a href="{{ policy.url }}">{{ policy.title | escape }}</a></li>{%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- else -%}
+    <div class="cw-footer__top">
+      {%- if section.settings.show_brand -%}
+        <div class="cw-footer__brand">
+          <p class="cw-header__wordmark">{{ shop.name | escape }}</p>
+          {%- if t_brand_text != blank -%}<div class="cw-rte cw-small">{{ t_brand_text }}</div>{%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="cw-footer__blocks">
+          {%- for block in section.blocks -%}
+{%- liquid
+  assign mg_bk = 'mg.footer.' | append: block.id | replace: '-', '_'
+  assign bt_heading = mg_bk | append: '_heading' | t
+  if bt_heading contains 'ranslation missing'
+    assign bt_heading = ''
+  endif
+  if block.settings.heading != blank
+    assign bt_heading = block.settings.heading
+  endif
+  assign bt_text = mg_bk | append: '_text_html' | t
+  if bt_text contains 'ranslation missing'
+    assign bt_text = ''
+  endif
+  if block.settings.text != blank
+    assign bt_text = block.settings.text
+  endif
+-%}
+            <div class="cw-footer__block cw-footer__block--{{ block.type }}" {{ block.shopify_attributes }}>
+              {%- case block.type -%}
+                {%- when '@app' -%}
+                  {% render block %}
+                {%- when 'menu' -%}
+                  {%- liquid
+                    assign footer_menu = block.settings.menu
+                    if footer_menu.links.size == 0
+                      assign footer_menu = linklists['footer']
+                    endif
+                    assign heading = bt_heading
+                    if heading == blank and footer_menu.links.size > 0
+                      assign heading = footer_menu.title
+                    endif
+                  -%}
+                  {%- if heading != blank -%}
+                    <h2 class="cw-footer__heading">{{ heading | escape }}</h2>
+                  {%- endif -%}
+                  <ul class="cw-footer__links" role="list">
+                    {%- if footer_menu.links.size > 0 -%}
+                      {%- for link in footer_menu.links -%}
+                        <li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></li>
+                      {%- endfor -%}
+                    {%- else -%}
+                      {%- for handle in auto_pages -%}
+                        {%- if pages[handle].title != blank -%}
+                          <li><a href="{{ pages[handle].url }}">{{ pages[handle].title | escape }}</a></li>
+                        {%- endif -%}
+                      {%- endfor -%}
+                      {%- if fb_blog.articles_count > 0 -%}
+                        <li><a href="{{ fb_blog.url }}">{{ fb_blog.title | escape }}</a></li>
+                      {%- endif -%}
+                      <li><a href="{{ routes.search_url }}">{{ 'search.title' | t }}</a></li>
+                    {%- endif -%}
+                  </ul>
+                {%- when 'text' -%}
+                  {%- if bt_heading != blank -%}
+                    <h2 class="cw-footer__heading">{{ bt_heading | escape }}</h2>
+                  {%- endif -%}
+                  <div class="cw-rte">{{ bt_text }}</div>
+                {%- when 'newsletter' -%}
+                  {%- if bt_heading != blank -%}
+                    <h2 class="cw-footer__heading">{{ bt_heading | escape }}</h2>
+                  {%- endif -%}
+                  {%- if bt_text != blank -%}
+                    <div class="cw-rte cw-small">{{ bt_text }}</div>
+                  {%- endif -%}
+                  {% render 'newsletter-form', id: 'FooterNewsletter' %}
+              {%- endcase -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="cw-footer__row">
+      {%- if section.settings.show_social -%}
+        {% render 'social-icons' %}
+      {%- endif -%}
+      {%- if section.settings.show_follow_on_shop and shop.features.follow_on_shop? -%}
+        <div class="cw-footer__follow">{{ shop | login_button: action: 'follow' }}</div>
+      {%- endif -%}
+      {% render 'localization', id: 'FooterLocalization', show_country: section.settings.show_country, show_language: section.settings.show_language %}
+    </div>
+
+    <div class="cw-footer__base">
+      <div class="cw-footer__legal">
+        <p class="cw-small">
+          &copy; {{ 'now' | date: '%Y' }} {{ shop.name | link_to: routes.root_url }}
+          {%- if settings.show_credit %}
+            <span aria-hidden="true">&middot;</span>
+            <a href="https://zeronkit.com" rel="noopener">{{ 'footer.credit' | t }}</a>
+          {%- endif -%}
+          {%- if section.settings.show_powered_by %} <span aria-hidden="true">&middot;</span> {{ powered_by_link }}{% endif %}
+        </p>
+        {%- if section.settings.show_policies and shop.policies.size > 0 -%}
+          <ul class="cw-footer__policies" role="list" aria-label="{{ 'footer.policies' | t }}">
+            {%- for policy in shop.policies -%}
+              {%- if policy != blank -%}
+                <li><a href="{{ policy.url }}">{{ policy.title | escape }}</a></li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.show_payment and shop.enabled_payment_types.size > 0 -%}
+        <ul class="cw-footer__payments" role="list" aria-label="{{ 'footer.payment_methods' | t }}">
+          {%- for type in shop.enabled_payment_types -%}
+            <li>{{ type | payment_type_svg_tag: class: 'cw-payment-icon' }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+    {%- endif -%}
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "t:names.footer",
+  "class": "cw-shopify-section",
+  "enabled_on": { "groups": ["footer"] },
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:labels.layout",
+      "options": [
+        { "value": "riverside", "label": "t:options.footer_riverside" },
+        { "value": "columns", "label": "t:options.footer_columns" },
+        { "value": "editorial", "label": "t:options.footer_editorial" },
+        { "value": "centered", "label": "t:options.footer_centered" }
+      ],
+      "default": "riverside"
+    },
+    { "type": "checkbox", "id": "show_week", "label": "t:labels.show_week", "default": true },
+    { "type": "text", "id": "baking_days", "label": "t:labels.baking_days", "info": "t:info.baking_days", "default": "tue,wed,thu,fri,sat" },
+    { "type": "checkbox", "id": "show_brand", "label": "t:labels.show_brand", "default": true },
+    { "type": "richtext", "id": "brand_text", "label": "t:labels.brand_text" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-2" },
+    { "type": "checkbox", "id": "show_social", "label": "t:labels.show_social", "default": true, "info": "t:info.social" },
+    { "type": "checkbox", "id": "show_follow_on_shop", "label": "t:labels.show_follow_on_shop", "default": true, "info": "t:info.follow_on_shop" },
+    { "type": "checkbox", "id": "show_country", "label": "t:labels.show_country", "default": true },
+    { "type": "checkbox", "id": "show_language", "label": "t:labels.show_language", "default": true },
+    { "type": "checkbox", "id": "show_payment", "label": "t:labels.show_payment", "default": true },
+    { "type": "checkbox", "id": "show_policies", "label": "t:labels.show_policies", "default": true, "info": "t:info.policies" },
+    { "type": "checkbox", "id": "show_powered_by", "label": "t:labels.show_powered_by", "default": false },
+    { "type": "paragraph", "content": "t:info.credit" }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "menu",
+      "name": "t:names.menu",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "t:labels.heading" },
+        { "type": "link_list", "id": "menu", "label": "t:labels.menu", "default": "footer", "info": "t:info.footer_menu" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:names.text",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "t:labels.heading" },
+        { "type": "richtext", "id": "text", "label": "t:labels.text" }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "t:names.newsletter",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "t:labels.heading" },
+        { "type": "richtext", "id": "text", "label": "t:labels.text" },
+        { "type": "paragraph", "content": "t:info.newsletter" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.footer",
+      "blocks": [{ "type": "menu" }, { "type": "newsletter" }]
+    }
+  ]
+}
+{% endschema %}

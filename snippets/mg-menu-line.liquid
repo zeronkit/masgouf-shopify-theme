@@ -1,0 +1,105 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  One line of the chalk menu: a small round plate, the name, a dotted leader, the price, and a "+" to add it.
+  A product with one option and up to six sizes opens its sizes as menu lines under it ("Choose").
+  Other products with options link to their page. Sold-out lines are struck through.
+  Params: product, show_image (default true), show_desc (default true), plate (px, default 56), eager, heading ('h2' | 'h3')
+{%- endcomment -%}
+{%- liquid
+  assign plate = plate | default: 56
+  assign heading = heading | default: 'h3'
+  assign show_image = show_image | default: true
+  if show_desc == false
+    assign show_desc = false
+  else
+    assign show_desc = true
+  endif
+  assign line_id = 'MgLine-' | append: product.id | append: '-' | append: section.id
+  assign default_variant = product.selected_or_first_available_variant
+  assign is_new = false
+  assign line_tags = product.tags | join: ',' | downcase | prepend: ',' | append: ','
+  if line_tags contains ',new,'
+    assign is_new = true
+  elsif settings.new_badge_days > 0 and product.published_at
+    assign age_days = 'now' | date: '%s' | minus: 0
+    assign published_seconds = product.published_at | date: '%s' | minus: 0
+    assign age_days = age_days | minus: published_seconds | divided_by: 86400
+    if age_days <= settings.new_badge_days
+      assign is_new = true
+    endif
+  endif
+  assign desc = ''
+  if show_desc
+    assign desc = product.description | strip_html | strip_newlines | split: '. ' | first | split: ': ' | first | truncate: 96
+  endif
+  assign can_choose = false
+  if product.has_only_default_variant == false and product.options.size == 1 and product.variants.size <= 6
+    assign can_choose = true
+  endif
+-%}
+<article class="mg-line{% if product.available == false %} mg-line--out{% endif %}{% if show_image == false %} mg-line--bare{% endif %}" style="--mg-plate: {{ plate }}px;">
+  {%- if show_image -%}
+    <div class="mg-line__plate">
+      {%- if product.featured_media -%}
+        {%- assign w2 = plate | times: 2 -%}
+        {{ product.featured_media.preview_image | image_url: width: w2, height: w2, crop: 'center' | image_tag: alt: '', width: plate, height: plate, loading: 'lazy', class: 'mg-line__img' }}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'cw-placeholder mg-line__img' }}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+  <{{ heading }} class="mg-line__name">
+    <a class="mg-line__link" href="{{ product.url }}">{{ product.title | escape }}</a>
+    {%- if product.available == false -%}
+      <span class="mg-line__tag mg-line__tag--out">{{ 'mg.line.sold_out_today' | t }}</span>
+    {%- elsif product.compare_at_price > product.price -%}
+      <span class="mg-line__tag mg-line__tag--sale">{{ 'products.badge_sale' | t }}</span>
+    {%- elsif is_new -%}
+      <span class="mg-line__tag">{{ 'products.new' | t }}</span>
+    {%- endif -%}
+  </{{ heading }}>
+  <div class="mg-line__price">{% render 'price', product: product %}</div>
+  {%- if desc != blank -%}
+    <p class="mg-line__desc">{{ desc | escape }}</p>
+  {%- endif -%}
+  <div class="mg-line__act">
+    {%- if product.available == false -%}
+      <span class="mg-line__none" aria-hidden="true">&times;</span>
+    {%- elsif product.has_only_default_variant -%}
+      <form method="post" action="{{ routes.cart_add_url }}" class="mg-line__form" data-mg-quick>
+        <input type="hidden" name="id" value="{{ default_variant.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" class="mg-plus" aria-label="{{ 'mg.line.add' | t: title: product.title | escape }}">{% render 'icon', name: 'plus' %}</button>
+      </form>
+    {%- elsif can_choose -%}
+      <button type="button" class="mg-plus mg-plus--choose cw-js-only" aria-expanded="false" aria-controls="{{ line_id }}" data-mg-choose>
+        <span class="cw-visually-hidden">{{ 'mg.line.choose_label' | t: title: product.title | escape }}</span>
+        <span aria-hidden="true">{{ 'mg.line.choose' | t }}</span>
+      </button>
+    {%- else -%}
+      <a class="mg-plus mg-plus--choose" href="{{ product.url }}">
+        <span class="cw-visually-hidden">{{ 'mg.line.choose_label' | t: title: product.title | escape }}</span>
+        <span aria-hidden="true">{{ 'mg.line.choose' | t }}</span>
+      </a>
+    {%- endif -%}
+  </div>
+  {%- if can_choose and product.available -%}
+    <ul class="mg-line__sizes" id="{{ line_id }}" role="list">
+      {%- for variant in product.variants -%}
+        <li class="mg-size{% unless variant.available %} mg-size--out{% endunless %}">
+          <span class="mg-size__name">{{ variant.title | escape }}</span>
+          <span class="mg-size__price">{% render 'price', product: product, variant: variant %}</span>
+          {%- if variant.available -%}
+            <form method="post" action="{{ routes.cart_add_url }}" class="mg-line__form" data-mg-quick>
+              <input type="hidden" name="id" value="{{ variant.id }}">
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="mg-plus" aria-label="{{ 'mg.line.add_variant' | t: title: product.title, variant: variant.title | escape }}">{% render 'icon', name: 'plus' %}</button>
+            </form>
+          {%- else -%}
+            <span class="mg-size__out">{{ 'products.sold_out' | t }}</span>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+</article>

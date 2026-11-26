@@ -1,0 +1,51 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Prints the description for search engines and link previews, so every template has one.
+  Order: the description Shopify gives the page, then the page's own text, then a short line from the locale files.
+{%- endcomment -%}
+{%- liquid
+  assign meta_text = page_description | strip_html | strip_newlines | strip
+  if meta_text == blank
+    case request.page_type
+      when 'index'
+        assign meta_text = settings.meta_description | default: shop.description
+        if meta_text == blank
+          assign meta_text = 'mg.meta.home' | t: shop: shop.name
+        endif
+      when 'list-collections'
+        assign meta_text = 'mg.meta.collections' | t: shop: shop.name
+      when 'collection'
+        assign meta_text = collection.description | strip_html | strip_newlines | strip
+        if meta_text == blank
+          assign meta_text = 'mg.meta.collection' | t: title: collection.title, shop: shop.name
+        endif
+      when 'product'
+        assign meta_text = product.description | strip_html | strip_newlines | strip
+        if meta_text == blank
+          assign meta_text = 'mg.meta.product' | t: title: product.title, shop: shop.name
+        endif
+      when 'blog'
+        assign meta_separator = 'mg.meta.separator' | t
+        assign meta_titles = blog.articles | map: 'title' | slice: 0, 3 | join: meta_separator
+        assign meta_text = 'mg.meta.blog' | t: blog: blog.title, shop: shop.name, titles: meta_titles
+      when 'article'
+        assign meta_text = article.excerpt_or_content | strip_html | strip_newlines | strip
+      when 'page'
+        assign meta_text = page.content | strip_html | strip_newlines | strip
+      when 'search'
+        if search.performed
+          assign meta_text = 'mg.meta.search_results' | t: terms: search.terms, shop: shop.name
+        else
+          assign meta_text = 'mg.meta.search' | t: shop: shop.name
+        endif
+      when 'cart'
+        assign meta_text = 'mg.meta.cart' | t: shop: shop.name
+      when 'policy'
+        assign meta_text = 'mg.meta.policy' | t: title: page_title, shop: shop.name
+    endcase
+    if meta_text == blank
+      assign meta_text = 'mg.meta.page' | t: title: page_title, shop: shop.name
+    endif
+  endif
+  echo meta_text | replace: '  ', ' ' | truncate: 160
+-%}

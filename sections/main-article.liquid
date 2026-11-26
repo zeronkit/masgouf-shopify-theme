@@ -1,0 +1,175 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- assign minutes = article.content | strip_html | split: ' ' | size | divided_by: 200 | at_least: 1 -%}
+{%- comment -%}
+  The recipe card: a chalk title band (title, date, time to make, Print), then two columns. The start column is a sticky
+  "At a glance" card: a round plate photo, the time line, the article's first list (the ingredients) and "Shop the ingredients"
+  menu lines with prices and "+". The end column holds the story and the numbered method.
+{%- endcomment -%}
+{%- liquid
+  assign body = article.content
+  assign glance_list = ''
+  assign glance_title = ''
+  if body contains '<ul'
+    assign pre = body | split: '<ul' | first
+    assign from_list = body | remove_first: pre
+    assign glance_list = from_list | split: '</ul>' | first | append: '</ul>'
+    assign rest = from_list | remove_first: glance_list
+    if pre contains '<h2'
+      assign last_head = pre | split: '<h2' | last
+      assign head_text = last_head | split: '</h2>' | first
+      assign head_bits = head_text | split: '>'
+      assign glance_title = head_text | remove_first: head_bits.first | remove_first: '>' | strip_html | strip
+      assign pre = pre | remove: last_head | remove_last: '<h2'
+    endif
+    assign body = pre | append: rest
+  endif
+  if glance_title == blank
+    assign glance_title = 'mg.article.ingredients' | t
+  endif
+  # Products for "Shop the ingredients": those that point to this article, then those named in it.
+  assign content_down = article.content | strip_html | downcase
+  assign picks = ''
+  assign pick_count = 0
+  for p in collections.all.products limit: 50
+    if pick_count >= 4
+      break
+    endif
+    assign linked = false
+    if p.metafields.masgouf.recipe_article.value.id == article.id
+      assign linked = true
+    endif
+    assign short_title = p.title | downcase | split: ' (' | first
+    if linked or content_down contains short_title
+      assign picks = picks | append: p.handle | append: ','
+      assign pick_count = pick_count | plus: 1
+    endif
+  endfor
+  assign pick_handles = picks | split: ','
+-%}
+<article class="cw-section mg-recipe color-{{ section.settings.color_scheme }}">
+  <div class="cw-wrap">
+    <header class="mg-board mg-recipe__band">
+      <a class="mg-recipe__back" href="{{ blog.url }}">{% render 'icon', name: 'back' %} {{ blog.title | escape }}</a>
+      <h1 class="mg-recipe__title">{{ article.title | escape }}</h1>
+      <p class="mg-recipe__meta">
+        {{ article.published_at | time_tag: format: 'date' }}
+        {%- if section.settings.show_author %} <span aria-hidden="true">&middot;</span> {{ article.author | escape }}{% endif %}
+        {%- if section.settings.show_read_time %} <span aria-hidden="true">&middot;</span> {{ 'blogs.read_time' | t: minutes: minutes }}{% endif %}
+      </p>
+      {%- if section.settings.show_print -%}
+        <button type="button" class="mg-tab mg-tab--more mg-recipe__print" data-cw-print>{{ 'blogs.print' | t }}</button>
+      {%- endif -%}
+    </header>
+    <div class="mg-recipe__grid">
+      <aside class="mg-recipe__card" aria-labelledby="Glance-{{ section.id }}">
+        {%- if article.image -%}
+          <div class="mg-recipe__plate">{% render 'image', image: article.image, sizes: '(min-width: 990px) 260px, 60vw', max: 700, eager: true %}</div>
+        {%- endif -%}
+        <h2 class="mg-recipe__card-title" id="Glance-{{ section.id }}">{{ 'mg.article.glance' | t }}</h2>
+        {%- if glance_list != blank -%}
+          <h3 class="mg-recipe__list-title">{{ glance_title | escape }}</h3>
+          <div class="cw-rte mg-recipe__list">{{ glance_list }}</div>
+        {%- endif -%}
+        {%- if pick_count > 0 -%}
+          <h3 class="mg-recipe__list-title">{{ 'mg.article.shop' | t }}</h3>
+          <ul class="mg-recipe__shop" role="list">
+            {%- for handle in pick_handles -%}
+              {%- assign p = all_products[handle] -%}
+              {%- if p != blank -%}
+                <li class="mg-recipe__pick">
+                  <a class="mg-pline" href="{{ p.url }}">
+                    <span class="mg-pline__plate">{%- if p.featured_media -%}{{ p.featured_media.preview_image | image_url: width: 72, height: 72, crop: 'center' | image_tag: alt: '', width: 36, height: 36, loading: 'lazy' }}{%- endif -%}</span>
+                    <span class="mg-pline__name">{{ p.title | escape }}</span>
+                    <span class="mg-pline__price">{% render 'price', product: p %}</span>
+                  </a>
+                  {%- if p.available and p.has_only_default_variant -%}
+                    <form method="post" action="{{ routes.cart_add_url }}" class="mg-line__form" data-mg-quick>
+                      <input type="hidden" name="id" value="{{ p.selected_or_first_available_variant.id }}">
+                      <input type="hidden" name="quantity" value="1">
+                      <button type="submit" class="mg-plus mg-plus--ink" aria-label="{{ 'mg.line.add' | t: title: p.title | escape }}">{% render 'icon', name: 'plus' %}</button>
+                    </form>
+                  {%- elsif p.available -%}
+                    <a class="mg-plus mg-plus--ink" href="{{ p.url }}" aria-label="{{ 'mg.line.choose_label' | t: title: p.title | escape }}">{% render 'icon', name: 'plus' %}</a>
+                  {%- endif -%}
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </aside>
+      <div class="cw-rte mg-recipe__method">{{ body }}</div>
+    </div>
+
+    <div class="mg-recipe__after">
+    {%- if article.tags.size > 0 -%}
+      <ul class="cw-rail__list cw-rail__list--wrap cw-article__tags" role="list" aria-label="{{ 'blogs.tags' | t }}">
+        {%- for tag in article.tags -%}
+          <li><a class="cw-rail__pill" href="{{ blog.url }}/tagged/{{ tag | handleize }}">{% render 'tag-label', tag: tag %}</a></li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if blog.comments_enabled? -%}
+      <section class="cw-comments" aria-labelledby="Comments-{{ section.id }}">
+        <h2 class="cw-h3" id="Comments-{{ section.id }}">{{ 'blogs.comments.title' | t: count: article.comments_count }}</h2>
+        {%- paginate article.comments by 20 -%}
+          <ul class="cw-comments__list" role="list">
+            {%- for comment in article.comments -%}
+              <li class="cw-comment">
+                <div class="cw-rte">{{ comment.content }}</div>
+                <p class="cw-small cw-muted">{{ comment.author | escape }} &middot; {{ comment.created_at | time_tag: format: 'date' }}</p>
+              </li>
+            {%- endfor -%}
+          </ul>
+          {% render 'pagination', paginate: paginate %}
+        {%- endpaginate -%}
+
+        {%- form 'new_comment', article, class: 'cw-form cw-comments__form' -%}
+          <h3 class="cw-h4">{{ 'blogs.comments.leave' | t }}</h3>
+          {%- if form.posted_successfully? -%}
+            <p class="cw-notice cw-notice--success" role="status">
+              {%- if blog.moderated? -%}{{ 'blogs.comments.moderated' | t }}{%- else -%}{{ 'blogs.comments.posted' | t }}{%- endif -%}
+            </p>
+          {%- endif -%}
+          {%- if form.errors -%}
+            <div class="cw-notice cw-notice--error" role="alert">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
+          <div class="cw-form__row">
+            <div class="cw-field">
+              <label class="cw-field__label" for="CommentAuthor">{{ 'blogs.comments.name' | t }}</label>
+              <input class="cw-input" type="text" id="CommentAuthor" name="comment[author]" value="{{ form.author }}" autocomplete="name" required>
+            </div>
+            <div class="cw-field">
+              <label class="cw-field__label" for="CommentEmail">{{ 'blogs.comments.email' | t }}</label>
+              <input class="cw-input" type="email" id="CommentEmail" name="comment[email]" value="{{ form.email }}" autocomplete="email" required>
+            </div>
+          </div>
+          <div class="cw-field">
+            <label class="cw-field__label" for="CommentBody">{{ 'blogs.comments.message' | t }}</label>
+            <textarea class="cw-input" id="CommentBody" name="comment[body]" rows="5" required>{{ form.body }}</textarea>
+          </div>
+          {%- if blog.moderated? -%}<p class="cw-small cw-muted">{{ 'blogs.comments.moderation_note' | t }}</p>{%- endif -%}
+          <button type="submit" class="cw-button cw-button--primary">{{ 'blogs.comments.post' | t }}</button>
+        {%- endform -%}
+      </section>
+    {%- endif -%}
+    </div>
+  </div>
+  <script type="application/ld+json">
+    {{ article | structured_data }}
+  </script>
+</article>
+
+{% schema %}
+{
+  "name": "t:names.blog_post",
+  "class": "cw-shopify-section",
+  "enabled_on": { "templates": ["article"] },
+  "settings": [
+    { "type": "checkbox", "id": "show_author", "label": "t:labels.show_author", "default": true },
+    { "type": "checkbox", "id": "show_read_time", "label": "t:labels.show_read_time", "default": true },
+    { "type": "checkbox", "id": "show_print", "label": "t:labels.show_print", "default": true, "info": "t:info.show_print" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ]
+}
+{% endschema %}

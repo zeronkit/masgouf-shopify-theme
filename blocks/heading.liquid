@@ -1,0 +1,56 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign mg_bk = 'mg.blocks.heading_html'
+  assign bt_heading = mg_bk | t
+  if bt_heading contains 'ranslation missing'
+    assign bt_heading = ''
+  endif
+  if block.settings.heading != blank
+    assign bt_heading = block.settings.heading
+  endif
+-%}
+{%- liquid
+  assign tag = block.settings.tag | default: 'h2'
+-%}
+<{{ tag }} class="cw-block cw-block-heading cw-{{ block.settings.size }} cw-align-{{ block.settings.alignment }}" {{ block.shopify_attributes }}>
+  {{- bt_heading -}}
+</{{ tag }}>
+
+{% schema %}
+{
+  "name": "t:names.heading",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "t:labels.heading" },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:labels.size",
+      "options": [
+        { "value": "display", "label": "t:options.display" },
+        { "value": "h1", "label": "t:options.large" },
+        { "value": "h2", "label": "t:options.medium" },
+        { "value": "h3", "label": "t:options.small" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "select",
+      "id": "tag",
+      "label": "t:labels.html_tag",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "p", "label": "t:options.paragraph" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "text_alignment",
+      "id": "alignment",
+      "label": "t:labels.alignment",
+      "default": "left"
+    }
+  ],
+  "presets": [{ "name": "t:names.heading" }]
+}
+{% endschema %}

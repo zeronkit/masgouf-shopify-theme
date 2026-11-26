@@ -1,0 +1,25 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign networks = 'instagram,tiktok,facebook,pinterest,youtube,snapchat,twitter' | split: ','
+-%}
+<ul class="cw-social" role="list">
+  {%- for network in networks -%}
+    {%- liquid
+      assign key = 'social_' | append: network | append: '_link'
+      assign url = settings[key]
+      assign icon = network
+      assign label_key = 'social.' | append: network
+      if network == 'twitter'
+        assign icon = 'x'
+      endif
+    -%}
+    {%- if url != blank -%}
+      <li>
+        <a class="cw-icon-button" href="{{ url }}" rel="noopener" target="_blank">
+          {% render 'icon', name: icon %}
+          <span class="cw-visually-hidden">{{ label_key | t }} ({{ 'general.new_window' | t }})</span>
+        </a>
+      </li>
+    {%- endif -%}
+  {%- endfor -%}
+</ul>

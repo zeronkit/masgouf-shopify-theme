@@ -1,0 +1,13 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  A top level header link. Links with children open their navigator panel.
+  Params: link, panel_id
+{%- endcomment -%}
+{%- if link.links.size > 0 -%}
+  <button type="button" class="cw-header__link" data-cw-open="Navigator" data-cw-panel="{{ panel_id }}" aria-haspopup="dialog">
+    {{- link.title | escape -}}
+    {% render 'icon', name: 'down' %}
+  </button>
+{%- else -%}
+  <a class="cw-header__link" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+{%- endif -%}

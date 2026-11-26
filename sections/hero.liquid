@@ -1,0 +1,102 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign image = section.settings.image
+  assign mobile = section.settings.image_mobile
+  if image == blank and section.settings.image_collection != blank
+    assign image = section.settings.image_collection.featured_image
+  endif
+  if image == blank and section.settings.video == blank
+    for candidate in collections.all.products limit: 10
+      if candidate.featured_media
+        assign image = candidate.featured_media.preview_image
+        break
+      endif
+    endfor
+  endif
+-%}
+<section class="cw-hero cw-hero--{{ section.settings.height }} color-{{ section.settings.color_scheme }}" style="--overlay: {{ section.settings.overlay | divided_by: 100.0 }};">
+  <div class="cw-hero__media">
+    {%- if section.settings.video != blank -%}
+      <cw-ambient-video class="cw-hero__video">
+        {{ section.settings.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, image_size: '1800x', class: 'cw-hero__img' }}
+        <button type="button" class="cw-icon-button cw-hero__pause" data-cw-pause aria-pressed="false" aria-label="{{ 'general.pause_video' | t }}">
+          <svg class="cw-icon" aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+        </button>
+      </cw-ambient-video>
+    {%- elsif image != blank -%}
+      <picture>
+        {%- if mobile != blank -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="{{ mobile | image_url: width: 600 }} 600w, {{ mobile | image_url: width: 900 }} 900w, {{ mobile | image_url: width: 1200 }} 1200w"
+            sizes="100vw"
+          >
+        {%- endif -%}
+        {% render 'image', image: image, sizes: '100vw', eager: section.settings.eager, class: 'cw-hero__img' %}
+      </picture>
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'cw-placeholder cw-hero__img' }}
+    {%- endif -%}
+  </div>
+
+  <div class="cw-wrap cw-hero__content cw-hero__content--{{ section.settings.position }}">
+    <div class="cw-hero__stack">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+
+  {%- if section.settings.frame_label != blank -%}
+    <p class="cw-hero__label" aria-hidden="true">{{ section.settings.frame_label | escape }}</p>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "t:names.hero",
+  "class": "cw-shopify-section",
+  "blocks": [{ "type": "@theme" }, { "type": "@app" }],
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "t:labels.image" },
+    { "type": "image_picker", "id": "image_mobile", "label": "t:labels.image_mobile" },
+    { "type": "collection", "id": "image_collection", "label": "t:labels.image_collection", "info": "t:info.image_collection" },
+    { "type": "video", "id": "video", "label": "t:labels.video", "info": "t:info.hero_video" },
+    { "type": "checkbox", "id": "eager", "label": "t:labels.load_first", "default": true, "info": "t:info.load_first" },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:labels.height",
+      "options": [
+        { "value": "short", "label": "t:options.short" },
+        { "value": "tall", "label": "t:options.tall" },
+        { "value": "full", "label": "t:options.full_screen" }
+      ],
+      "default": "tall"
+    },
+    {
+      "type": "select",
+      "id": "position",
+      "label": "t:labels.content_position",
+      "options": [
+        { "value": "start-end", "label": "t:options.bottom_start" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "end-end", "label": "t:options.bottom_end" },
+        { "value": "start-start", "label": "t:options.top_start" }
+      ],
+      "default": "start-end"
+    },
+    { "type": "range", "id": "overlay", "label": "t:labels.overlay", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 30 },
+    { "type": "text", "id": "frame_label", "label": "t:labels.frame_label", "info": "t:info.frame_label" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-2" }
+  ],
+  "presets": [
+    {
+      "name": "t:names.hero",
+      "blocks": [
+        { "type": "text", "settings": { "text": "<p>New season</p>", "style": "eyebrow" } },
+        { "type": "heading", "settings": { "heading": "Made to be worn together", "size": "display", "tag": "h2" } },
+        { "type": "button", "settings": { "label": "Shop the collection", "style": "primary" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

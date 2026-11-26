@@ -1,0 +1,56 @@
+{
+  "sections": {
+    "main": {
+      "type": "mg-about",
+      "blocks": {
+        "photo_1": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/photo-1772758632677-138b22b5d925.jpg"
+          }
+        },
+        "photo_2": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/photo-1791337442521-ef4e171442dc.jpg"
+          }
+        },
+        "photo_3": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/photo-1604740795234-9cb8e03c189b.jpg"
+          }
+        },
+        "fact_1": {
+          "type": "fact",
+          "settings": {}
+        },
+        "fact_2": {
+          "type": "fact",
+          "settings": {}
+        },
+        "fact_3": {
+          "type": "fact",
+          "settings": {}
+        },
+        "fact_4": {
+          "type": "fact",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "photo_1",
+        "photo_2",
+        "photo_3",
+        "fact_1",
+        "fact_2",
+        "fact_3",
+        "fact_4"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

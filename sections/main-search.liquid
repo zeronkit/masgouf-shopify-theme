@@ -1,0 +1,180 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign t_heading = 'mg.main_search.heading' | t
+  if section.settings.heading != blank
+    assign t_heading = section.settings.heading
+  endif
+-%}
+{%- liquid
+  assign current_type = 'all'
+  if search.types.size == 1
+    assign current_type = search.types.first
+  endif
+  assign encoded_terms = search.terms | url_encode
+  assign base_url = routes.search_url | append: '?q=' | append: encoded_terms | append: '&options%5Bprefix%5D=last'
+-%}
+{%- assign page_heading = 'search.page_heading' | t -%}
+{%- liquid
+  # A shopper's "Show" choice is kept in a hidden cart attribute, because Liquid cannot read URL parameters.
+  assign per_page = section.settings.per_page
+  assign chosen = cart.attributes['_cw_per_page'] | plus: 0
+  if section.settings.show_per_page and chosen >= 8 and chosen <= 48
+    assign per_page = chosen
+  endif
+-%}
+{%- liquid
+  assign suggested = section.settings.suggested_collection
+  if suggested == blank
+    assign suggested_products = collections.all.products
+  else
+    assign suggested_products = suggested.products
+  endif
+-%}
+{%- capture still_on_board -%}
+  {%- if suggested_products.size > 0 -%}
+    <div class="mg-board__still">
+      <h2 class="mg-board__sub">{{ 'mg.board.still' | t }}</h2>
+      <ul class="mg-menu" role="list">
+        {%- for product in suggested_products limit: 8 -%}
+          <li>{% render 'mg-menu-line', product: product, show_desc: false %}</li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+<section class="cw-section mg-menu-page mg-search-page color-{{ section.settings.color_scheme }}">
+  <div class="cw-wrap">
+    <div class="mg-board mg-board--search">
+      <header class="mg-board__head mg-board__head--stack">
+        <h1 class="mg-board__title">
+          {%- if search.performed -%}
+            {{ 'mg.search.asked' | t: terms: search.terms }}
+          {%- else -%}
+            {{ t_heading | default: page_heading | escape }}
+          {%- endif -%}
+        </h1>
+        <div class="mg-board__field">
+          {% render 'search-form', id: 'MainSearch', predictive: false, value: search.terms %}
+        </div>
+        {%- if search.performed -%}
+          <nav class="mg-tabs mg-board__types" aria-label="{{ 'search.tabs_label' | t }}">
+            <ul role="list">
+              <li><a class="mg-tab" href="{{ base_url }}"{% if current_type == 'all' %} aria-current="page"{% endif %}>{{ 'search.tab_all' | t }}{% if current_type == 'all' %} <span class="cw-count">{{ search.results_count }}</span>{% endif %}</a></li>
+              <li><a class="mg-tab" href="{{ base_url }}&amp;type=product"{% if current_type == 'product' %} aria-current="page"{% endif %}>{{ 'search.tab_products' | t }}{% if current_type == 'product' %} <span class="cw-count">{{ search.results_count }}</span>{% endif %}</a></li>
+              <li><a class="mg-tab" href="{{ base_url }}&amp;type=article"{% if current_type == 'article' %} aria-current="page"{% endif %}>{{ 'search.tab_articles' | t }}{% if current_type == 'article' %} <span class="cw-count">{{ search.results_count }}</span>{% endif %}</a></li>
+              <li><a class="mg-tab" href="{{ base_url }}&amp;type=page"{% if current_type == 'page' %} aria-current="page"{% endif %}>{{ 'search.tab_pages' | t }}{% if current_type == 'page' %} <span class="cw-count">{{ search.results_count }}</span>{% endif %}</a></li>
+            </ul>
+          </nav>
+        {%- endif -%}
+      </header>
+
+      {%- if search.performed -%}
+        <div class="mg-board__found" data-cw-search-collections data-terms="{{ search.terms | escape }}" hidden>
+          <h2 class="mg-board__sub">{{ 'search.matching_collections' | t }}</h2>
+          <ul class="cw-chips mg-tk-words" role="list" data-cw-search-collections-list></ul>
+        </div>
+
+        {%- paginate search.results by per_page -%}
+          <cw-facets class="cw-facets" data-section-id="{{ section.id }}">
+            {%- liquid
+              assign clear_url = base_url
+              if current_type != 'all'
+                assign clear_url = clear_url | append: '&type=' | append: current_type
+              endif
+            -%}
+            {% render 'facets',
+              layout: 'board',
+              filters: search.filters,
+              sort_options: search.sort_options,
+              sort_by: search.sort_by,
+              default_sort: search.default_sort_by,
+              count: search.results_count,
+              section_id: section.id,
+              clear_url: clear_url,
+              enable_filtering: section.settings.enable_filtering,
+              enable_sorting: section.settings.enable_sorting,
+              show_colour_bar: false,
+              terms: search.terms,
+              search_type: current_type,
+              scheme: 'scheme-1',
+              show_per_page: section.settings.show_per_page,
+              per_page: per_page
+            %}
+            <div class="cw-facets__results mg-board__body" data-cw-results>
+              {%- if search.results_count > 0 -%}
+                <ul class="mg-menu" role="list" data-cw-list>
+                  {%- for item in search.results -%}
+                    <li>
+                      {%- case item.object_type -%}
+                        {%- when 'product' -%}
+                          {% render 'mg-menu-line', product: item %}
+                        {%- when 'article' -%}
+                          {%- liquid
+                            assign minutes = item.content | strip_html | split: ' ' | size | divided_by: 200 | at_least: 1
+                            assign read = 'blogs.read_time' | t: minutes: minutes
+                            assign note = item.blog.title | escape
+                            if item.tags.size > 0
+                              assign note = item.tags.first | escape
+                            endif
+                          -%}
+                          {% render 'mg-text-line', url: item.url, title: item.title, hint: read, note: note %}
+                        {%- when 'page' -%}
+                          {%- assign note = item.content | strip_html | truncatewords: 14 | escape -%}
+                          {% render 'mg-text-line', url: item.url, title: item.title, note: note %}
+                      {%- endcase -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- else -%}
+                <div class="mg-board__none">
+                  <p class="mg-board__none-title">{{ 'mg.search.none_title' | t }}</p>
+                  <p>{{ 'mg.search.none_hint' | t: terms: search.terms }}</p>
+                  {% render 'search-discovery', id: 'NoResults', style: 'ticket', show_today: false, heading_tag: 'h2' %}
+                </div>
+                {{ still_on_board }}
+              {%- endif -%}
+              <div class="mg-board__foot">
+                {%- assign shown = paginate.current_offset | plus: search.results.size -%}
+                {% render 'pagination', paginate: paginate, style: section.settings.pagination_style, shown: shown, more_label: 'mg.board.more' %}
+              </div>
+            </div>
+          </cw-facets>
+        {%- endpaginate -%}
+      {%- else -%}
+        <div class="mg-board__none">
+          {% render 'search-discovery', id: 'SearchStart', style: 'ticket', show_today: false, heading_tag: 'h2' %}
+        </div>
+        {{ still_on_board }}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:names.search_results",
+  "class": "cw-shopify-section",
+  "enabled_on": { "templates": ["search"] },
+  "settings": [
+    { "type": "text", "id": "heading", "label": "t:labels.heading" },
+    { "type": "range", "id": "per_page", "label": "t:labels.products_per_page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    {
+      "type": "select",
+      "id": "pagination_style",
+      "label": "t:labels.pagination_style",
+      "options": [
+        { "value": "numbered", "label": "t:options.pagination_numbered" },
+        { "value": "load_more", "label": "t:options.pagination_load_more" },
+        { "value": "infinite", "label": "t:options.pagination_infinite" }
+      ],
+      "default": "load_more"
+    },
+    { "type": "checkbox", "id": "show_per_page", "label": "t:labels.show_per_page", "default": true, "info": "t:info.show_per_page" },
+    { "type": "checkbox", "id": "enable_filtering", "label": "t:labels.enable_filtering", "default": true, "info": "t:info.filters" },
+    { "type": "checkbox", "id": "enable_sorting", "label": "t:labels.enable_sorting", "default": true },
+    { "type": "collection", "id": "suggested_collection", "label": "t:labels.suggested_collection", "info": "t:info.suggested_collection" },
+    { "type": "paragraph", "content": "t:info.search_popular_where" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:labels.color_scheme", "default": "scheme-1" }
+  ]
+}
+{% endschema %}

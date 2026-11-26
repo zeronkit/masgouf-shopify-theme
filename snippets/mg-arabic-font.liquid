@@ -1,0 +1,25 @@
+{%- comment -%} Arabic text uses Cairo (SIL Open Font License), clear on every screen. Latin text keeps the theme fonts (unicode-range). {%- endcomment -%}
+{%- if request.locale.iso_code == 'ar' -%}
+  {{ 'cairo-arabic-400.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
+  {%- liquid
+    assign mg_heading = 'ui-sans-serif, system-ui, sans-serif'
+    assign mg_body = 'ui-sans-serif, system-ui, sans-serif'
+    assign mg_pairing = settings.font_pairing | default: 'custom'
+    if mg_pairing == 'custom'
+      assign mg_heading = settings.type_heading_font.family | append: ', ' | append: settings.type_heading_font.fallback_families
+      assign mg_body = settings.type_body_font.family | append: ', ' | append: settings.type_body_font.fallback_families
+    endif
+  -%}
+  {% style %}
+    @font-face { font-family: "Mg Arabic"; src: url("{{ 'cairo-arabic-400.woff2' | asset_url }}") format("woff2"); font-weight: 100 500; font-display: swap; unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200E, U+2010-2011; }
+    @font-face { font-family: "Mg Arabic"; src: url("{{ 'cairo-arabic-700.woff2' | asset_url }}") format("woff2"); font-weight: 600 900; font-display: swap; unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200E, U+2010-2011; }
+    :root {
+      --cw-font-script: "Mg Arabic";
+      --cw-font-heading: "Mg Arabic", {{ mg_heading }};
+      --cw-font-body: "Mg Arabic", {{ mg_body }};
+    }
+    html[lang="ar"] body, html[lang="ar"] input, html[lang="ar"] textarea, html[lang="ar"] select, html[lang="ar"] button { font-family: var(--cw-font-body); letter-spacing: 0; }
+    html[lang="ar"] h1, html[lang="ar"] h2, html[lang="ar"] h3, html[lang="ar"] h4, html[lang="ar"] .cw-h1, html[lang="ar"] .cw-h2, html[lang="ar"] .cw-h3, html[lang="ar"] .cw-h4 { font-family: var(--cw-font-heading); letter-spacing: 0; line-height: 1.35; }
+    html[lang="ar"] [class*="eyebrow"], html[lang="ar"] .cw-button, html[lang="ar"] [class*="uppercase"] { letter-spacing: 0; }
+  {% endstyle %}
+{%- endif -%}

@@ -1,0 +1,98 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Rendered by /search/suggest?section_id=predictive-search. Results are grouped:
+  suggestions, products, collections, pages and articles. Every result is a listbox option.
+{%- endcomment -%}
+{%- if predictive_search.performed -%}
+  {%- assign res = predictive_search.resources -%}
+  <div class="cw-predictive__inner" data-cw-predictive-content>
+    {%- assign total = res.products.size | plus: res.collections.size | plus: res.pages.size | plus: res.articles.size | plus: res.queries.size -%}
+    {%- if total > 0 -%}
+      <ul class="cw-predictive__list" role="listbox" aria-label="{{ 'search.suggestions' | t }}">
+        {%- if res.queries.size > 0 -%}
+          <li class="cw-predictive__group" role="presentation">
+            <p class="cw-predictive__heading" id="cw-ps-h-q" aria-hidden="true">{{ 'search.suggestions' | t }}</p>
+            <ul role="group" aria-labelledby="cw-ps-h-q">
+              {%- for query in res.queries -%}
+                <li role="option" id="cw-ps-q-{{ forloop.index }}" aria-selected="false" class="cw-predictive__query">
+                  <a href="{{ query.url }}" tabindex="-1">{% render 'icon', name: 'search' %} {{ query.styled_text }}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </li>
+        {%- endif -%}
+        {%- if res.products.size > 0 -%}
+          <li class="cw-predictive__group cw-predictive__group--products" role="presentation">
+            <p class="cw-predictive__heading" id="cw-ps-h-p" aria-hidden="true">{{ 'search.tab_products' | t }}</p>
+            <ul role="group" aria-labelledby="cw-ps-h-p">
+              {%- for product in res.products limit: 6 -%}
+                <li role="option" id="cw-ps-p-{{ forloop.index }}" aria-selected="false" class="cw-predictive__product">
+                  <a class="mg-pline" href="{{ product.url }}" tabindex="-1">
+                    <span class="mg-pline__plate">
+                      {%- if product.featured_media -%}{{ product.featured_media.preview_image | image_url: width: 72, height: 72, crop: 'center' | image_tag: alt: '', width: 36, height: 36, loading: 'lazy' }}{%- endif -%}
+                    </span>
+                    <span class="mg-pline__name">{{ product.title | escape }}</span>
+                    <span class="mg-pline__price">{% render 'price', product: product %}</span>
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </li>
+        {%- endif -%}
+        {%- if res.collections.size > 0 -%}
+          <li class="cw-predictive__group" role="presentation">
+            <p class="cw-predictive__heading" id="cw-ps-h-c" aria-hidden="true">{{ 'header.collections' | t }}</p>
+            <ul role="group" aria-labelledby="cw-ps-h-c">
+              {%- for collection in res.collections -%}
+                <li role="option" id="cw-ps-c-{{ forloop.index }}" aria-selected="false">
+                  <a href="{{ collection.url }}" tabindex="-1">{{ collection.title | escape }}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </li>
+        {%- endif -%}
+        {%- if res.pages.size > 0 -%}
+          <li class="cw-predictive__group" role="presentation">
+            <p class="cw-predictive__heading" id="cw-ps-h-pg" aria-hidden="true">{{ 'search.tab_pages' | t }}</p>
+            <ul role="group" aria-labelledby="cw-ps-h-pg">
+              {%- for page in res.pages -%}
+                <li role="option" id="cw-ps-pg-{{ forloop.index }}" aria-selected="false">
+                  <a href="{{ page.url }}" tabindex="-1">{{ page.title | escape }}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </li>
+        {%- endif -%}
+        {%- if res.articles.size > 0 -%}
+          <li class="cw-predictive__group" role="presentation">
+            <p class="cw-predictive__heading" id="cw-ps-h-a" aria-hidden="true">{{ 'search.tab_articles' | t }}</p>
+            <ul role="group" aria-labelledby="cw-ps-h-a">
+              {%- for article in res.articles -%}
+                <li role="option" id="cw-ps-a-{{ forloop.index }}" aria-selected="false">
+                  <a href="{{ article.url }}" tabindex="-1">{{ article.title | escape }}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </li>
+        {%- endif -%}
+        <li class="cw-predictive__group" role="presentation">
+          <ul role="group">
+            <li role="option" id="cw-ps-all" aria-selected="false" class="cw-predictive__all">
+              <a href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&amp;options%5Bprefix%5D=last" tabindex="-1">{{ 'search.view_all' | t: terms: predictive_search.terms }} {% render 'icon', name: 'arrow' %}</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    {%- else -%}
+      <p class="cw-predictive__empty">{{ 'search.no_results_title' | t: terms: predictive_search.terms }} {{ 'search.no_results_hint' | t }}</p>
+    {%- endif -%}
+    <p class="cw-visually-hidden" data-cw-predictive-status>{{ 'search.results_count' | t: count: total }}</p>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:names.predictive_search",
+  "settings": []
+}
+{% endschema %}

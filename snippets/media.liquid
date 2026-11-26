@@ -1,0 +1,45 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  One product media item: image, hosted video, external video or 3D model.
+  Video and 3D load only after the shopper asks for them.
+  Params: media (required), title (product title for AR), sizes, eager (boolean)
+{%- endcomment -%}
+{%- case media.media_type -%}
+  {%- when 'image' -%}
+    {% render 'image', image: media, sizes: sizes, eager: eager, class: 'cw-media__img' %}
+  {%- when 'video', 'external_video' -%}
+    <cw-deferred-media class="cw-media__deferred">
+      <button type="button" class="cw-media__poster" data-cw-load>
+        <span class="cw-visually-hidden">{{ 'products.media.play_video' | t }}</span>
+        {%- if media.preview_image -%}
+          {% render 'image', image: media.preview_image, sizes: sizes, eager: eager, alt: '', class: 'cw-media__img' %}
+        {%- endif -%}
+        <span class="cw-media__badge">{% render 'icon', name: 'play' %}</span>
+      </button>
+      <template>
+        {%- if media.media_type == 'video' -%}
+          {{ media | video_tag: controls: true, autoplay: true, playsinline: true }}
+        {%- else -%}
+          {{ media | external_video_url: autoplay: true, rel: 0 | external_video_tag }}
+        {%- endif -%}
+      </template>
+    </cw-deferred-media>
+  {%- when 'model' -%}
+    <cw-model class="cw-media__deferred" data-model-id="{{ media.id }}">
+      <button type="button" class="cw-media__poster" data-cw-load>
+        <span class="cw-visually-hidden">{{ 'products.media.load_model' | t }}</span>
+        {%- if media.preview_image -%}
+          {% render 'image', image: media.preview_image, sizes: sizes, alt: '', class: 'cw-media__img' %}
+        {%- endif -%}
+        <span class="cw-media__badge">{% render 'icon', name: 'cube' %}</span>
+      </button>
+      <template>
+        {{ media | model_viewer_tag: image_size: '1200x', reveal: 'interaction', toggleable: true, data-model-id: media.id }}
+      </template>
+      <button type="button" class="cw-button cw-button--ghost cw-media__xr" data-shopify-xr data-shopify-model3d-id="{{ media.id }}" data-shopify-title="{{ title | escape }}" data-shopify-xr-hidden>
+        {% render 'icon', name: 'cube' %} {{ 'products.media.view_in_space' | t }}
+      </button>
+    </cw-model>
+  {%- else -%}
+    {{ media | media_tag }}
+{%- endcase -%}

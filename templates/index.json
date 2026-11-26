@@ -1,0 +1,250 @@
+{
+  "sections": {
+    "counter": {
+      "type": "home-counter",
+      "blocks": {
+        "eyebrow": {
+          "type": "text",
+          "settings": {
+            "style": "eyebrow",
+            "alignment": "left"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "size": "display",
+            "tag": "h2",
+            "alignment": "left"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "style": "body",
+            "alignment": "left"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "style": "primary",
+            "show_arrow": true
+          }
+        }
+      },
+      "block_order": [
+        "eyebrow",
+        "heading",
+        "text",
+        "button"
+      ],
+      "settings": {
+        "eager": true,
+        "color_scheme": "scheme-1",
+        "show_board": true,
+        "board_limit": 6,
+        "board_scheme": "scheme-2",
+        "board_collection": "bakery",
+        "image": "shopify://shop_images/photo-1640625314547-aee9a7696589.jpg"
+      }
+    },
+    "aisles": {
+      "type": "collection-list",
+      "blocks": {
+        "c1": {
+          "type": "collection",
+          "settings": {}
+        },
+        "c2": {
+          "type": "collection",
+          "settings": {}
+        },
+        "c3": {
+          "type": "collection",
+          "settings": {}
+        },
+        "c4": {
+          "type": "collection",
+          "settings": {}
+        },
+        "c5": {
+          "type": "collection",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5"
+      ],
+      "settings": {
+        "shape": "awning",
+        "columns": 5,
+        "color_scheme": "scheme-1",
+        "image": "shopify://shop_images/photo-1772758632677-138b22b5d925.jpg"
+      }
+    },
+    "bake": {
+      "type": "home-bake-schedule",
+      "blocks": {
+        "b1": {
+          "type": "bake",
+          "settings": {}
+        },
+        "b2": {
+          "type": "bake",
+          "settings": {}
+        },
+        "b3": {
+          "type": "bake",
+          "settings": {}
+        },
+        "b4": {
+          "type": "bake",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4"
+      ],
+      "settings": {
+        "color_scheme": "scheme-4"
+      }
+    },
+    "fresh": {
+      "type": "featured-collection",
+      "settings": {
+        "limit": 6,
+        "columns": 4,
+        "layout": "tray",
+        "show_arrows": true,
+        "show_view_all": true,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "menu": {
+      "type": "home-menu-board",
+      "blocks": {
+        "m1": {
+          "type": "category",
+          "settings": {
+            "limit": 5
+          }
+        },
+        "m2": {
+          "type": "category",
+          "settings": {
+            "limit": 5
+          }
+        },
+        "m3": {
+          "type": "category",
+          "settings": {
+            "limit": 5
+          }
+        }
+      },
+      "block_order": [
+        "m1",
+        "m2",
+        "m3"
+      ],
+      "settings": {
+        "columns": 3,
+        "show_description": true,
+        "show_thumbnails": false,
+        "color_scheme": "scheme-3"
+      }
+    },
+    "recipe": {
+      "type": "home-ingredients",
+      "blocks": {
+        "a1": {
+          "type": "allergen",
+          "settings": {
+            "status": "contains"
+          }
+        },
+        "a2": {
+          "type": "allergen",
+          "settings": {
+            "status": "may_contain"
+          }
+        },
+        "a3": {
+          "type": "allergen",
+          "settings": {
+            "status": "contains"
+          }
+        },
+        "a4": {
+          "type": "allergen",
+          "settings": {
+            "status": "may_contain"
+          }
+        }
+      },
+      "block_order": [
+        "a1",
+        "a2",
+        "a3",
+        "a4"
+      ],
+      "settings": {
+        "show_image": true,
+        "media_position": "start",
+        "show_button": true,
+        "color_scheme": "scheme-5"
+      }
+    },
+    "spotlight": {
+      "type": "featured-product",
+      "settings": {
+        "show_dynamic_checkout": true,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "visit": {
+      "type": "home-visit",
+      "blocks": {
+        "h1": {
+          "type": "hours",
+          "settings": {}
+        },
+        "h2": {
+          "type": "hours",
+          "settings": {}
+        },
+        "h3": {
+          "type": "hours",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "h1",
+        "h2",
+        "h3"
+      ],
+      "settings": {
+        "show_image": true,
+        "color_scheme": "scheme-3"
+      }
+    }
+  },
+  "order": [
+    "counter",
+    "aisles",
+    "bake",
+    "fresh",
+    "menu",
+    "recipe",
+    "spotlight",
+    "visit"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "sections": {
+    "main": {
+      "type": "mg-faq",
+      "blocks": {
+        "topic_1": {
+          "type": "topic",
+          "settings": {
+            "question": 1
+          }
+        },
+        "topic_2": {
+          "type": "topic",
+          "settings": {
+            "question": 2
+          }
+        },
+        "topic_3": {
+          "type": "topic",
+          "settings": {
+            "question": 3
+          }
+        },
+        "topic_4": {
+          "type": "topic",
+          "settings": {
+            "question": 5
+          }
+        },
+        "topic_5": {
+          "type": "topic",
+          "settings": {
+            "question": 6
+          }
+        }
+      },
+      "block_order": [
+        "topic_1",
+        "topic_2",
+        "topic_3",
+        "topic_4",
+        "topic_5"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

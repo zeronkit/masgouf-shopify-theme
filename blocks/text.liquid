@@ -1,0 +1,37 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign mg_bk = 'mg.blocks.text_' | append: block.settings.style | append: '_html'
+  assign bt_text = mg_bk | t
+  if bt_text contains 'ranslation missing'
+    assign bt_text = ''
+  endif
+  if block.settings.text != blank
+    assign bt_text = block.settings.text
+  endif
+-%}
+<div class="cw-block cw-rte cw-text--{{ block.settings.style }} cw-align-{{ block.settings.alignment }}" {{ block.shopify_attributes }}>
+  {{ bt_text }}
+</div>
+
+{% schema %}
+{
+  "name": "t:names.text",
+  "settings": [
+    { "type": "richtext", "id": "text", "label": "t:labels.text" },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:labels.style",
+      "options": [
+        { "value": "body", "label": "t:options.body" },
+        { "value": "large", "label": "t:options.large" },
+        { "value": "small", "label": "t:options.small" },
+        { "value": "eyebrow", "label": "t:options.eyebrow" }
+      ],
+      "default": "body"
+    },
+    { "type": "text_alignment", "id": "alignment", "label": "t:labels.alignment", "default": "left" }
+  ],
+  "presets": [{ "name": "t:names.text" }]
+}
+{% endschema %}

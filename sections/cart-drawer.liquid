@@ -1,0 +1,60 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- liquid
+  assign t_note = 'mg.cart_drawer.note' | t
+  if section.settings.note != blank
+    assign t_note = section.settings.note
+  endif
+  assign t_suggestions_heading = 'mg.cart_drawer.suggestions_heading' | t
+  if section.settings.suggestions_heading != blank
+    assign t_suggestions_heading = section.settings.suggestions_heading
+  endif
+-%}
+{%- comment -%} Cart drawer as a narrow paper ticket hanging from the Basket button, torn at the foot. The cart logic lives in theme.js (cw-cart). {%- endcomment -%}
+{%- assign form_id = 'CartForm-drawer' -%}
+<dialog class="mg-tkdrawer color-{{ settings.drawer_scheme }}" id="CartDrawer" aria-labelledby="CartDrawerTitle" data-mg-drop="basket">
+  <cw-cart class="cw-drawer__cart" data-section-id="cart-drawer">
+    <div class="cw-drawer__head cw-drawer__head--ticket">
+      <h2 class="cw-h4" id="CartDrawerTitle">{{ 'cart.title' | t }}</h2>
+      <button type="button" class="cw-icon-button" data-cw-close aria-label="{{ 'general.close' | t }}">{% render 'icon', name: 'close' %}</button>
+    </div>
+    <div class="cw-drawer__content" data-cw-cart-content data-count="{{ cart.item_count }}" data-count-label="{{ 'cart.title_with_count' | t: count: cart.item_count }}" data-total="{{ cart.total_price | money | escape }}">
+      {%- if cart.item_count > 0 -%}
+        <form action="{{ routes.cart_url }}" method="post" id="{{ form_id }}" class="cw-drawer__body" novalidate>
+          <p class="cw-drawer__count cw-small cw-muted">{{ 'cart.title_with_count' | t: count: cart.item_count }}</p>
+          {% render 'mg-free-delivery', context: 'drawer' %}
+          {% render 'cart-lines', section_id: 'drawer', style: 'ticket', photos: section.settings.show_photos %}
+        </form>
+        <div class="cw-drawer__foot cw-drawer__foot--ticket">
+          {%- if t_note != blank -%}
+            <p class="cw-drawer__note cw-small">{{ t_note | escape }}</p>
+          {%- endif -%}
+          {% render 'cart-summary', form_id: form_id, show_note: settings.cart_note, note_rows: 2, note_fold: true %}
+          <a class="cw-link-button" href="{{ routes.cart_url }}">{{ 'cart.view' | t }}</a>
+        </div>
+      {%- else -%}
+        <div class="cw-drawer__body cw-empty cw-empty--drawer">
+          {% render 'icon', name: 'bag' %}
+          <p class="cw-h4">{{ 'cart.empty' | t }}</p>
+          <a class="cw-button cw-button--primary" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
+          {%- if section.settings.show_suggestions -%}
+            {% render 'cart-suggestions', collection: section.settings.suggestions_collection, heading: t_suggestions_heading, limit: 3, compact: true %}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </cw-cart>
+</dialog>
+
+{% schema %}
+{
+  "name": "t:names.cart_drawer",
+  "settings": [
+    { "type": "text", "id": "note", "label": "t:labels.drawer_note" },
+    { "type": "checkbox", "id": "show_photos", "label": "t:labels.mg_ticket_photos", "default": true },
+    { "type": "header", "content": "t:labels.empty_cart" },
+    { "type": "checkbox", "id": "show_suggestions", "label": "t:labels.show_suggestions", "default": true },
+    { "type": "text", "id": "suggestions_heading", "label": "t:labels.heading" },
+    { "type": "collection", "id": "suggestions_collection", "label": "t:labels.collection", "info": "t:info.suggestions_collection" }
+  ]
+}
+{% endschema %}

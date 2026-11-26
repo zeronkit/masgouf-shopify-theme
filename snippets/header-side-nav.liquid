@@ -1,0 +1,48 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Vertical menu of the side header, with expandable levels.
+  Params: menu, use_auto, auto_handles
+{%- endcomment -%}
+<nav class="cw-side__nav" aria-label="{{ 'header.primary_nav' | t }}">
+  <ul class="cw-side__list" role="list">
+    {%- if use_auto -%}
+      {%- for handle in auto_handles -%}
+        {%- assign c = collections[handle] -%}
+        <li><a class="cw-side__link" href="{{ c.url }}">{{ c.title | escape }}</a></li>
+      {%- endfor -%}
+      {%- if blogs.news.articles_count > 0 -%}<li><a class="cw-side__link" href="{{ blogs.news.url }}">{{ blogs.news.title | escape }}</a></li>{%- endif -%}
+    {%- else -%}
+      {%- for link in menu.links -%}
+        <li>
+          {%- if link.links.size > 0 -%}
+            <details{% if link.child_active or link.active %} open{% endif %}>
+              <summary class="cw-side__summary">{{ link.title | escape }}{% render 'icon', name: 'down' %}</summary>
+              <ul class="cw-side__sub" role="list">
+                <li><a class="cw-side__link" href="{{ link.url }}">{{ 'header.view_all_plain' | t }}<span class="cw-visually-hidden">: {{ link.title | escape }}</span></a></li>
+                {%- for child in link.links -%}
+                  <li>
+                    {%- if child.links.size > 0 -%}
+                      <details{% if child.child_active or child.active %} open{% endif %}>
+                        <summary class="cw-side__summary">{{ child.title | escape }}{% render 'icon', name: 'down' %}</summary>
+                        <ul class="cw-side__sub" role="list">
+                          <li><a class="cw-side__link" href="{{ child.url }}">{{ 'header.view_all_plain' | t }}<span class="cw-visually-hidden">: {{ child.title | escape }}</span></a></li>
+                          {%- for grandchild in child.links -%}
+                            <li><a class="cw-side__link" href="{{ grandchild.url }}"{% if grandchild.current %} aria-current="page"{% endif %}>{{ grandchild.title | escape }}</a></li>
+                          {%- endfor -%}
+                        </ul>
+                      </details>
+                    {%- else -%}
+                      <a class="cw-side__link" href="{{ child.url }}"{% if child.current %} aria-current="page"{% endif %}>{{ child.title | escape }}</a>
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </details>
+          {%- else -%}
+            <a class="cw-side__link" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    {%- endif -%}
+  </ul>
+</nav>

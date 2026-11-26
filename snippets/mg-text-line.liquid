@@ -1,0 +1,15 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  A text line of the board: a title, a dotted leader and a short hint (read time, an arrow), with a small note under it.
+  Params: url, title, hint (text), note (text), heading ('h2' | 'h3', default h3), struck (boolean)
+{%- endcomment -%}
+{%- assign heading = heading | default: 'h3' -%}
+<article class="mg-tline{% if struck %} mg-tline--struck{% endif %}">
+  <{{ heading }} class="mg-tline__name">
+    {%- if url != blank -%}<a class="mg-tline__link" href="{{ url }}">{{ title | escape }}</a>{%- else -%}<span>{{ title | escape }}</span>{%- endif -%}
+  </{{ heading }}>
+  <span class="mg-tline__hint">
+    {%- if hint != blank -%}{{ hint }}{%- else -%}<span aria-hidden="true">{% render 'icon', name: 'arrow' %}</span>{%- endif -%}
+  </span>
+  {%- if note != blank -%}<p class="mg-tline__note">{{ note }}</p>{%- endif -%}
+</article>

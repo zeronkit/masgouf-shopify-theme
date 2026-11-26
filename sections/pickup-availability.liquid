@@ -1,0 +1,50 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Rendered on request through /variants/{id}/?section_id=pickup-availability
+{%- endcomment -%}
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign locations = variant.store_availabilities | where: 'pick_up_enabled', true
+-%}
+{%- if locations.size > 0 -%}
+  {%- assign first = locations.first -%}
+  <div class="cw-pickup__summary">
+    {% render 'icon', name: 'pin' %}
+    <div>
+      {%- if first.available -%}
+        <p>{{ 'products.pickup.available_at_html' | t: location: first.location.name }}</p>
+        <p class="cw-small cw-muted">{{ first.pick_up_time }}</p>
+      {%- else -%}
+        <p>{{ 'products.pickup.unavailable_at_html' | t: location: first.location.name }}</p>
+      {%- endif -%}
+      <details class="cw-pickup__more">
+        <summary class="cw-link-button">{{ 'products.pickup.view_stores' | t }}</summary>
+        <ul class="cw-pickup__list" role="list">
+          {%- for availability in locations -%}
+            <li>
+              <p class="cw-strong">{{ availability.location.name | escape }}</p>
+              <p class="cw-small">
+                {%- if availability.available -%}
+                  {{ 'products.pickup.ready' | t }} {{ availability.pick_up_time }}
+                {%- else -%}
+                  {{ 'products.pickup.not_ready' | t }}
+                {%- endif -%}
+              </p>
+              <address class="cw-small cw-muted">{{ availability.location.address | format_address }}</address>
+              {%- if availability.location.address.phone != blank -%}
+                <p class="cw-small">{{ availability.location.address.phone }}</p>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </details>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:names.pickup_availability",
+  "settings": []
+}
+{% endschema %}

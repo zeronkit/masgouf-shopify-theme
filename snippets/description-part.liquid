@@ -1,0 +1,44 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Splits a product description at its <h3> headings.
+  Params:
+    description: product.description
+    want: 'main' (everything except the moved sections), 'ingredients', 'nutrition', 'storage', 'shipping' or 'recipe'
+    moved: comma list of keys that have their own block (used with want: 'main')
+  Heading words decide the key: ingredient, allergen -> ingredients, nutrition -> nutrition,
+  storage, store, keep -> storage, shipping, delivery, return -> shipping, recipe, serving suggestion, pair -> recipe.
+{%- endcomment -%}
+{%- liquid
+  assign parts = description | split: '<h3'
+  assign moved_keys = moved | default: '' | split: ','
+  for part in parts
+    if forloop.first
+      if want == 'main'
+        echo part
+      endif
+      continue
+    endif
+    assign heading_html = part | split: '</h3>' | first
+    assign heading = heading_html | split: '>' | last | strip_html | strip | downcase
+    assign key = 'other'
+    if heading contains 'ingredient' or heading contains 'allergen'
+      assign key = 'ingredients'
+    elsif heading contains 'nutrition'
+      assign key = 'nutrition'
+    elsif heading contains 'storage' or heading contains 'store' or heading contains 'keep'
+      assign key = 'storage'
+    elsif heading contains 'shipping' or heading contains 'return' or heading contains 'delivery'
+      assign key = 'shipping'
+    elsif heading contains 'recipe' or heading contains 'serving suggestion' or heading contains 'pair'
+      assign key = 'recipe'
+    endif
+    if want == 'main'
+      unless moved_keys contains key
+        echo '<h3' | append: part
+      endunless
+    elsif want == key
+      assign body = part | remove_first: heading_html | remove_first: '</h3>'
+      echo body
+    endif
+  endfor
+-%}
