@@ -17,7 +17,7 @@ Masgouf is built on Online Store 2.0: JSON templates, sections everywhere, heade
 1. Download the theme zip.
 2. In Shopify admin go to **Online Store > Themes > Add theme > Upload zip file**.
 3. Customize it, then publish when you are ready.
-4. Fill in three store settings: **Theme settings > Cart > Free delivery bar** (the same amount and countries as your free rate in Settings > Shipping and delivery), **Theme settings > Brand assets > Store contact email** (leave empty to show only the contact form) and **Home page description**.
+4. Fill in three store settings: **Theme settings > Cart > Free delivery bar** (the same amount and countries as your free rate in Settings > Shipping and delivery), **Theme settings > Brand assets > Store contact email** (leave empty to show only the contact form) and **Home page description**. In **Brand assets** also choose a **Favicon** (square, at least 180 x 180 px) and a **Default share image** (1200 x 630 px) for pages without a picture of their own.
 5. Give your About page the `about` template and your FAQ page the `faq` template (**Online Store > Pages >** the page **> Theme template**). The FAQ reads every h2 heading of the page as a question.
 6. In the editor, pick the stall photos (Collections list, Contact form and Fill your basket), the **Popular today** collection under **Theme settings > Search**, and any bake times for the header chips (**Header > Hints on the category chips**, one `collection-handle: hint` per line).
 
@@ -102,7 +102,7 @@ Cart drawer or cart page, predictive search, facet filters, per-page selector, s
 | Variant images and swatches | `snippets/variant-picker.liquid`, `snippets/swatch.liquid` |
 | Follow on Shop | footer |
 | `shopify-account` component | header |
-| SEO, canonical, Open Graph, Twitter, structured data | `layout/theme.liquid`, `snippets/meta-tags.liquid` |
+| SEO, canonical, Open Graph, Twitter, structured data | `layout/theme.liquid`, `snippets/meta-tags.liquid`, `snippets/mg-structured-data.liquid` |
 | Social icons | `snippets/social-icons.liquid` |
 | App blocks and Custom Liquid | product, footer, canvas, hero, apps section, Custom Liquid section and block |
 

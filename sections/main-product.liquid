@@ -178,23 +178,6 @@
       {%- when 'price' -%}
         <div class="cw-product__price cw-pdp__label" data-cw-swap="price-{{ block.id }}" {{ block.shopify_attributes }}>
           {% render 'price', product: product, variant: variant, class: 'cw-price--large', badge: true %}
-          {%- comment -%} When this size is full price but another one is reduced, say so here, as the cards do. {%- endcomment -%}
-          {%- unless variant.compare_at_price > variant.price -%}
-            {%- for offer in product.variants -%}
-              {%- if offer.available and offer.compare_at_price > offer.price -%}
-                {%- liquid
-                  assign offer_price = offer.price | money
-                  assign offer_was = offer.compare_at_price | money
-                -%}
-                <p class="mg-offer">
-                  <span class="cw-badge cw-badge--accent">{{ 'products.badge_sale' | t }}</span>
-                  <span>{{ 'products.price.variant_offer' | t: variant: offer.title, price: offer_price }}</span>
-                  <s><span class="cw-visually-hidden">{{ 'products.price.regular' | t }}</span>{{ offer_was }}</s>
-                </p>
-                {%- break -%}
-              {%- endif -%}
-            {%- endfor -%}
-          {%- endunless -%}
           {%- if cart.taxes_included -%}
             <p class="cw-small cw-muted">{{ 'products.tax_included' | t }}</p>
           {%- endif -%}

@@ -1,0 +1,8 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%} Prints a date as ISO 8601 with a colon in the time zone (2026-11-25T12:05:36-05:00). Param: date {%- endcomment -%}
+{%- liquid
+  assign d = date | date: '%Y-%m-%dT%H:%M:%S%z'
+  assign head = d | slice: 0, 22
+  assign tail = d | slice: 22, 2
+  echo head | append: ':' | append: tail
+-%}

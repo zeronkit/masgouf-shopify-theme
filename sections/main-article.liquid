@@ -155,9 +155,7 @@
     {%- endif -%}
     </div>
   </div>
-  <script type="application/ld+json">
-    {{ article | structured_data }}
-  </script>
+  {% render 'mg-structured-data', type: 'article' %}
 </article>
 
 {% schema %}

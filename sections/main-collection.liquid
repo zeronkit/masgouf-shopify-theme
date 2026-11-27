@@ -69,6 +69,7 @@
             </div>
           </div>
         </cw-facets>
+        {% render 'mg-structured-data', type: 'collection', items: collection.products, offset: paginate.current_offset %}
       {%- endpaginate -%}
     </div>
   </div>

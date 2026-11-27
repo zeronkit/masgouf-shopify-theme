@@ -7,7 +7,7 @@
 <p align="center">
 <a href="docs/guide.md"><img alt="Read the guide in English" src="https://img.shields.io/badge/Guide-English-10463F?style=for-the-badge"></a>
 <a href="docs/guide-ar.md"><img alt="Read the guide in Arabic" src="https://img.shields.io/badge/Guide-Arabic-10463F?style=for-the-badge"></a>
-<a href="https://zeronkit.com/downloads/masgouf-1.0.0.zip"><img alt="Download Masgouf" src="https://img.shields.io/badge/Download-masgouf--1.0.0.zip-E9A21B?style=for-the-badge"></a>
+<a href="https://github.com/zeronkit/masgouf-shopify-theme/releases/latest/download/masgouf-1.0.2.zip"><img alt="Download Masgouf" src="https://img.shields.io/badge/Download-masgouf--1.0.2.zip-E9A21B?style=for-the-badge"></a>
 </p>
 
 <table><tr><td valign="top" width="50%">
@@ -60,11 +60,15 @@ Masgouf is a free Shopify theme for bakeries, sweet shops, date and spice pantri
 
 Masgouf is Baghdad's river fish, grilled upright around an open fire on the Tigris bank, at the evening stalls of Abu Nuwas street. The theme is built like one of those stalls: Tigris green chalk boards with dotted leaders to the price, paper order tickets, photos as small round plates, turmeric for the fire and sumac for prices. The design is called the Riverside Stall.
 
+Version 1.0.2. See the [changelog](CHANGELOG.md) for what changed and what to do after updating.
+
 **Free, source-available, not for resale.** This repository is not open source and is not under the GPL. You may use and change Masgouf on stores you own or run. You may not resell, redistribute, sublicense or upload it to theme marketplaces. See [LICENSE](LICENSE).
 
 ## Download
 
-- Latest version: [masgouf-1.0.0.zip](https://zeronkit.com/downloads/masgouf-1.0.0.zip).
+- Latest version: [masgouf-1.0.2.zip](https://zeronkit.com/downloads/masgouf-1.0.2.zip) from zeronkit.com, or the same file attached to the [v1.0.2 release](https://github.com/zeronkit/masgouf-shopify-theme/releases/tag/v1.0.2) on GitHub ([direct link](https://github.com/zeronkit/masgouf-shopify-theme/releases/latest/download/masgouf-1.0.2.zip)).
+- Guide: [zeronkit.com/masgouf-guide](https://zeronkit.com/masgouf-guide/) (English) and [zeronkit.com/masgouf-guide-ar](https://zeronkit.com/masgouf-guide-ar/) (Arabic).
+- What changed: [CHANGELOG.md](CHANGELOG.md) (English and Arabic).
 - In Shopify admin: `Online Store` > `Themes` > `Add theme` > `Upload zip file`.
 
 ## What it does for a food shop

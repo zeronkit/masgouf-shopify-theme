@@ -306,7 +306,7 @@ body .cw-collection-list--plates .cw-ccard__media { box-shadow: none; }
 
 /* ---------- Product: the stall counter ---------- */
 body .cw-pdp__name { font-weight: 800; letter-spacing: -0.03em; }
-body .cw-pdp__masthead .cw-pdp__label { background: var(--mg-tigris); color: var(--mg-chalk); border: var(--mg-edge); border-radius: 6px; padding: 0.85rem 1.4rem 0.9rem 2.4rem; }
+body .cw-pdp__masthead .cw-pdp__label { background: var(--mg-tigris); color: var(--mg-chalk); border: var(--mg-edge); border-radius: 6px; padding: 0.85rem 1.4rem 0.9rem; padding-inline-start: 2.4rem; }
 body .cw-pdp__masthead .cw-pdp__label::before { background: var(--mg-turmeric); border: 2px solid var(--mg-ink); inline-size: 0.75rem; block-size: 0.75rem; }
 body .cw-pdp__label .cw-price { font-family: var(--mg-font-hand); font-size: 2.3rem; font-weight: 700; color: var(--mg-turmeric); }
 html[lang="ar"] body .cw-pdp__label .cw-price { font-family: var(--cw-font-heading); font-size: 1.7rem; }
@@ -534,9 +534,6 @@ body .cw-ticket .mg-meter { margin-block: 0.25rem 1rem; }
 .cw-price__badge { align-self: center; font-size: 0.8rem; padding: 0.2rem 0.55rem; }
 body .cw-pdp__label .cw-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 0.75rem; }
 body .cw-pdp__label .cw-price__was { opacity: 1; text-decoration-thickness: 2px; }
-.mg-offer { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.6rem; margin: 0.5rem 0 0; font-size: 0.95rem; color: var(--mg-chalk); }
-.mg-offer s { color: color-mix(in srgb, var(--mg-chalk) 80%, var(--mg-tigris)); text-decoration-thickness: 2px; }
-.mg-offer .cw-badge { font-size: 0.8rem; padding: 0.2rem 0.55rem; }
 
 /* Stock box: the state and one delivery line */
 .mg-stock__line { display: flex; gap: 0.6rem; align-items: flex-start; margin: 0; font-size: 0.92rem; padding-block-start: 0.6rem; border-block-start: 1px dashed color-mix(in srgb, var(--mg-ink) 40%, transparent); }
@@ -1199,9 +1196,8 @@ html[lang="ar"] .mg-keyline__count { font-family: var(--cw-font-body); font-size
   body .cw-pdp__masthead > .cw-product__price { order: 2; flex: none; justify-self: auto; }
 }
 body .cw-pdp__name { font-size: clamp(2.2rem, 4.6vw, 4rem); }
-.mg-menucard { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 40rem) minmax(0, 1fr); align-items: start; gap: 0; padding-block-start: clamp(2.5rem, 4vw, 3.25rem); }
+.mg-menucard { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 46rem) minmax(0, 1fr); align-items: start; gap: 0; padding-block-start: clamp(2.5rem, 4vw, 3.25rem); }
 .mg-menucard > .cw-pdp__ticket { grid-column: 2; grid-row: 1; position: relative; inset: auto; z-index: 1; }
-.mg-menucard > .cw-pdp__ticket > :nth-child(-n+2) { padding-inline-end: calc(var(--mg-pl) / 2 + 0.75rem); }
 .mg-menucard > .cw-pdp__ticket > :first-child { min-block-size: calc(var(--mg-pl) / 2); }
 .mg-menucard > .cw-gallery { --mg-pl: 20rem; grid-column: 3; grid-row: 1; position: sticky; inset-block-start: calc(var(--cw-header-height, 8rem) + 1rem); z-index: 2; align-self: start; inline-size: var(--mg-pl); margin-inline-start: calc(var(--mg-pl) / -2); margin-block-start: -3rem; }
 .mg-menucard { --mg-pl: 20rem; }
@@ -1213,6 +1209,8 @@ body .mg-menucard .cw-gallery__thumb { inline-size: 2.9rem; block-size: 2.9rem; 
 body .mg-menucard .cw-gallery__thumb[aria-current="true"] { outline: 3px solid var(--mg-turmeric); outline-offset: 2px; }
 body .mg-menucard .cw-gallery [data-cw-count], body .mg-menucard .cw-gallery__count { display: none; }
 body .mg-menucard .cw-pdp__ticket { padding: clamp(1.25rem, 3vw, 2.25rem); }
+/* The sticky plate keeps a free lane on the ticket's end side all the way down, so it never covers the sizes, prices or buttons while scrolling */
+@media (min-width: 750px) { body .mg-menucard > .cw-pdp__ticket { padding-inline-end: calc(var(--mg-pl) / 2 + 1.25rem); } }
 /* Facts as a small two column table, sizes as menu lines on paper */
 body .mg-menucard .cw-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1.5rem; }
 body .mg-menucard .cw-stat { display: flex; align-items: baseline; gap: 0.4rem; padding: 0.45rem 0; background: transparent; border-block-end: 1px dashed color-mix(in srgb, var(--mg-ink) 35%, transparent); border-radius: 0; }
@@ -1250,7 +1248,7 @@ body .mg-menucard .cw-stat dd { margin: 0; font-weight: 700; }
   .mg-menucard { display: grid; grid-template-columns: minmax(0, 1fr); padding-block-start: 1.25rem; gap: 1.25rem; }
   .mg-menucard > .cw-gallery, .mg-menucard > .cw-pdp__ticket { grid-column: 1; grid-row: auto; }
   .mg-menucard > .cw-gallery { position: static; justify-self: center; inline-size: min(17rem, 80vw); margin: 0; }
-  .mg-menucard > .cw-pdp__ticket > :nth-child(-n+2) { padding-inline-end: 0; min-block-size: 0; }
+  .mg-menucard > .cw-pdp__ticket > :first-child { min-block-size: 0; }
   body .mg-menucard .cw-stats { grid-template-columns: minmax(0, 1fr); }
   body .mg-menucard .cw-gallery__thumbs { margin-inline-start: 0; justify-content: center; }
 }
@@ -1393,7 +1391,7 @@ html[lang="ar"] .mg-footboard__title { font-family: var(--cw-font-heading); font
 .mg-footband { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; padding-block: 1.25rem 0.25rem; }
 .mg-footband__sign { display: grid; gap: 0.1rem; }
 .mg-footband__name { margin: 0; font-family: var(--cw-font-heading); font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
-.mg-footband__name a { color: var(--mg-turmeric); text-decoration: none; }
+.mg-footband__name a { display: inline-flex; align-items: center; min-block-size: 2.75rem; color: var(--mg-turmeric); text-decoration: none; }
 .mg-footband__name a:hover { text-decoration: underline; }
 .mg-footband__note { margin: 0; font-family: var(--mg-font-hand); font-size: 1.15rem; font-weight: 700; }
 html[lang="ar"] .mg-footband__note { font-family: var(--cw-font-body); font-size: 0.85rem; }

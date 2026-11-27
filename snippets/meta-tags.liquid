@@ -17,13 +17,27 @@
 <meta property="og:title" content="{{ og_title | escape }}">
 <meta property="og:type" content="{{ og_type }}">
 <meta property="og:description" content="{{ og_description | escape }}">
-{%- if page_image -%}
-  <meta property="og:image" content="http:{{ page_image | image_url: width: 1200 }}">
-  <meta property="og:image:secure_url" content="https:{{ page_image | image_url: width: 1200 }}">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="{{ 1200 | divided_by: page_image.aspect_ratio | round }}">
-  {%- if page_image.alt != blank -%}
-    <meta property="og:image:alt" content="{{ page_image.alt | escape }}">
+{%- liquid
+  # Share picture: the page's own image (product, collection, post), then the Default share image setting, then the brand logo
+  assign share_image = page_image
+  if share_image == blank
+    assign share_image = settings.share_image
+  endif
+  if share_image == blank
+    assign share_image = settings.logo_social
+  endif
+-%}
+{%- if share_image != blank -%}
+  {%- liquid
+    assign share_w = share_image.width | at_most: 1200
+    assign share_url = share_image | image_url: width: share_w | prepend: 'https:'
+  -%}
+  <meta property="og:image" content="{{ share_url }}">
+  <meta property="og:image:secure_url" content="{{ share_url }}">
+  <meta property="og:image:width" content="{{ share_w }}">
+  <meta property="og:image:height" content="{{ share_w | divided_by: share_image.aspect_ratio | round }}">
+  {%- if share_image.alt != blank -%}
+    <meta property="og:image:alt" content="{{ share_image.alt | escape }}">
   {%- endif -%}
 {%- endif -%}
 {%- if request.page_type == 'product' -%}
@@ -39,6 +53,12 @@
 {%- endif -%}
 <meta name="twitter:title" content="{{ og_title | escape }}">
 <meta name="twitter:description" content="{{ og_description | escape }}">
+{%- if share_image != blank -%}
+  <meta name="twitter:image" content="{{ share_url }}">
+  {%- if share_image.alt != blank -%}
+    <meta name="twitter:image:alt" content="{{ share_image.alt | escape }}">
+  {%- endif -%}
+{%- endif -%}
 {%- if request.page_type == 'index' -%}
   {%- capture search_target -%}{{ request.origin }}{{ routes.search_url }}?q={search_term_string}{%- endcapture -%}
   <script type="application/ld+json">

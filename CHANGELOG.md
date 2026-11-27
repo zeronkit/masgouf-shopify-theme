@@ -1,5 +1,45 @@
 # Masgouf changelog
 
+## 1.0.2 (2026-11-26)
+
+A small fix after the owner's second review of 26 November 2026. Masgouf 1.0.1 is public, so this comes as 1.0.2.
+
+### Fixed
+
+- **Product page, round photo while scrolling**: on computers and tablets the main photo (the round plate) stays in view while you scroll, and it used to slide over the size lines, the Add to cart button and the delivery days. The order ticket now keeps a free lane on its end side all the way down (it is a little wider on large screens to make room), so the plate never covers anything. Why: the review found the plate over the size lines at 1280 px.
+- **Crossed out sale price**: with a reduced size chosen, its crossed out price in the size line (for example $25.00) was hidden under the round plate. It now always shows in full. The price tag at the top of the page was already fine. Why: the review saw the old price cut off at 1280 px.
+
+### How to update a store
+
+1. In Online Store, Themes, open the menu of your current Masgouf theme and choose Duplicate, so you keep a copy.
+2. Upload the new zip (Add theme, Upload zip file). It arrives as an unpublished theme.
+3. Copy your settings: open the new theme in the editor and set it up as your current theme, or copy `config/settings_data.json` and the `templates/*.json` files from the old theme (Edit code) into the new one. There are no new settings in 1.0.2.
+4. Check a product with sizes on a computer in English and Arabic, then publish.
+
+## 1.0.1 (2026-11-26)
+
+A small update after the owner's review of 26 November 2026. Masgouf 1.0.0 is public, so these fixes come as 1.0.1.
+
+### Added
+
+- **Favicon and home screen icon**: Theme settings, Brand assets, Favicon now also gives the apple touch icon (180 x 180) next to the 32 x 32 browser tab icon. Why: the review found no icon in the page head. Use a square image of at least 180 x 180 px.
+- **Default share image** setting (Theme settings, Brand assets). Every page now has a share picture (og:image and twitter:image): the page's own picture first (product, collection, post), then this setting, then the brand logo. Why: the home, about, contact, FAQ, policy, journal and search pages had no picture when shared. Use 1200 x 630 px.
+- **Structured data**: collection pages describe themselves as a CollectionPage with a list of the products shown, the journal as a Blog with its posts, and each post as a BlogPosting with author, dates, picture and publisher. The Product, BreadcrumbList, Organization and WebSite data stay as before. Why: search engines could not read the collection and journal pages as lists.
+
+### Changed
+
+- **Product price**: the price box shows only the price of the chosen size, with its own Sale badge and crossed out price, and it changes with the size. The extra line "Sale, Mixed nut now $22.00" about another size is gone; each reduced size already shows its old and new price in the size lines. Why: shoppers saw two prices from two sizes at once.
+- **Tap targets**: the shop name link in the footer band is 44px tall.
+- **Arabic price tag**: the small dot on the product price tag no longer touches the price in right to left languages.
+
+### How to update a store
+
+1. In Online Store, Themes, open the menu of your current Masgouf theme and choose Duplicate, so you keep a copy.
+2. Upload the new zip (Add theme, Upload zip file). It arrives as an unpublished theme.
+3. Copy your settings: open the new theme in the editor and set it up as your current theme, or copy `config/settings_data.json` and the `templates/*.json` files from the old theme (Edit code) into the new one.
+4. New settings: Theme settings, Brand assets, choose a Favicon (square, at least 180 x 180 px) and a Default share image (1200 x 630 px).
+5. Check the home page, a product with sizes, a collection and the journal in English and Arabic, then publish.
+
 ## 1.0.0 (2026-11-25)
 
 Masgouf 1.0.0 is not public yet, so the second round of review fixes goes into 1.0.0 itself instead of a new version. The reasons come from four store reviews that found the same problems in several ZeronKit themes.
@@ -30,7 +70,7 @@ Why: a comparison of the six ZeronKit stores found that Masgouf shared most of i
 - **Store contact email** setting (Theme settings, Brand assets), empty by default. When it is empty, the contact page shows the form and no email line. Why: the theme vendor's address appeared as the store's address.
 - **Home page description for search engines** setting, plus a description on every template (collections list, collection, product, blog, article, page, search, cart and policies) built from the page's own text, with a short fallback line in each language. Why: nine pages had no meta description.
 - **Breadcrumb data** for search engines on product pages, next to the product data.
-- **Sale line on the product page** when the chosen size is full price but another size is reduced, with the same Sale badge as the cards.
+- **Sale line on the product page** when the chosen size is full price but another size is reduced, with the same Sale badge as the cards (removed again in 1.0.1).
 
 ### Changed
 
@@ -67,6 +107,46 @@ Why: a comparison of the six ZeronKit stores found that Masgouf shared most of i
 
 ## العربية
 
+### الإصدار 1.0.2 (26 نوفمبر 2026)
+
+إصلاح صغير بعد المراجعة الثانية للمالك في 26 نوفمبر 2026. الإصدار 1.0.1 منشور، لذلك يأتي هذا الإصلاح في الإصدار 1.0.2.
+
+#### أُصلح
+
+- **صفحة المنتج، الصورة الدائرية أثناء التمرير**: على الحاسوب والجهاز اللوحي تبقى الصورة الرئيسية (الطبق الدائري) ظاهرة أثناء التمرير، وكانت تنزلق فوق أسطر الأحجام وزر الإضافة إلى السلة وأيام التوصيل. صارت بطاقة الطلب تترك مساحة فارغة على جانبها حتى آخرها (وهي أعرض قليلًا على الشاشات الكبيرة لتتسع لذلك)، فلا تغطي الصورة أي شيء. السبب: وجدت المراجعة الصورة فوق أسطر الأحجام بعرض 1280 بكسل.
+- **السعر القديم المشطوب**: عند اختيار حجم مخفّض كان سعره القديم المشطوب في سطر الحجم (مثل $25.00) يختفي تحت الصورة الدائرية. صار يظهر كاملًا دائمًا. بطاقة السعر أعلى الصفحة كانت سليمة. السبب: رأت المراجعة السعر القديم مقطوعًا بعرض 1280 بكسل.
+
+#### طريقة التحديث
+
+1. من المتجر الإلكتروني، القوالب، اختر "إنشاء نسخة" من قالب مسكوف الحالي.
+2. ارفع الملف المضغوط الجديد، فيصل قالبًا غير منشور.
+3. انقل إعداداتك إلى القالب الجديد من المحرر، أو انسخ ملف `config/settings_data.json` وملفات `templates/*.json` من القالب القديم. لا إعدادات جديدة في 1.0.2.
+4. راجع منتجًا له أحجام على الحاسوب بالعربية والإنجليزية، ثم انشر القالب.
+
+### الإصدار 1.0.1 (26 نوفمبر 2026)
+
+تحديث صغير بعد مراجعة المالك في 26 نوفمبر 2026. الإصدار 1.0.0 منشور، لذلك تأتي هذه الإصلاحات في الإصدار 1.0.1.
+
+#### أُضيف
+
+- **أيقونة الموقع وأيقونة الشاشة الرئيسية**: إعداد "أيقونة الموقع" في عناصر العلامة يعطي الآن أيقونة الهاتف (180 × 180) إلى جانب أيقونة تبويب المتصفح (32 × 32). السبب: لم تكن في رأس الصفحة أي أيقونة. استخدم صورة مربعة لا تقل عن 180 × 180 بكسل.
+- **صورة المشاركة الافتراضية** في عناصر العلامة. لكل صفحة الآن صورة مشاركة: صورة الصفحة نفسها أولًا (المنتج أو المجموعة أو المقالة)، ثم هذا الإعداد، ثم شعار العلامة. السبب: صفحات الرئيسية ومن نحن والتواصل والأسئلة والسياسات والمدونة والبحث كانت بلا صورة عند مشاركتها. المقاس المناسب 1200 × 630 بكسل.
+- **بيانات منظمة لمحركات البحث**: صفحة المجموعة تُوصف بأنها CollectionPage مع قائمة بالمنتجات المعروضة، والمدونة بأنها Blog مع مقالاتها، وكل مقالة بأنها BlogPosting مع الكاتب والتواريخ والصورة والناشر. بيانات المنتج ومسار التنقل والمتجر والموقع باقية كما هي.
+
+#### تغيّر
+
+- **سعر المنتج**: يعرض مربع السعر سعر الحجم المختار فقط، مع شارة التخفيض والسعر القديم المشطوب الخاصين به، ويتغير مع تغيير الحجم. حُذف السطر الإضافي عن حجم آخر مخفّض، لأن أسطر الأحجام تعرض السعر القديم والجديد لكل حجم. السبب: كان المتسوق يرى سعرين لحجمين في وقت واحد.
+- **أهداف اللمس**: رابط اسم المتجر في شريط التذييل بارتفاع 44 بكسل.
+- **بطاقة السعر بالعربية**: النقطة الصغيرة على بطاقة سعر المنتج لم تعد تلامس السعر في اللغات التي تُكتب من اليمين إلى اليسار.
+
+#### طريقة التحديث
+
+1. من المتجر الإلكتروني، القوالب، اختر "إنشاء نسخة" من قالب مسكوف الحالي.
+2. ارفع الملف المضغوط الجديد، فيصل قالبًا غير منشور.
+3. انقل إعداداتك إلى القالب الجديد من المحرر، أو انسخ ملف `config/settings_data.json` وملفات `templates/*.json` من القالب القديم.
+4. الإعدادات الجديدة: من إعدادات القالب، عناصر العلامة، اختر أيقونة الموقع (مربعة، 180 × 180 بكسل على الأقل) وصورة المشاركة الافتراضية (1200 × 630 بكسل).
+5. راجع الصفحة الرئيسية ومنتجًا له أحجام ومجموعة والمدونة بالعربية والإنجليزية، ثم انشر القالب.
+
 ### الإصدار 1.0.0 (25 نوفمبر 2026)
 
 لم يُنشر الإصدار 1.0.0 من مسكوف بعد، لذلك أُدرجت الجولة الثانية من الإصلاحات فيه مباشرة بدل إصدار جديد. جاءت هذه الإصلاحات من أربع مراجعات لمتاجر وجدت المشكلات نفسها في عدة قوالب من ZeronKit.
@@ -93,7 +173,7 @@ Why: a comparison of the six ZeronKit stores found that Masgouf shared most of i
 - **البريد الإلكتروني للتواصل مع المتجر** في إعدادات القالب، فارغ افتراضيًا. إذا بقي فارغًا تعرض صفحة التواصل النموذج وحده.
 - **وصف الصفحة الرئيسية لمحركات البحث**، ووصف لكل قالب صفحة مأخوذ من نصها، مع سطر احتياطي قصير بكل لغة.
 - **بيانات مسار التنقل** لمحركات البحث في صفحات المنتجات.
-- **سطر التخفيض في صفحة المنتج** عندما يكون حجم آخر مخفّض السعر، مع شارة التخفيض نفسها الموجودة في البطاقات.
+- **سطر التخفيض في صفحة المنتج** عندما يكون حجم آخر مخفّض السعر، مع شارة التخفيض نفسها الموجودة في البطاقات (حُذف في الإصدار 1.0.1).
 
 ### تغيّر
 

@@ -93,8 +93,7 @@
       "regular": "Regular price",
       "sale": "Sale price",
       "unit": "Unit price",
-      "from": "From {{ price }}",
-      "variant_offer": "{{ variant }} now {{ price }}"
+      "from": "From {{ price }}"
     },
     "media": {
       "gallery": "Product images",

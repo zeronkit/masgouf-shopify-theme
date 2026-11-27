@@ -1,0 +1,104 @@
+{%- comment -%} Masgouf theme by ZeronKit (https://zeronkit.com). Free theme - not for resale or redistribution. © 2026 ZeronKit. {%- endcomment -%}
+{%- comment -%}
+  Structured data for search engines.
+  Params: type ('collection', 'blog' or 'article'), items (the products or posts shown on this page), offset (paginate.current_offset)
+{%- endcomment -%}
+{%- liquid
+  assign origin = request.origin
+  assign offset = offset | default: 0
+-%}
+{%- case type -%}
+  {%- when 'collection' -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": {{ collection.title | json }},
+        "url": {{ origin | append: collection.url | json }},
+        {%- if collection.description != blank -%}
+          "description": {{ collection.description | strip_html | strip_newlines | truncate: 300 | json }},
+        {%- endif -%}
+        {%- if collection.image -%}
+          "image": {{ collection.image | image_url: width: 1200 | prepend: 'https:' | json }},
+        {%- endif -%}
+        "inLanguage": {{ request.locale.iso_code | json }},
+        "isPartOf": { "@type": "WebSite", "name": {{ shop.name | json }}, "url": {{ origin | append: routes.root_url | json }} },
+        "mainEntity": {
+          "@type": "ItemList",
+          "numberOfItems": {{ items.size }},
+          "itemListElement": [
+            {%- for item in items -%}
+              {
+                "@type": "ListItem",
+                "position": {{ offset | plus: forloop.index }},
+                "url": {{ origin | append: item.url | json }},
+                "name": {{ item.title | json }}
+                {%- if item.featured_image -%}, "image": {{ item.featured_image | image_url: width: 800 | prepend: 'https:' | json }}{%- endif %}
+              }{% unless forloop.last %},{% endunless %}
+            {%- endfor -%}
+          ]
+        }
+      }
+    </script>
+  {%- when 'blog' -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": {{ blog.title | json }},
+        "url": {{ origin | append: blog.url | json }},
+        "inLanguage": {{ request.locale.iso_code | json }},
+        "publisher": { "@type": "Organization", "name": {{ shop.name | json }}, "url": {{ origin | append: routes.root_url | json }} },
+        "blogPost": [
+          {%- for item in items -%}
+            {
+              "@type": "BlogPosting",
+              "headline": {{ item.title | truncate: 110 | json }},
+              "url": {{ origin | append: item.url | json }},
+              "datePublished": "{% render 'mg-iso-date', date: item.published_at %}",
+              "dateModified": "{% render 'mg-iso-date', date: item.updated_at %}",
+              "author": { "@type": "Person", "name": {{ item.author | default: shop.name | json }} }
+              {%- if item.image -%}, "image": {{ item.image | image_url: width: 1200 | prepend: 'https:' | json }}{%- endif %}
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        ]
+      }
+    </script>
+  {%- when 'article' -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": {{ article.title | truncate: 110 | json }},
+        "url": {{ origin | append: article.url | json }},
+        "mainEntityOfPage": { "@type": "WebPage", "@id": {{ origin | append: article.url | json }} },
+        {%- if article.excerpt_or_content != blank -%}
+          "description": {{ article.excerpt_or_content | strip_html | strip_newlines | truncate: 300 | json }},
+        {%- endif -%}
+        {%- if article.image -%}
+          "image": {
+            "@type": "ImageObject",
+            "url": {{ article.image | image_url: width: 1200 | prepend: 'https:' | json }},
+            "width": {{ article.image.width | at_most: 1200 }},
+            "height": {{ article.image.width | at_most: 1200 | divided_by: article.image.aspect_ratio | round }}
+          },
+        {%- endif -%}
+        "datePublished": "{% render 'mg-iso-date', date: article.published_at %}",
+        "dateModified": "{% render 'mg-iso-date', date: article.updated_at %}",
+        "author": { "@type": "Person", "name": {{ article.author | default: shop.name | json }} },
+        "publisher": {
+          "@type": "Organization",
+          "name": {{ shop.name | json }},
+          "url": {{ origin | append: routes.root_url | json }}
+          {%- if settings.logo_social != blank -%},
+            "logo": { "@type": "ImageObject", "url": {{ settings.logo_social | image_url: width: 600 | prepend: 'https:' | json }} }
+          {%- endif %}
+        },
+        {%- if article.tags.size > 0 -%}
+          "keywords": {{ article.tags | join: ', ' | json }},
+        {%- endif -%}
+        "inLanguage": {{ request.locale.iso_code | json }},
+        "isPartOf": { "@type": "Blog", "name": {{ blog.title | json }}, "url": {{ origin | append: blog.url | json }} }
+      }
+    </script>
+{%- endcase -%}

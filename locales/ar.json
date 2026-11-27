@@ -101,8 +101,7 @@
       "regular": "السعر العادي",
       "sale": "سعر التخفيض",
       "unit": "سعر الوحدة",
-      "from": "ابتداءً من {{ price }}",
-      "variant_offer": "{{ variant }} الآن بـ {{ price }}"
+      "from": "ابتداءً من {{ price }}"
     },
     "media": {
       "gallery": "صور المنتج",

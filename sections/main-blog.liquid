@@ -84,6 +84,7 @@
         {%- endif -%}
         <div class="mg-board__foot">{% render 'pagination', paginate: paginate %}</div>
       </div>
+      {% render 'mg-structured-data', type: 'blog', items: blog.articles, offset: paginate.current_offset %}
     {%- endpaginate -%}
   </div>
 </section>
